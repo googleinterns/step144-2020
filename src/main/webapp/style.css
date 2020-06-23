@@ -1,1 +1,34 @@
 /** style rules for index.html **/
+body, html {
+  height:100%;
+  text-align: center;
+}
+
+/** big image class already imbeded in the pictures **/
+.step-img-1 {
+  position: relative;
+  background-attachment: scroll;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/** This class allows for text to be centered to the image **/
+.step-img-1 {
+  background-image: url(images/8bitSky.jpg);
+  min-height: 100%;
+}
+
+.step-caption {
+  position: absolute;
+  left: 0;
+  top: 20%;
+  width: 100%;
+  text-align: center;
+}
+
+.step-caption spam.step-border {
+  color: white;
+  padding: 18px;
+  font-size: 45px;
+}
