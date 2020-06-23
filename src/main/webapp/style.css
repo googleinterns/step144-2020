@@ -32,3 +32,15 @@ body, html {
   padding: 18px;
   font-size: 45px;
 }
+
+/** This class allow the text inside it to stay in the container no matter the device width **/
+.step-wrap {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.step-align {
+    margin-left: 20%;
+    margin-right: 20%;
+}
