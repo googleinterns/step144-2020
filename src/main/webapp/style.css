@@ -1,3 +1,11 @@
+/** color style guide 
+*  #264653 - charcoal can be used for background  
+*  #2A9D8F - persian green can be used as a header color
+*  #E9C46A - orange yellow can be used for text color
+*  #E76F51 - orange can be used as buttons
+*/
+
+
 /** style rules for index.html **/
 body, html {
   height:100%;
@@ -44,3 +52,21 @@ body, html {
     margin-left: 20%;
     margin-right: 20%;
 }
+
+/** creators table based on a responsive design **/
+.step-table-align {
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.step-table-align td {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.step-table-align img {
+    height: 355px;
+    width: 355px;
+}
+
+
