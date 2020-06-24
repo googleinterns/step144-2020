@@ -49,7 +49,7 @@ public class UserAuthServlet extends HttpServlet {
     private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
     private static String loginUrl = userService.createLoginURL(SLASH_PAGE_REDIRECT);
 
-  @Override
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType(TEXT_CONTENT_TYPE);
         response.getWriter().println(getLoginLogoutLink());
@@ -63,7 +63,6 @@ public class UserAuthServlet extends HttpServlet {
         // Creates new entity for user
         Entity entity = newEntity(user, user.getNickname(), id);
 
-        // Stores entity
         datastore.put(entity);
         response.sendRedirect(GAME_STAGE_REDIRECT);
     }
