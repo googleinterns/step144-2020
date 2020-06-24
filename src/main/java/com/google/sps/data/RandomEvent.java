@@ -35,7 +35,11 @@ public class RandomEvent {
         return willRedirect;
     }
  
+<<<<<<< HEAD
     public String getRedirectStageID () {
+=======
+    public Stirng getRedirectStageID () {
+>>>>>>> 7ca2e3553bf4c643168d55826dcd797452a9e036
         return redirectStageID;
     }
  
