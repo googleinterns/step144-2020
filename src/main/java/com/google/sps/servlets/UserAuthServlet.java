@@ -37,6 +37,7 @@ public class UserAuthServlet extends HttpServlet {
 
     private static final String TEXT_CONTENT_TYPE = "text/html";
     private static final String GAME_STAGE_REDIRECT = "/gameStage.html";
+    private static final String SLASH_PAGE_REDIRECT = "/index.html";
     private static final String DISPLAY_NAME_PARAMETER = "displayName";
     private static final String EMAIL_PARAMETER = "email";   
     private static final String ID_PARAMETER = "id"; 
@@ -45,8 +46,8 @@ public class UserAuthServlet extends HttpServlet {
     private static final String PLAYER_PARAMETER = "Player";  
     private static UserService userService = UserServiceFactory.getUserService();
     private static User user = userService.getCurrentUser();
-    private static String logoutUrl = userService.createLogoutURL(LOGIN_URL);
-    private static String loginUrl = userService.createLoginURL(INDEX_REDIRECT);
+    private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
+    private static String loginUrl = userService.createLoginURL(SLASH_PAGE_REDIRECT);
 
   @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
