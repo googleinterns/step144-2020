@@ -16,11 +16,11 @@ import com.google.inject.Singleton;
 @Singleton
 /** Responds with a JSON string containing questions and answers for the career quiz*/
 public class CareerQuizServlet extends HttpServlet {
-  private CareerQuestionDatabase careerQuestionDatabase ;
+  private final CareerQuestionDatabase careerQuestionDatabase;
   private static final String JSON_CONTENT_TYPE = "application/json;";
   
-  @Inject public void setCareerQuestionDatabase(CareerQuestionDatabase careerQuestionDatabase) {
-    this.careerQuestionDatabase = careerQuestionDatabase;
+  @Inject public CareerQuizServlet(CareerQuestionDatabase careerQuestionDatabase) {
+     this.careerQuestionDatabase = careerQuestionDatabase;
   }
 
   @Override

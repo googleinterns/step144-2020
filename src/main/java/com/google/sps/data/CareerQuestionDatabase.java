@@ -8,6 +8,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import com.google.inject.Inject;
 
 /* purpose: to manage the interface of the Career Question database */
 public final class CareerQuestionDatabase {
@@ -19,6 +20,7 @@ public final class CareerQuestionDatabase {
       new CareerQuestionChoice("choice2", "career2")
     );
   
+  @Inject
   public CareerQuestionDatabase(DatastoreService datastore) {
     this.datastore = datastore;
   }
