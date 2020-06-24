@@ -35,7 +35,7 @@ public class RandomEvent {
         return willRedirect;
     }
 
-    public String getRedirectStageID () {
+    public Stirng getRedirectStageID () {
         return redirectStageID;
     }
  
