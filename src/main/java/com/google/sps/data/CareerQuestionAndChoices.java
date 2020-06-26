@@ -12,4 +12,12 @@ public final class CareerQuestionAndChoices {
     this.question = question;
     this.choices = choices;
   }  
+
+  public String getQuestion() {
+    return this.question;
+  }
+
+  public List<CareerQuestionChoice> getChoices() {
+    return this.choices;
+  }
 }
