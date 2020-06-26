@@ -13,4 +13,12 @@ public final class CareerQuestionChoice {
     this.choiceText = choiceText;
     this.associatedCareerPath= associatedCareerPath;
   }
+
+  public String getAssociatedCareerPath() {
+    return this.associatedCareerPath;
+  }
+
+  public String getChoiceText() {
+    return this.choiceText;
+  }
 }
