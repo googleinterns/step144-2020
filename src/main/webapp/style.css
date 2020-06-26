@@ -2,7 +2,7 @@
 *  #264653 - charcoal can be used for background  
 *  #2A9D8F - persian green can be used as a header color
 *  #E9C46A - orange yellow can be used for text color
-*  #E76F51 - orange can be used as buttons
+*  #e76f51- orange can be used as buttons
 */
 
 
@@ -10,6 +10,46 @@
 body, html {
   height:100%;
   text-align: center;
+  background-color: #264653;
+}
+
+h1, h2, h3, h4 { 
+  color: #2a9d8f;
+  text-align: center;
+  font-family: 'Press Start 2P', cursive;
+}
+
+h1 {
+  font-size: 5.4rem;
+}
+
+h2 {
+  font-size: 2.4rem;
+}
+
+h4 {
+    font-size: .96rem;
+}
+
+p {
+  color: #e9c46a;
+  font-size: 1.4rem;
+  line-height: 2.6rem;
+  font-family: 'B612', sans-serif;
+}
+
+a {
+  text-decoration: none;
+  opacity: 0.75;
+}
+
+a:hover{
+    opacity: 1.0;
+}
+
+.step-outline {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #e76f51;
 }
 
 /** big image class already imbeded in the pictures **/
@@ -21,12 +61,33 @@ body, html {
   background-size: cover;
 }
 
-/** This class allows for text to be centered to the image **/
+/** parallax Image class **/
+.step-img-2, .step-img-3 {
+  position: relative;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: brightness(50%);
+}
+
+/** classes for Images used as background **/
 .step-img-1 {
-  background-image: url(images/8bitSky.jpg);
+  background-image: url(images/splash-page.jpg);
   min-height: 100%;
 }
 
+.step-img-2 {
+  background-image: url(images/computer-monitor.jpg);
+  min-height: 20%;
+}
+
+.step-img-3 {
+  background-image: url(images/coding-glasses.jpg);
+  min-height: 20%;
+}
+
+/** This class allows for text to be centered to the image **/
 .step-caption {
   position: absolute;
   left: 0;
@@ -36,9 +97,12 @@ body, html {
 }
 
 .step-caption spam.step-border {
-  color: white;
   padding: 18px;
   font-size: 45px;
+}
+
+.step-left {
+    text-align: left;
 }
 
 /** This class allow the text inside it to stay in the container no matter the device width **/
@@ -60,13 +124,36 @@ body, html {
     margin-right: auto;
 }
 .step-table-align td {
-    margin-left: 5px;
-    margin-right: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .step-table-align img {
     height: 355px;
     width: 355px;
+    border: 2px solid #e76f51;
 }
 
+.step-figcaption {
+  background-color: black;
+  color: white;
+  font-style: italic;
+  padding: 2px;
+  text-align: center;
+}
 
+/** style for the buttons **/
+.step-button{
+  background-color: #e76f51;
+  border: none;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', cursive; 
+}
