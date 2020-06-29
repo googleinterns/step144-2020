@@ -7,8 +7,12 @@
 
 
 /** style rules for index.html **/
+html {
+  box-sizing: border-box;
+}
+
 body, html {
-  height:100%;
+  height: 100%;
   text-align: center;
   background-color: #264653;
 }
@@ -27,8 +31,13 @@ h2 {
   font-size: 2.4rem;
 }
 
+h3 {
+  font-size: 1.4rem;
+}
+
 h4 {
-    font-size: .96rem;
+    font-size: 0.90rem;
+    color: #e76f51;
 }
 
 p {
@@ -40,16 +49,12 @@ p {
 
 a {
   text-decoration: none;
+  color: #e9c46a; 
   opacity: 0.75;
 }
 
-a:hover{
+a:hover {
     opacity: 1.0;
-}
-
-.step-outline {
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: #e76f51;
 }
 
 /** big image class already imbeded in the pictures **/
@@ -59,6 +64,11 @@ a:hover{
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.step-outline {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #e76f51;
 }
 
 /** parallax Image class **/
@@ -123,6 +133,7 @@ a:hover{
     margin-left: auto;
     margin-right: auto;
 }
+
 .step-table-align td {
     margin-left: 10px;
     margin-right: 10px;
@@ -156,4 +167,178 @@ a:hover{
   cursor: pointer;
   border-radius: 8px;
   font-family: 'Press Start 2P', cursive; 
+}
+
+/** These classes are in charge of styleing the footer **/
+.step-row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap; 
+  flex-wrap: wrap;
+  padding: 0 4px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.step-column { 
+  -ms-flex: 32%;
+  flex: 32%;
+  max-width: 32%;
+  padding: 0 4px;
+}
+
+.step-column h4 { 
+  text-align: left;
+}
+
+.resource-link li {
+  list-style-type: none;
+  color: #E9C46A;
+  text-align: left;
+}
+
+.resource-link a:visited {
+  color: #E9C46A;
+}
+
+/** accordian pop up for resources **/
+#accordion {
+  text-align: left;
+  margin-left: 39px;
+}
+
+#accordion section p {
+  display: none;
+}
+
+#accordion section ul {
+  display: none;
+}
+
+#accordion section:target p {
+  display: block;
+}
+
+#accordion section:target ul {
+  display: block;
+}
+
+/** responsive team page **/ 
+.intern-pic {
+  height: 400px;
+  width: 355px;
+  border: 2px solid #e76f51;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.step-team-column {
+  float: left;
+  width: 33.3%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.step-team-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.step-team-container {
+  padding: 0 16px;
+}
+
+.step-team-container::after, .row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.step-team-button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color:#e76f51;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.step-team-button:hover {
+  background-color: #555; 
+}                  
+
+@media screen and (max-width: 650px) {
+  .step-team-column {
+    width: 100%;
+    display: block;
+  }
+}
+
+/** Responsive media classes to addapt to diffrent devices **/
+@media screen and (max-width: 800px) {
+  /** start of large tablet styles **/
+  .step-column {
+    -ms-flex: 60%;
+    flex: 60%;
+    max-width: 60%;
+  }
+
+  .step-caption spam.border {
+    font-size: 20px;
+  }
+  
+  h1 {
+    font-size: 4.4rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.0rem;  
+  }
+
+  h4 {
+    font-size: 0.70rem;
+  }
+
+  p {
+    font-size: 1.0rem;
+    line-height: 1.6rem;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  /** start of phone styles **/
+  .step-column {
+    -ms-flex: 100%;
+    flex: 100%;
+    max-width: 100%;
+  }
+
+  .step-caption spam.border {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  h3 {
+    font-size: 0.95rem;  
+  }
+
+  p {
+    font-size: 0.96rem;
+    line-height: 1.0rem;
+  }
 }
