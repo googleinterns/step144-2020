@@ -11,10 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+package com.google.sps.data;
 
 import com.google.appengine.api.datastore.Key;
 
-public class Player {
+// Player object to represent each user.
+ public final class Player {
     private String displayName;
     private String email;
     private String id;
@@ -26,7 +28,7 @@ public class Player {
         this.email = email;
     }
 
-    public String getdisplayName() {
+    public String getDisplayName() {
         return displayName;
     }
 

@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.KeyRange;
 import com.google.appengine.api.users.UserService;
+import com.google.sps.data.PlayerDatabase;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.google.inject.Inject;
 
 @WebServlet("/login")
 public class UserAuthServlet extends HttpServlet {
@@ -48,11 +50,17 @@ public class UserAuthServlet extends HttpServlet {
     private static User user = userService.getCurrentUser();
     private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
     private static String loginUrl = userService.createLoginURL(SLASH_PAGE_REDIRECT);
+    private static PlayerDatabase playerDatabase;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType(TEXT_CONTENT_TYPE);
         response.getWriter().println(getLoginLogoutLink());
+    }
+
+    // Allows local database for testing
+    @Inject public UserAuthServlet(PlayerDatabase playerDatabase) {
+        this.playerDatabase = playerDatabase;
     }
 
     @Override
@@ -75,14 +83,14 @@ public class UserAuthServlet extends HttpServlet {
         return link;
     }
 
-    private Entity newEntity(User user, String displayName, String id) {
+    public static Entity newEntity(User user, String displayName, String id) {
         Entity player = new Entity(PLAYER_PARAMETER);
         player.setProperty(DISPLAY_NAME_PARAMETER, displayName);
         player.setProperty(EMAIL_PARAMETER, user.getEmail());
         player.setProperty(ID_PARAMETER, id);
         // These two will need to be modified as we develop how images/pageIDs are stored
-        player.setProperty(IMAGE_ID_PARAMETER, IMAGE_ID_PARAMETER);
-        player.setProperty(CURRENT_PAGE_ID_PARAMETER, CURRENT_PAGE_ID_PARAMETER);
+        // player.setProperty(IMAGE_ID_PARAMETER, IMAGE_ID_PARAMETER);
+        // player.setProperty(CURRENT_PAGE_ID_PARAMETER, CURRENT_PAGE_ID_PARAMETER);
         return player;
     }
 }
