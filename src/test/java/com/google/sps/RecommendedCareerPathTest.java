@@ -6,12 +6,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import com.google.sps.data.CareerQuestionChoice;
-import com.google.sps.data.CareerQuestionAndChoices;
 import java.util.List;
 import java.util.Arrays;
 
-
-/** Tests the CareerQuiz servlet and its interactions with CareerQuestionDatabase*/
+/** Tests the CareerQuiz servlet and its interactions with CareerQuestionDatabase */
 @RunWith(JUnit4.class)
 public final class RecommendedCareerPathTest {
 
@@ -23,15 +21,15 @@ public final class RecommendedCareerPathTest {
   private static final String CHOICE_3 = "choice3";
   private static final String CHOICE_4 = "choice4";
   private static final String CHOICE_5 = "choice5";
-  
+
   @Test
   public void outputsMostFrequentCareerPath_2choices() {
-    List<CareerQuestionChoice> userChoices = Arrays.asList(
-      new CareerQuestionChoice(CHOICE_1, CAREER_1),
-      new CareerQuestionChoice(CHOICE_2, CAREER_2),
-      new CareerQuestionChoice(CHOICE_3, CAREER_2),
-      new CareerQuestionChoice(CHOICE_4, CAREER_3)
-    );
+    List<CareerQuestionChoice> userChoices =
+        Arrays.asList(
+            new CareerQuestionChoice(CHOICE_1, CAREER_1),
+            new CareerQuestionChoice(CHOICE_2, CAREER_2),
+            new CareerQuestionChoice(CHOICE_3, CAREER_2),
+            new CareerQuestionChoice(CHOICE_4, CAREER_3));
     String expected = CAREER_2;
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     Assert.assertEquals(result, expected);
@@ -39,13 +37,13 @@ public final class RecommendedCareerPathTest {
 
   @Test
   public void picksArbitraryCareerPath_forTies() {
-    List<CareerQuestionChoice> userChoices = Arrays.asList(
-      new CareerQuestionChoice(CHOICE_1, CAREER_1),
-      new CareerQuestionChoice(CHOICE_2, CAREER_1),
-      new CareerQuestionChoice(CHOICE_3, CAREER_2),
-      new CareerQuestionChoice(CHOICE_4, CAREER_2),
-      new CareerQuestionChoice(CHOICE_5, CAREER_3)
-    );
+    List<CareerQuestionChoice> userChoices =
+        Arrays.asList(
+            new CareerQuestionChoice(CHOICE_1, CAREER_1),
+            new CareerQuestionChoice(CHOICE_2, CAREER_1),
+            new CareerQuestionChoice(CHOICE_3, CAREER_2),
+            new CareerQuestionChoice(CHOICE_4, CAREER_2),
+            new CareerQuestionChoice(CHOICE_5, CAREER_3));
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     String expectedOption1 = CAREER_1;
     String expectedOption2 = CAREER_2;
