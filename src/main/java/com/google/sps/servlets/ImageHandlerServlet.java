@@ -1,51 +1,18 @@
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+package com.google.sps.servlets;
 
-package com.googl.sps.servlets;
-
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.KeyRange;
-import com.google.appengine.api.blobstore.BlobInfo;
-import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
-import javax.servlet.annotation.WebServlet;
-import com.google.sps.data.Player;
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.annotation.WebServlet;
@@ -59,107 +26,99 @@ import javax.servlet.http.HttpServletResponse;
  * Blobstore.
  */
 @WebServlet("/image-handler")
-public class ImageHandlerServlet extends HttpServlet {
-    private static final String EMAIL_PARAMETER = "email";    
-    private static final String ID_PARAMETER = "id";    
-    private static final String IMAGE_PARAMETER = "image";
-    private static final String DISPLAY_NAME_PARAMETER = "displayName";
-    private static final String UPLOADED_REDIRECT_PARAMETER = "/uploaded.html";
-    private static final String PLAYER_QUERY_PARAMETER = "Player";
-    private static final String JPG_PARAMETER = ".jpg";
-    private static final String JPEG_PARAMETER = ".jpeg";
-    private static final String PNG_PARAMETER = ".png";
+public class ImageHandlerServlet extends HttpServlet {    
+  private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+  private static String displayName;
+  private static String imageID;
+  private static final String CURRENT_PLAYER_TRUE_PARAMETER = "true";
+  private static final String CURRENT_PLAYER_FALSE_PARAMETER = "false";
+  private static final String DISPLAY_NAME_PARAMETER = "displayName";
+  private static final String EMAIL_PARAMETER = "email";
+  private static final String ID_PARAMETER = "id";
+  private static final String IMAGE_PARAMETER = "image";
+  private static final String JPEG_PARAMETER = ".jpeg";
+  private static final String JPG_PARAMETER = ".jpg";
+  private static final String PLAYER_QUERY_PARAMETER = "Player";
+  private static final String PNG_PARAMETER = ".png";
+  private static final String UPLOADED_REDIRECT_PARAMETER = "/uploaded.html";
+  private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
+  private static final String DEFAULT_IMAGE_GS_LOCATION =
+      "/gs/cs-career-step-2020.appspot.com/face.jpg";
+  private static Entity currentPlayer = PlayerDatabase.getCurrentPlayerEntity();
 
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        // Get the displayName entered by the user.
-        String displayName = request.getParameter(DISPLAY_NAME_PARAMETER);
-
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String imageUrl;
+    if (currentPlayer == null) {
+      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);
+    } else {
+      // Get the displayName entered by the user.
+      String displayName = request.getParameter(DISPLAY_NAME_PARAMETER);
+      // Get the imageName to check if a file was uploaded.
+      String imageName = request.getParameter(IMAGE_PARAMETER);
+      if (imageName == null) { // Default image path
+        BlobKey defaultBlobKey = blobstoreService.createGsBlobKey(DEFAULT_IMAGE_GS_LOCATION);
+        imageUrl = getFileUrl(defaultBlobKey);
+      } else {
         // Get the URL of the image that the user uploaded to Blobstore.
-        String imageUrl = getUploadedFileUrl(request, IMAGE_PARAMETER);
-        
-        Player currentPlayer = getCurrentPlayer();
-        if (currentPlayer != null){
-            // Assign imageUrl to current player
-            currentPlayer.setImageID(imageUrl);
+        BlobKey uploadedBlobKey = createUploadedBlobKey(request, IMAGE_PARAMETER);
+        imageUrl = getFileUrl(uploadedBlobKey);
+      }
+      Entity currentPlayerEntity = PlayerDatabase.getCurrentPlayerEntity();
+      currentPlayerEntity = PlayerDatabase.getCurrentPlayerEntity();
+      // Assign imageUrl to current player
+      PlayerDatabase.setEntityImageID(imageUrl);
 
-            // Assign displayName to current player
-            currentPlayer.setDisplayName(displayName);
-        }
-
-        response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
-        ArrayList<Player> Players = PlayerDatabase.getPlayers();
+      // Assign displayName to current player
+      PlayerDatabase.setEntityDisplayName(displayName);
     }
+    response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
+  }
 
-    // Gets the URL of the uploaded file; null if no file was uploaded
-    private String getUploadedFileUrl(HttpServletRequest request, String formInputElementName) {
-        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-        List<BlobKey> blobKeys = blobs.get(formInputElementName);
+  // Gets the URL of the uploaded file; null if no file was uploaded
+  private BlobKey createUploadedBlobKey(HttpServletRequest request, String formInputElementName) {
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get(formInputElementName);
+    // Our form only contains a single file input, so get the first index.
+    BlobKey blobKey = blobKeys.get(0);
+    return blobKey;
+  }
 
-        // User submitted form without selecting a file
-        if (blobKeys == null || blobKeys.isEmpty()) {
-        return null;
-        }
-
-        // Our form only contains a single file input, so get the first index.
-        BlobKey blobKey = blobKeys.get(0);
-
-        // User submitted form without selecting a file (live server)
-        BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
-        if (blobInfo.getSize() == 0) {
-        blobstoreService.delete(blobKey);
-        return null;
-        }
-
-        // Use ImagesService to get a URL that points to the uploaded file.
-        ImagesService imagesService = ImagesServiceFactory.getImagesService();
-        ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
-
-        // To support running in Google Cloud Shell with AppEngine's dev server, we must use the relative
-        // path to the image, rather than the path returned by imagesService which contains a host.
-        try {
-        URL url = new URL(imagesService.getServingUrl(options));
-        return url.getPath();
-        } catch (MalformedURLException e) {
-        return imagesService.getServingUrl(options);
-        }
+  private String getFileUrl(BlobKey blobKey) {
+    // Use ImagesService to get a URL that points to the uploaded file.
+    ImagesService imagesService = ImagesServiceFactory.getImagesService();
+    ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
+    // To support running in Google Cloud Shell with AppEngine's dev server,
+    // we must use the relativepath to the image, rather than
+    // the path returned by imagesService which contains a host.
+    try {
+      URL url = new URL(imagesService.getServingUrl(options));
+      return url.getPath();
+    } catch (MalformedURLException e) {
+      return imagesService.getServingUrl(options);
     }
+  }
 
-    private boolean isValidImage(String imageUrl) {
-        if (imageUrl.endsWith(JPG_PARAMETER) || imageUrl.endsWith(JPEG_PARAMETER) || imageUrl.endsWith(PNG_PARAMETER)) {
-            return true;
-        }
-        return false;
+  private boolean isValidImage(String imageUrl) {
+    if (imageUrl.endsWith(JPG_PARAMETER)
+        || imageUrl.endsWith(JPEG_PARAMETER)
+        || imageUrl.endsWith(PNG_PARAMETER)) {
+      return true;
     }
+    return false;
+  }
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Player currentPlayer = getCurrentPlayer();
-        String imageID = currentPlayer.getImageID();
-        String displayName = currentPlayer.getDisplayName();
-        response.getWriter().println(imageID);
-        response.getWriter().println(displayName);
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    response.getWriter();
+    if (currentPlayer != null) {
+      imageID = PlayerDatabase.getEntityImageID();
+      displayName = PlayerDatabase.getEntityDisplayName();
+      response.getWriter().println(CURRENT_PLAYER_TRUE_PARAMETER);
+    } else {
+        response.getWriter().println(CURRENT_PLAYER_FALSE_PARAMETER);
     }
-
-    // Uses the email of the current user logged in and comares it to 
-    // emails in the Player Database. Returns null if no entity is found.
-    private Player getCurrentPlayer() {
-        User currentUser = UserServiceFactory.getUserService().getCurrentUser();
-        String email = currentUser.getEmail();
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query(PLAYER_QUERY_PARAMETER).setFilter(new Query.FilterPredicate(
-            ID_PARAMETER, Query.FilterOperator.EQUAL, currentUser.getUserId()));
-        Key playerKey;
-
-        PreparedQuery results = datastore.prepare(query);
-        for (Entity entity : results.asIterable()){
-            if (email.equals(entity.getProperty(EMAIL_PARAMETER).toString())){
-                playerKey = entity.getKey();
-            }
-        }
-        
-        return null;
-    }
+    response.getWriter().println(imageID);
+    response.getWriter().println(displayName);
+  }
 }
