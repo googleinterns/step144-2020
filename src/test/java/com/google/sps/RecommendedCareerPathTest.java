@@ -1,14 +1,13 @@
 package com.google.sps;
 
 import com.google.sps.data.ProcessCareerQuizResults;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import com.google.sps.data.CareerQuestionChoice;
-import java.util.List;
 import java.util.Arrays;
-
+import java.util.List;
+import org.junit.Assert;
+import org.junit.runners.JUnit4;
+import org.junit.runner.RunWith;
+import org.junit.Test;
 
 /**
   * Tests that the submission of choices for the CareerQuizServlet returns recommended path that is

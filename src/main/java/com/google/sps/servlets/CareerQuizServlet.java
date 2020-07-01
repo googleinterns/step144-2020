@@ -1,19 +1,18 @@
 package com.google.sps.servlets;
 
-import com.google.sps.data.CareerQuestionDatabase;
-import com.google.sps.data.CareerQuestionAndChoices;
-import com.google.sps.data.CareerQuestionChoice;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.sps.data.ProcessCareerQuizResults;
 import com.google.gson.Gson;
-import javax.servlet.annotation.WebServlet;
+import com.google.sps.data.CareerQuestionAndChoices;
+import com.google.sps.data.CareerQuestionChoice;
+import com.google.sps.data.CareerQuestionDatabase;
+import com.google.sps.data.ProcessCareerQuizResults;
+import java.util.ArrayList;
+import java.io.IOException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-
+import javax.servlet.annotation.WebServlet;
 
 @WebServlet("/careerquiz")
 /** Responds with a JSON string containing questions and answers for the career quiz */

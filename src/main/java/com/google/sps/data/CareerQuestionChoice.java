@@ -1,7 +1,7 @@
 package com.google.sps.data;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to store the response text of each Choice in the career quiz, and what path selecting it is

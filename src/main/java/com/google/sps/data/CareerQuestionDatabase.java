@@ -1,8 +1,9 @@
 package com.google.sps.data;
-import com.google.appengine.api.datastore.Entity;
+
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
