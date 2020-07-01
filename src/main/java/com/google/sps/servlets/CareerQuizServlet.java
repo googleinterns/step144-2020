@@ -3,6 +3,8 @@ package com.google.sps.servlets;
 import com.google.sps.data.CareerQuestionDatabase;
 import com.google.sps.data.CareerQuestionAndChoices;
 import com.google.sps.data.CareerQuestionChoice;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.sps.data.ProcessCareerQuizResults;
 import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
@@ -11,22 +13,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 
-@Singleton
+@WebServlet("/careerquiz")
 /** Responds with a JSON string containing questions and answers for the career quiz*/
 public class CareerQuizServlet extends HttpServlet {
-  private final CareerQuestionDatabase careerQuestionDatabase;
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final CareerQuestionDatabase careerQuestionDatabase = new CareerQuestionDatabase(datastore);
   private ArrayList<CareerQuestionAndChoices> questionsAndChoices;
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String QUIZ_SUBMIT = "career-quiz-submit";
   private static final Gson gson = new Gson();
-  
-  @Inject public CareerQuizServlet(CareerQuestionDatabase careerQuestionDatabase) {
-     this.careerQuestionDatabase = careerQuestionDatabase;
-  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
