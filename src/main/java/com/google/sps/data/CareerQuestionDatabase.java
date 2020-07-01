@@ -9,7 +9,6 @@ import java.util.List;
 
 /* purpose: to manage the interface of the Career Question database */
 public final class CareerQuestionDatabase {
- 
   private DatastoreService datastore;
   private ArrayList<CareerQuestionAndChoices> questionAndChoices;
   private static final String ENTITY_QUERY_STRING = "careerquizquestionandchoices";
@@ -18,7 +17,7 @@ public final class CareerQuestionDatabase {
   private static final String CHOICETEXT_QUERY_STRING = "choicetext";
   private static final String ASSOCIATED_CAREER_PATH_QUERY_STRING = "associatedcareerpath";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
-  
+
   public CareerQuestionDatabase(DatastoreService datastore) {
     this.datastore = datastore;
   }

@@ -6,7 +6,6 @@ import java.util.List;
 /** Returns the recommended career path based off the career quiz results. */
 public class ProcessCareerQuizResults {
   private ProcessCareerQuizResults() {}
-  
   public static String getRecommendedCareerPath(List<CareerQuestionChoice> userChoices) {
     HashMap<String, Integer> choiceFrequencyHashMap = new HashMap<String, Integer>();
     String careerPath;

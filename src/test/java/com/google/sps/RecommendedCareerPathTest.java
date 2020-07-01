@@ -1,7 +1,7 @@
 package com.google.sps;
 
-import com.google.sps.data.ProcessCareerQuizResults;
 import com.google.sps.data.CareerQuestionChoice;
+import com.google.sps.data.ProcessCareerQuizResults;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
@@ -24,7 +24,7 @@ public final class RecommendedCareerPathTest {
   private static final String CHOICE_3 = "choice3";
   private static final String CHOICE_4 = "choice4";
   private static final String CHOICE_5 = "choice5";
-  
+
   @Test
   public void outputsMostFrequentCareerPath_2choices() {
     List<CareerQuestionChoice> userChoices =
