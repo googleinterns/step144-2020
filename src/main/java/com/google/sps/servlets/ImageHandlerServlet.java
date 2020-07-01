@@ -1,20 +1,3 @@
-// Copyright 2020 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 package com.googl.sps.servlets;
 
@@ -69,6 +52,9 @@ public class ImageHandlerServlet extends HttpServlet {
     private static final String JPG_PARAMETER = ".jpg";
     private static final String JPEG_PARAMETER = ".jpeg";
     private static final String PNG_PARAMETER = ".png";
+    private static String displayName;
+    private static String imageID;
+    
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -79,14 +65,14 @@ public class ImageHandlerServlet extends HttpServlet {
         // Get the URL of the image that the user uploaded to Blobstore.
         String imageUrl = getUploadedFileUrl(request, IMAGE_PARAMETER);
         
-        Player currentPlayer = getCurrentPlayer();
-        if (currentPlayer != null){
-            // Assign imageUrl to current player
-            currentPlayer.setImageID(imageUrl);
+        // Player currentPlayer = getCurrentPlayer();
+        // if (currentPlayer != null){
+        //     // Assign imageUrl to current player
+        //     currentPlayer.setImageID(imageUrl);
 
-            // Assign displayName to current player
-            currentPlayer.setDisplayName(displayName);
-        }
+        //     // Assign displayName to current player
+        //     currentPlayer.setDisplayName(displayName);
+        // }
 
         response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
         ArrayList<Player> Players = PlayerDatabase.getPlayers();
@@ -100,7 +86,7 @@ public class ImageHandlerServlet extends HttpServlet {
 
         // User submitted form without selecting a file
         if (blobKeys == null || blobKeys.isEmpty()) {
-        return null;
+            return null;
         }
 
         // Our form only contains a single file input, so get the first index.
@@ -109,8 +95,8 @@ public class ImageHandlerServlet extends HttpServlet {
         // User submitted form without selecting a file (live server)
         BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
         if (blobInfo.getSize() == 0) {
-        blobstoreService.delete(blobKey);
-        return null;
+            blobstoreService.delete(blobKey);
+            return null;
         }
 
         // Use ImagesService to get a URL that points to the uploaded file.
@@ -120,10 +106,11 @@ public class ImageHandlerServlet extends HttpServlet {
         // To support running in Google Cloud Shell with AppEngine's dev server, we must use the relative
         // path to the image, rather than the path returned by imagesService which contains a host.
         try {
-        URL url = new URL(imagesService.getServingUrl(options));
-        return url.getPath();
-        } catch (MalformedURLException e) {
-        return imagesService.getServingUrl(options);
+            URL url = new URL(imagesService.getServingUrl(options));
+            return url.getPath();
+        } 
+        catch (MalformedURLException e) {
+            return imagesService.getServingUrl(options);
         }
     }
 
@@ -136,27 +123,34 @@ public class ImageHandlerServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Player currentPlayer = getCurrentPlayer();
-        String imageID = currentPlayer.getImageID();
-        String displayName = currentPlayer.getDisplayName();
-        response.getWriter().println(imageID);
-        response.getWriter().println(displayName);
+        if (request != null && response != null) {
+            response.getWriter();
+            Player currentPlayer = getCurrentPlayer();
+            if (currentPlayer != null) {
+                imageID = currentPlayer.getImageID();
+                displayName = currentPlayer.getDisplayName();
+            }
+            response.getWriter().println(imageID);
+            response.getWriter().println(displayName);
+        }
     }
 
     // Uses the email of the current user logged in and comares it to 
     // emails in the Player Database. Returns null if no entity is found.
     private Player getCurrentPlayer() {
-        User currentUser = UserServiceFactory.getUserService().getCurrentUser();
-        String email = currentUser.getEmail();
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query(PLAYER_QUERY_PARAMETER).setFilter(new Query.FilterPredicate(
-            ID_PARAMETER, Query.FilterOperator.EQUAL, currentUser.getUserId()));
-        Key playerKey;
+        if (UserServiceFactory.getUserService().getCurrentUser() != null) {
+            User currentUser = UserServiceFactory.getUserService().getCurrentUser();
+            String email = currentUser.getEmail();
+            DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+            Query query = new Query(PLAYER_QUERY_PARAMETER).setFilter(new Query.FilterPredicate(
+                ID_PARAMETER, Query.FilterOperator.EQUAL, currentUser.getUserId()));
+            Key playerKey;
 
-        PreparedQuery results = datastore.prepare(query);
-        for (Entity entity : results.asIterable()){
-            if (email.equals(entity.getProperty(EMAIL_PARAMETER).toString())){
-                playerKey = entity.getKey();
+            PreparedQuery results = datastore.prepare(query);
+            for (Entity entity : results.asIterable()){
+                if (email.equals(entity.getProperty(EMAIL_PARAMETER).toString())){
+                    playerKey = entity.getKey();
+                }
             }
         }
         

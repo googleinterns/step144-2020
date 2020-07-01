@@ -32,7 +32,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.google.inject.Inject;
 
 @WebServlet("/login")
 public class UserAuthServlet extends HttpServlet {
@@ -56,11 +55,6 @@ public class UserAuthServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType(TEXT_CONTENT_TYPE);
         response.getWriter().println(getLoginLogoutLink());
-    }
-
-    // Allows local database for testing
-    @Inject public UserAuthServlet(PlayerDatabase playerDatabase) {
-        this.playerDatabase = playerDatabase;
     }
 
     @Override

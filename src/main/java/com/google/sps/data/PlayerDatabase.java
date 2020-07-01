@@ -10,38 +10,28 @@ import com.google.appengine.api.datastore.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.google.inject.Inject;
-
 // Manages the interface of the Player database for testing
 public final class PlayerDatabase {
  
-  private static DatastoreService datastore;
-  public static ArrayList<Player> players = new ArrayList<>();
-  private static final String ENTITY_QUERY_STRING = "player";
-  private static final String DISPLAY_NAME_QUERY_STRING = "displayName";
-  private static final String EMAIL_QUERY_STRING = "email";
-  private static final String ID_QUERY_STRING = "id";
-  private static final String IMAGE_ID_QUERY_STRING = "imageID";
-  private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
-  private static final Query query = new Query(ENTITY_QUERY_STRING);
-  
-  @Inject
-  public PlayerDatabase(DatastoreService datastore) {
-    this.datastore = datastore;
-  }
+    private static DatastoreService datastore;
+    public static ArrayList<Player> players = new ArrayList<>();
+    private static final String ENTITY_QUERY_STRING = "player";
+    private static final String DISPLAY_NAME_QUERY_STRING = "displayName";
+    private static final String EMAIL_QUERY_STRING = "email";
+    private static final String ID_QUERY_STRING = "id";
+    private static final String IMAGE_ID_QUERY_STRING = "imageID";
+    private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
+    private static final Query query = new Query(ENTITY_QUERY_STRING);
 
-
-  public static ArrayList<Player> getPlayers() {
-    ArrayList<Player> playerList = new ArrayList<Player>();
-    List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withDefaults());
-    for (Entity entity : entities) {
-      Player player = entityToPlayer(entity);
-      playerList.add(player);
+    public static ArrayList<Player> getPlayers() {
+        return players;
     }
-    return playerList;
-  }
-
+    
+    public PlayerDatabase(DatastoreService datastore) {
+        this.datastore = datastore;
+    }
     public void addPlayerToDatabase(Player player) {
+        players.add(player);
         String displayName = player.getDisplayName();
         String email = player.getEmail();
         String id = player.getID();

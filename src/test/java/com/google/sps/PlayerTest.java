@@ -54,7 +54,7 @@ public final class PlayerTest {
       DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
       playerDatabase = new PlayerDatabase(localDatastore);
       playerDatabase.addPlayerToDatabase(player);
-      UserAuthServlet userAuthServlet = new UserAuthServlet(playerDatabase);
+      UserAuthServlet userAuthServlet = new UserAuthServlet();
       return userAuthServlet;
   }
 

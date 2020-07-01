@@ -47,7 +47,7 @@ public final class UploadImageTest {
   //Creating local blobstore service
   public UploadImageServlet newUploadImageServlet() {
       BlobstoreService localBlobstore = BlobstoreServiceFactory.getBlobstoreService();
-      UploadImageServlet uploadImageServlet = new UploadImageServlet(localBlobstore);
+      UploadImageServlet uploadImageServlet = new UploadImageServlet();
       return uploadImageServlet;
   }
 
@@ -56,7 +56,6 @@ public final class UploadImageTest {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter  = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
-        
     this.uploadImageServlet.doGet(this.request, this.response);
     String result = stringWriter.toString();
     Assert.assertTrue(result.contains(EXPECTED_JSON_OUTPUT));

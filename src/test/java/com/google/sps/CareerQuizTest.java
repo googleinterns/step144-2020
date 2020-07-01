@@ -68,7 +68,7 @@ public final class CareerQuizTest {
     careerQuestionDatabase = new CareerQuestionDatabase(localDatastore);
     careerQuestionDatabase.putCareerQuestionAndChoicesIntoDatabase(
         new CareerQuestionAndChoices(QUESTION, HARD_CODED_CHOICES));
-    CareerQuizServlet careerQuizServlet = new CareerQuizServlet(careerQuestionDatabase);
+    CareerQuizServlet careerQuizServlet = new CareerQuizServlet();
     return careerQuizServlet;
   }
   
