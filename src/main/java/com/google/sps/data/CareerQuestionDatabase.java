@@ -10,7 +10,6 @@ import com.google.appengine.api.datastore.Key;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import com.google.inject.Inject;
 
 /* purpose: to manage the interface of the Career Question database */
 public final class CareerQuestionDatabase {
@@ -24,7 +23,6 @@ public final class CareerQuestionDatabase {
   private static final String ASSOCIATED_CAREER_PATH_QUERY_STRING = "associatedcareerpath";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
   
-  @Inject
   public CareerQuestionDatabase(DatastoreService datastore) {
     this.datastore = datastore;
   }
