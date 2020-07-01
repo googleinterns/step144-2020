@@ -49,7 +49,7 @@ public final class CareerQuizTest {
   private static final String DATABASE_OBJECT_JSON =
       "[{\"question\":\"A question\",\"choices\":"
           + "[{\"choiceText\":\"choice1\",\"associatedCareerPath\":\"career1\"},"
-          + "{\"choiceText\":\"choicecareer2\"}]}]";
+          + "{\"choiceText\":\"choice2\",\"associatedCareerPath\":\"career2\"}]}]";
 
   private static final String QUESTION = "A question";
   
