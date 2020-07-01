@@ -1,17 +1,16 @@
 package com.google.sps.data;
 
-import java.util.List;
-import java.util.ArrayList;
-
-/** Class to store the reponse text of each Choice in the career quiz, and what path
-    selecting it is associated with */
+/**
+ * Class to store the response text of each Choice in the career quiz, and what path selecting it is
+ * associated with
+ */
 public final class CareerQuestionChoice {
   private String choiceText;
   private String associatedCareerPath;
 
   public CareerQuestionChoice(String choiceText, String associatedCareerPath) {
     this.choiceText = choiceText;
-    this.associatedCareerPath= associatedCareerPath;
+    this.associatedCareerPath = associatedCareerPath;
   }
 
   public String getAssociatedCareerPath() {
