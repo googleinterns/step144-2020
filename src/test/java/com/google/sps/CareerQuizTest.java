@@ -82,7 +82,7 @@ public final class CareerQuizTest {
   public void testCareerQuizServlet_OutputsJsonDatabaseQuestionAndChoices() throws IOException {
     // mocks the HttpServletResponse, which uses a writer to output JSON response
     StringWriter stringWriter = new StringWriter();
-    PrintWriter printWriter  = new PrintWriter(stringWriter);
+    PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
     // mocks the result of querying the CareerQuestionDatabase for all the Career Question and
     // choices

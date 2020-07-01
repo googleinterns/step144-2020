@@ -1,11 +1,9 @@
 package com.google.sps.data;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.FetchOptions;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /* purpose: to manage the interface of the Career Question database */

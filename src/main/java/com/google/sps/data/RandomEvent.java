@@ -13,7 +13,7 @@
 // limitations under the License.
  
 public class RandomEvent {
-      /**
+  /**
    * Random Events are events that appear to the player at random which causes a change in their
    * current game stage, as well as their game path.
    */

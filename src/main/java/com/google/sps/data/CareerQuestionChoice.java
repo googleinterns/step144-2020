@@ -13,7 +13,7 @@ public final class CareerQuestionChoice {
 
   public CareerQuestionChoice(String choiceText, String associatedCareerPath) {
     this.choiceText = choiceText;
-    this.associatedCareerPath= associatedCareerPath;
+    this.associatedCareerPath = associatedCareerPath;
   }
 
   public String getAssociatedCareerPath() {

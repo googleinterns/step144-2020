@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import com.google.appengine.api.datastore.Key;
-
 public class Player {
   private String displayName;
   private String email;

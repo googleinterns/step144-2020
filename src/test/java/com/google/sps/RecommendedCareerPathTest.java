@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import com.google.sps.data.CareerQuestionChoice;
-import com.google.sps.data.CareerQuestionAndChoices;
 import java.util.List;
 import java.util.Arrays;
 
