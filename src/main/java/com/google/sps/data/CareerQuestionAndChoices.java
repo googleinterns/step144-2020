@@ -1,9 +1,10 @@
 package com.google.sps.data;
 
 import java.util.List;
-import java.util.ArrayList;
 
-/** Class to store a career question, which includes a question and several mutiple choice choices*/
+/**
+ * Class to store a career question, which includes a question and several mutiple choice choices
+ */
 public final class CareerQuestionAndChoices {
   private String question;
   private List<CareerQuestionChoice> choices;

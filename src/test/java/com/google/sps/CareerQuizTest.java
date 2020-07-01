@@ -28,7 +28,7 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.Gson;
 
-/** Tests the CareerQuiz servlet and its interactions with CareerQuestionDatabase*/
+/** Tests the CareerQuiz servlet and its interactions with CareerQuestionDatabase */
 @RunWith(JUnit4.class)
 public final class CareerQuizTest {
   private final LocalServiceTestHelper helper =
@@ -42,13 +42,15 @@ public final class CareerQuizTest {
   private static final String CAREER_2 = "career2";
   private static final String CHOICE_1 = "choice1";
   private static final String CHOICE_2 = "choice2";
-  private static final List<CareerQuestionChoice> HARD_CODED_CHOICES = Arrays.asList(
-      new CareerQuestionChoice(CHOICE_1, CAREER_1),
-      new CareerQuestionChoice(CHOICE_2, CAREER_2)
-   );
-  private static final String DATABASE_OBJECT_JSON = "[{\"question\":\"A question\",\"choices\":"
-      + "[{\"choiceText\":\"choice1\",\"associatedCareerPath\":\"career1\"},"
-      + "{\"choiceText\":\"choice2\",\"associatedCareerPath\":\"career2\"}]}]";
+  private static final List<CareerQuestionChoice> HARD_CODED_CHOICES =
+      Arrays.asList(
+          new CareerQuestionChoice(CHOICE_1, CAREER_1),
+          new CareerQuestionChoice(CHOICE_2, CAREER_2));
+  private static final String DATABASE_OBJECT_JSON =
+      "[{\"question\":\"A question\",\"choices\":"
+          + "[{\"choiceText\":\"choice1\",\"associatedCareerPath\":\"career1\"},"
+          + "{\"choiceText\":\"choicecareer2\"}]}]";
+
   private static final String QUESTION = "A question";
   
   @Before
@@ -72,14 +74,18 @@ public final class CareerQuizTest {
     return careerQuizServlet;
   }
   
-  /**Tests that the doGet method returns JSON containing database queried career question and choices*/
+  /**
+   * Tests that the doGet method returns JSON containing database queried career question and
+   * choices
+   */
   @Test
   public void testCareerQuizServlet_OutputsJsonDatabaseQuestionAndChoices() throws IOException {
     // mocks the HttpServletResponse, which uses a writer to output JSON response
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter  = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
-    // mocks the result of querying the CareerQuestionDatabase for all the Career Question and choices
+    // mocks the result of querying the CareerQuestionDatabase for all the Career Question and
+    // choices
     this.careerQuizServlet.doGet(this.request, this.response);
     // checks that the string writer used in servlet mock response contains the database object JSON
     // that matches with the hardcoded CareerQAndChoice given be the mock database

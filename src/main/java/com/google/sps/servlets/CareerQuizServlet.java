@@ -16,10 +16,11 @@ import java.util.ArrayList;
 
 
 @WebServlet("/careerquiz")
-/** Responds with a JSON string containing questions and answers for the career quiz*/
+/** Responds with a JSON string containing questions and answers for the career quiz */
 public class CareerQuizServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private final CareerQuestionDatabase careerQuestionDatabase = new CareerQuestionDatabase(datastore);
+  private final CareerQuestionDatabase careerQuestionDatabase = 
+      new CareerQuestionDatabase(datastore);
   private ArrayList<CareerQuestionAndChoices> questionsAndChoices;
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String QUIZ_SUBMIT = "career-quiz-submit";
@@ -36,8 +37,10 @@ public class CareerQuizServlet extends HttpServlet {
     response.getWriter().println(questionsAndChoicesJson);
   }
 
-  /** when submit button on career quiz is clicked, this method is called and returns recommended path
-  based on selected choices*/
+  /**
+   * when submit button on career quiz is clicked, this method is called and returns recommended
+   * path based on selected choices
+   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     this.questionsAndChoices = this.careerQuestionDatabase.getQuestionsAndChoices();

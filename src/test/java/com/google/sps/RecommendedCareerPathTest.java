@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Arrays;
 
 
-/** Tests the CareerQuiz servlet and its interactions with CareerQuestionDatabase*/
+/** 
+ * Tests that the submission of choices for the CareerQuizServlet returns recommended path
+ * that is associated to the majority of choices. 
+ */
 @RunWith(JUnit4.class)
 public final class RecommendedCareerPathTest {
 
@@ -26,12 +29,12 @@ public final class RecommendedCareerPathTest {
   
   @Test
   public void outputsMostFrequentCareerPath_2choices() {
-    List<CareerQuestionChoice> userChoices = Arrays.asList(
-      new CareerQuestionChoice(CHOICE_1, CAREER_1),
-      new CareerQuestionChoice(CHOICE_2, CAREER_2),
-      new CareerQuestionChoice(CHOICE_3, CAREER_2),
-      new CareerQuestionChoice(CHOICE_4, CAREER_3)
-    );
+    List<CareerQuestionChoice> userChoices =
+        Arrays.asList(
+            new CareerQuestionChoice(CHOICE_1, CAREER_1),
+            new CareerQuestionChoice(CHOICE_2, CAREER_2),
+            new CareerQuestionChoice(CHOICE_3, CAREER_2),
+            new CareerQuestionChoice(CHOICE_4, CAREER_3));
     String expected = CAREER_2;
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     Assert.assertEquals(result, expected);
@@ -39,13 +42,13 @@ public final class RecommendedCareerPathTest {
 
   @Test
   public void picksArbitraryCareerPath_forTies() {
-    List<CareerQuestionChoice> userChoices = Arrays.asList(
-      new CareerQuestionChoice(CHOICE_1, CAREER_1),
-      new CareerQuestionChoice(CHOICE_2, CAREER_1),
-      new CareerQuestionChoice(CHOICE_3, CAREER_2),
-      new CareerQuestionChoice(CHOICE_4, CAREER_2),
-      new CareerQuestionChoice(CHOICE_5, CAREER_3)
-    );
+    List<CareerQuestionChoice> userChoices =
+        Arrays.asList(
+            new CareerQuestionChoice(CHOICE_1, CAREER_1),
+            new CareerQuestionChoice(CHOICE_2, CAREER_1),
+            new CareerQuestionChoice(CHOICE_3, CAREER_2),
+            new CareerQuestionChoice(CHOICE_4, CAREER_2),
+            new CareerQuestionChoice(CHOICE_5, CAREER_3));
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     String expectedOption1 = CAREER_1;
     String expectedOption2 = CAREER_2;
