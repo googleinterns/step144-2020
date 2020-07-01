@@ -17,4 +17,4 @@ jobs:
           java-version: "8"
       - uses: axel-op/googlejavaformat-action@v3
         with:
-          args: "--skip-sorting-imports --replace --dry-run"
+          args: "--skip-sorting-imports --dry-run --set-exit-if-changed"
