@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Arrays;
 
 
-/** 
- * Tests that the submission of choices for the CareerQuizServlet returns recommended path
- * that is associated to the majority of choices. 
- */
+/**
+  * Tests that the submission of choices for the CareerQuizServlet returns recommended path that is
+  * associated to the majority of choices.
+  */
 @RunWith(JUnit4.class)
 public final class RecommendedCareerPathTest {
 

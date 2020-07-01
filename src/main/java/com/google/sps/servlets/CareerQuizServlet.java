@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /** Responds with a JSON string containing questions and answers for the career quiz */
 public class CareerQuizServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private final CareerQuestionDatabase careerQuestionDatabase = 
+  private final CareerQuestionDatabase careerQuestionDatabase =
       new CareerQuestionDatabase(datastore);
   private ArrayList<CareerQuestionAndChoices> questionsAndChoices;
   private static final String JSON_CONTENT_TYPE = "application/json";
@@ -32,7 +32,7 @@ public class CareerQuizServlet extends HttpServlet {
     // Convert the ArrayLists to JSON
     Gson gson = new Gson();
     String questionsAndChoicesJson = gson.toJson(questionsAndChoices);
-    // Send the career questions and choices JSON as the response    
+    // Send the career questions and choices JSON as the response
     response.setContentType(JSON_CONTENT_TYPE);
     response.getWriter().println(questionsAndChoicesJson);
   }

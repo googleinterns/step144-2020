@@ -29,7 +29,7 @@ public final class CareerQuestionDatabase {
     List<Entity> entities =
         this.datastore.prepare(this.query).asList(FetchOptions.Builder.withDefaults());
     for (Entity entity : entities) {
-      CareerQuestionAndChoices careerQuestionAndChoices = 
+      CareerQuestionAndChoices careerQuestionAndChoices =
           this.entityToCareerQuestionAndChoices(entity);
       careerQuestionAndChoicesList.add(careerQuestionAndChoices);
     }
@@ -50,7 +50,7 @@ public final class CareerQuestionDatabase {
   private CareerQuestionAndChoices entityToCareerQuestionAndChoices(Entity entity) {
     String question = entity.getProperty(QUESTION_QUERY_STRING).toString();
     Query associatedChoicesQuery = new Query(question + CHOICETEXT_QUERY_STRING);
-    List<Entity> choiceEntities = 
+    List<Entity> choiceEntities =
         this.datastore.prepare(associatedChoicesQuery).asList(FetchOptions.Builder.withDefaults());
     List<CareerQuestionChoice> choices = extractChoicesFromChoiceEntities(choiceEntities);
     return new CareerQuestionAndChoices(question, choices);
@@ -60,9 +60,9 @@ public final class CareerQuestionDatabase {
     List<CareerQuestionChoice> choices = new ArrayList();
     for (Entity choiceEntity : choiceEntities) {
       String choiceText = choiceEntity.getProperty(CHOICETEXT_QUERY_STRING).toString();
-      String associatedCareerPath = 
+      String associatedCareerPath =
           choiceEntity.getProperty(ASSOCIATED_CAREER_PATH_QUERY_STRING).toString();
-      CareerQuestionChoice careerQuestionChoice = 
+      CareerQuestionChoice careerQuestionChoice =
           new CareerQuestionChoice(choiceText, associatedCareerPath);
       choices.add(careerQuestionChoice);
     }
