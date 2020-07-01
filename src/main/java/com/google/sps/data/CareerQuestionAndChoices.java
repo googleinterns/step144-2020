@@ -12,7 +12,7 @@ public final class CareerQuestionAndChoices {
   public CareerQuestionAndChoices(String question, List<CareerQuestionChoice> choices) {
     this.question = question;
     this.choices = choices;
-  }  
+  }
 
   public String getQuestion() {
     return this.question;

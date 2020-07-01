@@ -5,14 +5,14 @@ import com.google.sps.data.CareerQuestionChoice;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.runners.JUnit4;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.junit.Test;
 
 /**
-  * Tests that the submission of choices for the CareerQuizServlet returns recommended path that is
-  * associated to the majority of choices.
-  */
+ * Tests that the submission of choices for the CareerQuizServlet returns recommended path that is
+ * associated to the majority of choices.
+ */
 @RunWith(JUnit4.class)
 public final class RecommendedCareerPathTest {
 

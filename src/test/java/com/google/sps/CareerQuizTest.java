@@ -1,32 +1,33 @@
 package com.google.sps;
 
-import com.google.sps.servlets.CareerQuizServlet;
-import com.google.sps.data.CareerQuestionDatabase;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
-import com.google.sps.data.CareerQuestionChoice;
-import com.google.sps.data.CareerQuestionAndChoices;
-import org.mockito.Mock;
-import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.Gson;
+import com.google.sps.data.CareerQuestionAndChoices;
+import com.google.sps.data.CareerQuestionChoice;
+import com.google.sps.data.CareerQuestionDatabase;
+import com.google.sps.servlets.CareerQuizServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runners.JUnit4;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.mockito.MockitoAnnotations;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 /** Tests the CareerQuiz servlet and its interactions with CareerQuestionDatabase */
 @RunWith(JUnit4.class)
