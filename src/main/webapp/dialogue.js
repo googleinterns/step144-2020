@@ -13,7 +13,7 @@
 // limitations under the License.
 
 function getDialogue() {
-  const responsePromise = fetch('/software-dialogue');
+  const responsePromise = fetch('/game-dialogue');
   responsePromise.then(handleResponse);
 }
 
