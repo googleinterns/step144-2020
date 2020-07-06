@@ -6,7 +6,7 @@ import java.util.List;
  * Class to store a question, which includes a string question and several mutiple choice choices of
  * type T
  */
-public final class QuestionAndChoices<T> {
+public final class QuestionAndChoices<T extends QuestionChoice> {
   private String question;
   private List<T> choices;
 

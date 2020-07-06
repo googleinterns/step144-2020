@@ -6,6 +6,8 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.Gson;
 import com.google.sps.data.CareerQuestionChoice;
 import com.google.sps.data.CareerQuestionDatabase;
@@ -88,9 +90,9 @@ public final class CareerQuizTest {
     this.careerQuizServlet.doGet(this.request, this.response);
     // checks that the string writer used in servlet mock response contains the database object JSON
     // that matches with the hardcoded CareerQAndChoice given be the mock database
-    String expected = DATABASE_OBJECT_JSON;
-    String result = stringWriter.toString();
-    Assert.assertTrue(result.contains(expected));
+    JsonElement expected = JsonParser.parseString(DATABASE_OBJECT_JSON);
+    JsonElement result = JsonParser.parseString(stringWriter.toString());
+    Assert.assertEquals(result, expected);
   }
 
   /** Tests that the doPost methods responds with the recommended String career path */
