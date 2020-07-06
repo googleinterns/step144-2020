@@ -11,9 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package com.google.sps.data;
-
 public class Player {
   private String displayName;
   private String email;
@@ -26,7 +23,7 @@ public class Player {
     this.email = email;
   }
 
-  public String getDisplayName() {
+  public String getdisplayName() {
     return displayName;
   }
 
@@ -34,7 +31,7 @@ public class Player {
     return email;
   }
 
-  public String getID(){
+  public String getID() {
     return id;
   }
 
