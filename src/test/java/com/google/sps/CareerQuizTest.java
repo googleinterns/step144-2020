@@ -7,9 +7,9 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.gson.Gson;
-import com.google.sps.data.CareerQuestionAndChoices;
 import com.google.sps.data.CareerQuestionChoice;
 import com.google.sps.data.CareerQuestionDatabase;
+import com.google.sps.data.QuestionAndChoices;
 import com.google.sps.servlets.CareerQuizServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -68,7 +68,7 @@ public final class CareerQuizTest {
     DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
     careerQuestionDatabase = new CareerQuestionDatabase(localDatastore);
     careerQuestionDatabase.putCareerQuestionAndChoicesIntoDatabase(
-        new CareerQuestionAndChoices(QUESTION, HARD_CODED_CHOICES));
+        new QuestionAndChoices<CareerQuestionChoice>(QUESTION, HARD_CODED_CHOICES));
     CareerQuizServlet careerQuizServlet = new CareerQuizServlet();
     return careerQuizServlet;
   }

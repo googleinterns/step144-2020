@@ -10,7 +10,7 @@ import java.util.List;
 /* purpose: to manage the interface of the Career Question database */
 public final class CareerQuestionDatabase {
   private DatastoreService datastore;
-  private ArrayList<CareerQuestionAndChoices> questionAndChoices;
+  private ArrayList<QuestionAndChoices<CareerQuestionChoice>> questionAndChoices;
   private static final String ENTITY_QUERY_STRING = "careerquizquestionandchoices";
   private static final String QUESTION_QUERY_STRING = "question";
   private static final String CHOICE_QUERY_STRING = "choice";
@@ -23,37 +23,36 @@ public final class CareerQuestionDatabase {
   }
 
   /* method to return all questions and choices from database as an arraylist */
-  public ArrayList<CareerQuestionAndChoices> getQuestionsAndChoices() {
-    ArrayList<CareerQuestionAndChoices> careerQuestionAndChoicesList =
-        new ArrayList<CareerQuestionAndChoices>();
+  public ArrayList<QuestionAndChoices<CareerQuestionChoice>> getQuestionsAndChoices() {
+    ArrayList<QuestionAndChoices<CareerQuestionChoice>> questionAndChoicesList = new ArrayList();
     List<Entity> entities =
         this.datastore.prepare(this.query).asList(FetchOptions.Builder.withDefaults());
     for (Entity entity : entities) {
-      CareerQuestionAndChoices careerQuestionAndChoices =
-          this.entityToCareerQuestionAndChoices(entity);
-      careerQuestionAndChoicesList.add(careerQuestionAndChoices);
+      QuestionAndChoices<CareerQuestionChoice> questionAndChoices =
+          this.entityToQuestionAndChoices(entity);
+      questionAndChoicesList.add(questionAndChoices);
     }
-    return careerQuestionAndChoicesList;
+    return questionAndChoicesList;
   }
 
   public void putCareerQuestionAndChoicesIntoDatabase(
-      CareerQuestionAndChoices careerQuestionAndChoices) {
-    String question = careerQuestionAndChoices.getQuestion();
-    Entity questionEntity = getQuestionDatastoreEntity(careerQuestionAndChoices);
+      QuestionAndChoices<CareerQuestionChoice> questionAndChoices) {
+    String question = questionAndChoices.getQuestion();
+    Entity questionEntity = getQuestionDatastoreEntity(questionAndChoices);
     this.datastore.put(questionEntity);
-    for (CareerQuestionChoice choice : careerQuestionAndChoices.getChoices()) {
+    for (CareerQuestionChoice choice : questionAndChoices.getChoices()) {
       Entity choiceEntity = getChoiceDatastoreEntity(question, choice);
       this.datastore.put(choiceEntity);
     }
   }
 
-  private CareerQuestionAndChoices entityToCareerQuestionAndChoices(Entity entity) {
+  private QuestionAndChoices entityToQuestionAndChoices(Entity entity) {
     String question = entity.getProperty(QUESTION_QUERY_STRING).toString();
     Query associatedChoicesQuery = new Query(question + CHOICETEXT_QUERY_STRING);
     List<Entity> choiceEntities =
         this.datastore.prepare(associatedChoicesQuery).asList(FetchOptions.Builder.withDefaults());
     List<CareerQuestionChoice> choices = extractChoicesFromChoiceEntities(choiceEntities);
-    return new CareerQuestionAndChoices(question, choices);
+    return new QuestionAndChoices<CareerQuestionChoice>(question, choices);
   }
 
   private List<CareerQuestionChoice> extractChoicesFromChoiceEntities(List<Entity> choiceEntities) {
@@ -69,10 +68,11 @@ public final class CareerQuestionDatabase {
     return choices;
   }
 
-  private Entity getQuestionDatastoreEntity(CareerQuestionAndChoices careerQuestionAndChoices) {
-    String questionKey = careerQuestionAndChoices.getQuestion();
+  private Entity getQuestionDatastoreEntity(
+      QuestionAndChoices<CareerQuestionChoice> questionAndChoices) {
+    String questionKey = questionAndChoices.getQuestion();
     Entity entity = new Entity(ENTITY_QUERY_STRING, questionKey);
-    entity.setProperty(QUESTION_QUERY_STRING, careerQuestionAndChoices.getQuestion());
+    entity.setProperty(QUESTION_QUERY_STRING, questionAndChoices.getQuestion());
     return entity;
   }
 
