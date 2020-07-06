@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
 package com.google.sps.data;
 
 public class Player {
@@ -21,7 +22,7 @@ public class Player {
   private String imageID;
   private String currentPageID;
 
-  public Player (String displayName, String email){
+  public Player(String displayName, String email) {
     this.displayName = displayName;
     this.email = email;
   }
@@ -34,7 +35,7 @@ public class Player {
     return email;
   }
 
-  public String getID(){
+  public String getID() {
     return id;
   }
 
