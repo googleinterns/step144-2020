@@ -3,10 +3,10 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
-import com.google.sps.data.CareerQuestionAndChoices;
 import com.google.sps.data.CareerQuestionChoice;
 import com.google.sps.data.CareerQuestionDatabase;
 import com.google.sps.data.ProcessCareerQuizResults;
+import com.google.sps.data.QuestionAndChoices;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +20,7 @@ public class CareerQuizServlet extends HttpServlet {
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private final CareerQuestionDatabase careerQuestionDatabase =
       new CareerQuestionDatabase(datastore);
-  private ArrayList<CareerQuestionAndChoices> questionsAndChoices;
+  private ArrayList<QuestionAndChoices<CareerQuestionChoice>> questionsAndChoices;
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String QUIZ_SUBMIT = "career-quiz-submit";
   private static final Gson gson = new Gson();
@@ -50,7 +50,7 @@ public class CareerQuizServlet extends HttpServlet {
 
   private String handleQuizSubmission(HttpServletRequest request) {
     ArrayList<CareerQuestionChoice> userChoices = new ArrayList();
-    for (CareerQuestionAndChoices questionAndChoice : this.questionsAndChoices) {
+    for (QuestionAndChoices<CareerQuestionChoice> questionAndChoice : this.questionsAndChoices) {
       String selectedChoice = request.getParameter(questionAndChoice.getQuestion());
       CareerQuestionChoice userChoice = gson.fromJson(selectedChoice, CareerQuestionChoice.class);
       userChoices.add(userChoice);
