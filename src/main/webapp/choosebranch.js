@@ -15,4 +15,3 @@ function handleResponse(response) {
 function changeDom(recommendedCareerPath) {
   console.log(recommendedCareerPath);
 }
-

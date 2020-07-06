@@ -12,19 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function getDialogue() {
-  const responsePromise = fetch('/software-dialogue');
+/*
+* Purpose: recieves HTTP promise response from login.html, 
+* Once login redirects to comment.html
+*/
+var FETCH_LOGIN = '/login';
+var LOGIN_CONTAINER = 'login-container';
+
+function login() {
+  const responsePromise = fetch(FETCH_LOGIN);
   responsePromise.then(handleResponse);
 }
 
 function handleResponse(response) {
-  console.log('Handling the response.');
   const textPromise = response.text();
   textPromise.then(addDialogueToDom);
 }
 
-function addDialogueToDom(dialogue) {
-  console.log('Adding quote to dom: ' + dialogue);
-  const quoteContainer = document.getElementById('dialogue-container');
-  quoteContainer.innerText = dialogue;
+function addDialogueToDom(authInfo) {
+  const quoteContainer = document.getElementById(LOGIN_CONTAINER);
+  quoteContainer.innerHTML = authInfo;
 }
