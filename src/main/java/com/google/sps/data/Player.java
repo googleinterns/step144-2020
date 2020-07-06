@@ -1,4 +1,3 @@
-
 package com.google.sps.data;
 
 public class Player {
@@ -13,7 +12,7 @@ public class Player {
     this.email = email;
   }
 
-  public String getdisplayName() {
+  public String getDisplayName() {
     return displayName;
   }
 
