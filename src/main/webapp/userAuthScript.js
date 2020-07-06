@@ -13,18 +13,16 @@
 // limitations under the License.
 
 function getDialogue() {
-  const responsePromise = fetch('/software-dialogue');
+  const responsePromise = fetch('/game-dialogue');
   responsePromise.then(handleResponse);
 }
 
 function handleResponse(response) {
-  console.log('Handling the response.');
   const textPromise = response.text();
   textPromise.then(addDialogueToDom);
 }
 
 function addDialogueToDom(dialogue) {
-  console.log('Adding quote to dom: ' + dialogue);
   const quoteContainer = document.getElementById('dialogue-container');
   quoteContainer.innerText = dialogue;
 }

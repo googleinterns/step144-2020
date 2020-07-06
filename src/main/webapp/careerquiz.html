@@ -5,14 +5,15 @@
   <meta name = "viewpoint" content="width=device-width, initial-scale=1">
 
   <title>Career Quiz</title>
-
+  
   <link rel="stylesheet" href="style.css">
-  <script src="careerquiz.js"></script>
+  <script src="quiz.js" servletName="/careerquiz" submitButtonName="careerQuizSubmit" 
+          redirect="choosebranch.html">
+  </script>
 </head>
 
 <body onload="getQuestionsAndChoices()">
-  <div id="questions-and-choices-div">
-  </div>
-
+  <div id="questions-and-choices-div"></div>
 </body>
+
 </html>
