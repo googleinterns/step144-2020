@@ -1,21 +1,19 @@
 package com.google.sps.data;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.HashMap; 
-import java.util.Map; 
-import java.util.Map.Entry;
-import com.google.sps.data.CareerQuestionChoice;
 
 /** Returns the recommended career path based off the career quiz results. */
 public class ProcessCareerQuizResults {
-  private ProcessCareerQuizResults() {};
-  
+  private ProcessCareerQuizResults() {}
+
   public static String getRecommendedCareerPath(List<CareerQuestionChoice> userChoices) {
-    Map<String, Integer> choiceFrequencyHashMap = new HashMap<String, Integer>(); 
+    HashMap<String, Integer> choiceFrequencyHashMap = new HashMap<String, Integer>();
     String careerPath;
     String maxFrequencyCareerPath = new String();
     Integer count;
-    // creates a frequency choiceFrequencyMap mapping associated career paths of choices to their frequencies
+    // creates a frequency choiceFrequencyMap mapping associated career paths of choices to their
+    // frequencies
     for (CareerQuestionChoice choice : userChoices) {
       careerPath = choice.getAssociatedCareerPath();
       count = choiceFrequencyHashMap.getOrDefault(careerPath, 0);
@@ -24,7 +22,7 @@ public class ProcessCareerQuizResults {
     return getMostFrequentChoice(choiceFrequencyHashMap);
   }
 
-  private static String getMostFrequentChoice(Map<String, Integer> choiceFrequencyMap) {
+  private static String getMostFrequentChoice(HashMap<String, Integer> choiceFrequencyMap) {
     int maxFrequencyCount = 0;
     int currentFrequency;
     String mostFrequentKey = "";

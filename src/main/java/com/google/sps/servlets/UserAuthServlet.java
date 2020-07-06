@@ -17,14 +17,8 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.KeyRange;
-import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -42,7 +36,7 @@ public class UserAuthServlet extends HttpServlet {
   private static final String EMAIL_PARAMETER = "email";
   private static final String ID_PARAMETER = "id";
   private static final String IMAGE_ID_PARAMETER = "imageID";
-  private static final String CURRENT_PAGE_ID_PARAMETER = "currentPageID";   
+  private static final String CURRENT_PAGE_ID_PARAMETER = "currentPageID";
   private static final String PLAYER_PARAMETER = "Player";
   private static UserService userService = UserServiceFactory.getUserService();
   private static User user = userService.getCurrentUser();
@@ -82,7 +76,7 @@ public class UserAuthServlet extends HttpServlet {
     player.setProperty(ID_PARAMETER, id);
     // These two will need to be modified as we develop how images/pageIDs are stored
     player.setProperty(IMAGE_ID_PARAMETER, IMAGE_ID_PARAMETER);
-    player.setProperty(CURRENT_PAGE_ID_PARAMETER, CURRENT_PAGE_ID_PARAMETER);//what is this for?
+    player.setProperty(CURRENT_PAGE_ID_PARAMETER, CURRENT_PAGE_ID_PARAMETER);
     return player;
   }
 }
