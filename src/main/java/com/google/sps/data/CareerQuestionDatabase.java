@@ -2,8 +2,6 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +11,6 @@ public final class CareerQuestionDatabase extends QuestionDatabase<CareerQuestio
   private ArrayList<QuestionAndChoices<CareerQuestionChoice>> questionAndChoices;
   private static final String ENTITY_QUERY_STRING = "careerquizquestionandchoices";
   private static final String ASSOCIATED_CAREER_PATH_QUERY_STRING = "associatedcareerpath";
-  private static final Query query = new Query(ENTITY_QUERY_STRING);
 
   public CareerQuestionDatabase(DatastoreService datastore) {
     super(datastore, ENTITY_QUERY_STRING);

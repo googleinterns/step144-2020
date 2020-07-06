@@ -7,7 +7,7 @@ import com.google.appengine.api.datastore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-/* purpose: to manage the interface of the Career Question database */
+/* abstract quiz question database, to put and query for QuestionAndChoices */
 public abstract class QuestionDatabase<T extends QuestionChoice> {
   private DatastoreService datastore;
   private ArrayList<QuestionAndChoices<T>> questionAndChoices;
@@ -16,8 +16,7 @@ public abstract class QuestionDatabase<T extends QuestionChoice> {
   public static final String QUESTION_QUERY_STRING = "question";
   public static final String CHOICETEXT_QUERY_STRING = "choicetext";
 
-  public QuestionDatabase(
-      DatastoreService datastore, String entityQueryString) {
+  public QuestionDatabase(DatastoreService datastore, String entityQueryString) {
     this.datastore = datastore;
     this.entityQueryString = entityQueryString;
     this.query = new Query(entityQueryString);
@@ -29,15 +28,13 @@ public abstract class QuestionDatabase<T extends QuestionChoice> {
     List<Entity> entities =
         this.datastore.prepare(this.query).asList(FetchOptions.Builder.withDefaults());
     for (Entity entity : entities) {
-      QuestionAndChoices<T> questionAndChoices =
-          this.entityToQuestionAndChoices(entity);
+      QuestionAndChoices<T> questionAndChoices = this.entityToQuestionAndChoices(entity);
       questionAndChoicesList.add(questionAndChoices);
     }
     return questionAndChoicesList;
   }
 
-  public void putCareerQuestionAndChoicesIntoDatabase(
-      QuestionAndChoices<T> questionAndChoices) {
+  public void putCareerQuestionAndChoicesIntoDatabase(QuestionAndChoices<T> questionAndChoices) {
     String question = questionAndChoices.getQuestion();
     Entity questionEntity = getQuestionDatastoreEntity(questionAndChoices);
     this.datastore.put(questionEntity);
@@ -56,8 +53,7 @@ public abstract class QuestionDatabase<T extends QuestionChoice> {
     return new QuestionAndChoices<T>(question, choices);
   }
 
-  private Entity getQuestionDatastoreEntity(
-      QuestionAndChoices<T> questionAndChoices) {
+  private Entity getQuestionDatastoreEntity(QuestionAndChoices<T> questionAndChoices) {
     String questionKey = questionAndChoices.getQuestion();
     Entity entity = new Entity(entityQueryString, questionKey);
     entity.setProperty(QUESTION_QUERY_STRING, questionAndChoices.getQuestion());
