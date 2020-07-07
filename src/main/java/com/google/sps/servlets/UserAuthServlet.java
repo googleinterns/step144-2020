@@ -41,7 +41,7 @@ public class UserAuthServlet extends HttpServlet {
   private static UserService userService = UserServiceFactory.getUserService();
   private static User user = userService.getCurrentUser();
   private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
-  private static String loginUrl = userService.createLoginURL(SLASH_PAGE_REDIRECT);
+  private static String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
