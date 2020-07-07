@@ -7,14 +7,14 @@ import java.util.List;
 public class ProcessCareerQuizResults {
   private ProcessCareerQuizResults() {}
 
-  public static String getRecommendedCareerPath(List<CareerQuestionChoice> userChoices) {
+  public static String getRecommendedCareerPath(List<QuestionChoice> userChoices) {
     HashMap<String, Integer> choiceFrequencyHashMap = new HashMap<String, Integer>();
     String careerPath;
     String maxFrequencyCareerPath = new String();
     Integer count;
     // creates a frequency choiceFrequencyMap mapping associated career paths of choices to their
     // frequencies
-    for (CareerQuestionChoice choice : userChoices) {
+    for (QuestionChoice choice : userChoices) {
       careerPath = choice.getAssociatedCareerPath();
       count = choiceFrequencyHashMap.getOrDefault(careerPath, 0);
       choiceFrequencyHashMap.put(careerPath, count + 1);
