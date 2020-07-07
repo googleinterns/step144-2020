@@ -269,8 +269,9 @@ a:hover {
 
 .step-team-button:hover {
   background-color: #555; 
-}                  
+}
 
+/** Responsive media classes to addapt to diffrent devices **/
 @media screen and (max-width: 650px) {
   .step-team-column {
     width: 100%;
@@ -278,7 +279,6 @@ a:hover {
   }
 }
 
-/** Responsive media classes to addapt to diffrent devices **/
 @media screen and (max-width: 800px) {
   /** start of large tablet styles **/
   .step-column {
@@ -341,4 +341,14 @@ a:hover {
     font-size: 0.96rem;
     line-height: 1.0rem;
   }
+}
+
+/** classes for the dialog container **/
+.step-dialogue {
+  text-align: left;
+  margin-left: 100px;
+  margin-right:100px;
+  padding: 16px;
+  border: 5px solid #e76f51;
+  background-color: rgba(0, 0, 0, 0.3)
 }

@@ -11,3 +11,25 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+/*
+* Purpose: recieves HTTP promise response from login.html, 
+* Once login redirects to comment.html
+*/
+var FETCH_LOGIN = '/login';
+var LOGIN_CONTAINER = 'login-container';
+
+function login() {
+  const responsePromise = fetch(FETCH_LOGIN);
+  responsePromise.then(handleResponse);
+}
+
+function handleResponse(response) {
+  const textPromise = response.text();
+  textPromise.then(addDialogueToDom);
+}
+
+function addDialogueToDom(authInfo) {
+  const quoteContainer = document.getElementById(LOGIN_CONTAINER);
+  quoteContainer.innerHTML = authInfo;
+}
