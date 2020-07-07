@@ -47,31 +47,44 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String PLAYER_QUERY_PARAMETER = "Player";
   private static final String PNG_PARAMETER = ".png";
   private static final String UPLOADED_REDIRECT_PARAMETER = "/uploaded.html";
+  private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
+  private static final String DEFAULT_IMAGE_GS_LOCATION = "/gs/cs-career-step-2020.appspot.com/face.jpg";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-    // Get the displayName entered by the user.
-    String displayName = request.getParameter(DISPLAY_NAME_PARAMETER);
-
-    // Get the URL of the image that the user uploaded to Blobstore.
-    String imageUrl = getUploadedFileUrl(request, IMAGE_PARAMETER);
-
     Player currentPlayer = getCurrentPlayer();
-    if (currentPlayer != null) {
+    if (currentPlayer == null) {
+      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);
+    }
+    else {
+      // Get the displayName entered by the user.
+      String displayName = request.getParameter(DISPLAY_NAME_PARAMETER);
+      // Get the imageName to check if a file was uploaded. 
+      String imageName = request.getParameter(IMAGE_PARAMETER);
+      if (imageName == null) {
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+        BlobKey defaultBlobKey = blobstoreService.createGsBlobKey(DEFAULT_IMAGE_GS_LOCATION);
+      }  
+    
+
+      // Get the URL of the image that the user uploaded to Blobstore.
+      String imageUrl = getUploadedFileUrl(request, IMAGE_PARAMETER);
+
+      Player currentPlayer = getCurrentPlayer();
+      if (currentPlayer != null) {
       // Assign imageUrl to current player
       currentPlayer.setImageID(imageUrl);
 
       // Assign displayName to current player
       currentPlayer.setDisplayName(displayName);
-    }
+      }
 
-    response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
-    ArrayList<Player> Players = PlayerDatabase.getPlayers();
+      response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
+    }
   }
 
   // Gets the URL of the uploaded file; null if no file was uploaded
-  private String getUploadedFileUrl(HttpServletRequest request, String formInputElementName) {
+  private BlobKey getUploadedFileUrl(HttpServletRequest request, String formInputElementName) {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get(formInputElementName);
@@ -87,6 +100,8 @@ public class ImageHandlerServlet extends HttpServlet {
       blobstoreService.delete(blobKey);
       return null;
     }
+
+  private String getUploadedFileUrl(BlobKey blobKey) {
     // Use ImagesService to get a URL that points to the uploaded file.
     ImagesService imagesService = ImagesServiceFactory.getImagesService();
     ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
