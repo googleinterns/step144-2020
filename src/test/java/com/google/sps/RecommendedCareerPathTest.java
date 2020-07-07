@@ -1,7 +1,7 @@
 package com.google.sps;
 
-import com.google.sps.data.CareerQuestionChoice;
 import com.google.sps.data.ProcessCareerQuizResults;
+import com.google.sps.data.QuestionChoice;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
@@ -27,12 +27,12 @@ public final class RecommendedCareerPathTest {
 
   @Test
   public void outputsMostFrequentCareerPath_2choices() {
-    List<CareerQuestionChoice> userChoices =
+    List<QuestionChoice> userChoices =
         Arrays.asList(
-            new CareerQuestionChoice(CHOICE_1, CAREER_1),
-            new CareerQuestionChoice(CHOICE_2, CAREER_2),
-            new CareerQuestionChoice(CHOICE_3, CAREER_2),
-            new CareerQuestionChoice(CHOICE_4, CAREER_3));
+            new QuestionChoice(CHOICE_1, CAREER_1),
+            new QuestionChoice(CHOICE_2, CAREER_2),
+            new QuestionChoice(CHOICE_3, CAREER_2),
+            new QuestionChoice(CHOICE_4, CAREER_3));
     String expected = CAREER_2;
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     Assert.assertEquals(result, expected);
@@ -40,13 +40,13 @@ public final class RecommendedCareerPathTest {
 
   @Test
   public void picksArbitraryCareerPath_forTies() {
-    List<CareerQuestionChoice> userChoices =
+    List<QuestionChoice> userChoices =
         Arrays.asList(
-            new CareerQuestionChoice(CHOICE_1, CAREER_1),
-            new CareerQuestionChoice(CHOICE_2, CAREER_1),
-            new CareerQuestionChoice(CHOICE_3, CAREER_2),
-            new CareerQuestionChoice(CHOICE_4, CAREER_2),
-            new CareerQuestionChoice(CHOICE_5, CAREER_3));
+            new QuestionChoice(CHOICE_1, CAREER_1),
+            new QuestionChoice(CHOICE_2, CAREER_1),
+            new QuestionChoice(CHOICE_3, CAREER_2),
+            new QuestionChoice(CHOICE_4, CAREER_2),
+            new QuestionChoice(CHOICE_5, CAREER_3));
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     String expectedOption1 = CAREER_1;
     String expectedOption2 = CAREER_2;
@@ -55,7 +55,7 @@ public final class RecommendedCareerPathTest {
 
   @Test
   public void ifChoicesAreEmpty_OutputsEmptyString() {
-    List<CareerQuestionChoice> userChoices = Arrays.asList();
+    List<QuestionChoice> userChoices = Arrays.asList();
     String expected = "";
     String result = ProcessCareerQuizResults.getRecommendedCareerPath(userChoices);
     Assert.assertEquals(result, expected);
