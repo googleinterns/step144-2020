@@ -2,7 +2,6 @@ package com.google.sps;
 
 import com.google.sps.data.ProcessPromotionQuizResults;
 import com.google.sps.data.QuestionChoice;
-import java.lang.IllegalArgumentException;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
