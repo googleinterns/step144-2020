@@ -1,6 +1,5 @@
 package com.google.sps.data;
 
-import java.lang.IllegalArgumentException;
 import java.util.List;
 
 /** Returns the recommended career path based off the career quiz results. */
