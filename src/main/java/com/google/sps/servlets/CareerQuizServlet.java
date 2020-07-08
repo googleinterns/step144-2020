@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 /** Responds with a JSON string containing questions and answers for the career quiz */
 public class CareerQuizServlet extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
-  private static final String QUIZ_SUBMIT = "career-quiz-submit";
+  private static final String QUIZ_SUBMIT = "careerQuizSubmit";
   private static final String ENTITY_QUERY_STRING = "careerQuizQuestionAndChoices";
   private static final Gson gson = new Gson();
 
