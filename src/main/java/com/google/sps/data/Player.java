@@ -20,6 +20,7 @@ public class Player {
   private String id;
   private String imageID;
   private String currentPageID;
+  private int currentDialogueIndex = 0;
 
   public Player(String displayName, String email) {
     this.displayName = displayName;
@@ -34,7 +35,7 @@ public class Player {
     return email;
   }
 
-  public String getID(){
+  public String getID() {
     return id;
   }
 
@@ -44,6 +45,10 @@ public class Player {
 
   public String getCurrentPageID() {
     return currentPageID;
+  }
+
+  public int getcurrentDialogueIndex(){
+      return currentDialogueIndex;
   }
 
   public void setDisplayName(String displayName) {
@@ -65,4 +70,8 @@ public class Player {
   public void setCurrentPageID(String currentPageID) {
     this.currentPageID = currentPageID;
   }
-}
+
+  public void setcurrentDialogueIndex(int currentDialogueIndex){
+    this.currentDialogueIndex = currentDialogueIndex;
+  }
+} 

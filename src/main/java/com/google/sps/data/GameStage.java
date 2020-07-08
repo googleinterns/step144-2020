@@ -11,7 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
+package com.google.sps.data; 
+
 import com.google.appengine.api.datastore.Key;
 
 public class GameStage {
@@ -31,6 +32,7 @@ public class GameStage {
     private Key quizKey;
     /** Represents key of the quiz that is specific to this game stage 
     */
+    private int dialogueKey = 0;
     
     /** Creates a game stage with the specified name and content
     * @param name The name of the game stage 
@@ -95,6 +97,15 @@ public class GameStage {
     */
     public void setQuizKey(Key quizKey) {
         this.quizKey = quizKey;
+    }
+
+    //stuff many added
+    public void setdialogueKey(int dialoguekey){
+        this.dialogueKey = dialogueKey;
+    }
+
+    public int getdialogueKey(){
+        return dialogueKey;
     }
 }
  

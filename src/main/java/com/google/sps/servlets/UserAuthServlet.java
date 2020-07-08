@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     https://www.apache.org/licenses/LICENSE-2.0
+// https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -26,6 +26,8 @@ import com.google.appengine.api.datastore.KeyRange;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.data.Player;
+import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,6 +50,7 @@ public class UserAuthServlet extends HttpServlet {
   private static User user = userService.getCurrentUser();
   private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
   private static String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -57,16 +60,16 @@ public class UserAuthServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String id = user.getUserId();
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      String id = user.getUserId();
 
-    // Creates new entity for user
-    Entity entity = newEntity(user, user.getNickname(), id);
-
-    datastore.put(entity);
-    response.sendRedirect(GAME_STAGE_REDIRECT);
+      // Creates new entity for user
+      Entity entity = newEntity(user, user.getNickname(), id);
+    
+      datastore.put(entity);
+      response.sendRedirect(GAME_STAGE_REDIRECT);
   }
 
+  //displays the link in the DOM
   public String getLoginLogoutLink() {
     String link = "<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>";
     if (userService.isUserLoggedIn()) {
@@ -76,6 +79,7 @@ public class UserAuthServlet extends HttpServlet {
   }
 
   private Entity newEntity(User user, String displayName, String id) {
+    
     Entity player = new Entity(PLAYER_PARAMETER);
     player.setProperty(DISPLAY_NAME_PARAMETER, displayName);
     player.setProperty(EMAIL_PARAMETER, user.getEmail());
@@ -83,6 +87,7 @@ public class UserAuthServlet extends HttpServlet {
     // These two will need to be modified as we develop how images/pageIDs are stored
     player.setProperty(IMAGE_ID_PARAMETER, IMAGE_ID_PARAMETER);
     player.setProperty(CURRENT_PAGE_ID_PARAMETER, CURRENT_PAGE_ID_PARAMETER);//what is this for?
+    System.out.println(player);
     return player;
   }
 }
