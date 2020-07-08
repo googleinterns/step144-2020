@@ -1,9 +1,11 @@
 /*
-* Purpose: recieves HTTP promise response from Career Quiz servlet, displays questions and responses 
+* Purpose: recieves HTTP promise response from a Quiz servlet, displays questions and choices then
+* sends selected choices back to servlet 
 */
-const QUIZ_FORM_NAME = 'career-quiz';
-const QUIZ_SERVLET = '/careerquiz';
-const CHOOSE_BRANCH_URL = 'choosebranch.html';
+
+const QUIZ_SERVLET = document.currentScript.getAttribute('servletName'); 
+const SUBMIT_BUTTON_NAME = document.currentScript.getAttribute('submitButtonName');
+const REDIRECT_PAGE = document.currentScript.getAttribute('redirect');
 
 function getQuestionsAndChoices() {
   const responsePromise = fetch(QUIZ_SERVLET);
@@ -15,20 +17,20 @@ function handleResponse(response) {
   responsePromise.then(addToDom);
 }
 
-/* Adds questions and choices for the career quiz to the page. */
+/* Adds questions and choices for the quiz to the page. */
 function addToDom(questionsAndChoicesList) {
   const questionsDiv = document.getElementById('questions-and-choices-div');
   questionsDiv.innerHTML = '';
   const questionsForm = document.createElement('form');
   questionsForm.setAttribute('action', QUIZ_SERVLET);
   questionsForm.setAttribute('method', 'POST');
-  for (let i = 0; i < questionsAndChoicesList.length; i++){
+  for (let i = 0; i < questionsAndChoicesList.length; i++) {
     question = questionsAndChoicesList[i].question;
-    choices = questionsAndChoicesList[i].choices
+    choices = questionsAndChoicesList[i].choices;
     questionsForm.appendChild(
         createQuestionAndChoices(question, choices));
  }
-  let submitButton = createSubmitButton('career-quiz-submit');
+  let submitButton = createSubmitButton(SUBMIT_BUTTON_NAME);
   questionsForm.appendChild(submitButton);
   questionsDiv.appendChild(questionsForm);
 }
@@ -60,7 +62,7 @@ function addChoiceInput(question, choices) {
 
 function createLabel(text) {
   const label = document.createElement('label');
-  label.setAttribute('for', text)
+  label.setAttribute('for', text);
   label.innerHTML = text;
   return label;
 }
@@ -78,6 +80,6 @@ function createSubmitButton(name) {
   const submitButton = document.createElement('input'); 
   submitButton.setAttribute('type','submit');
   submitButton.setAttribute('name', name);
-  submitButton.setAttribute('onclick', CHOOSE_BRANCH_URL);
+  submitButton.setAttribute('onclick', REDIRECT_PAGE);
   return submitButton;
 }
