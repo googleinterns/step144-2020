@@ -1,15 +1,216 @@
 <!doctype html>
-
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name = "viewpoint" content="width=device-width, initial-scale=1">
 
   <title>CS Career Explorer</title>
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
 
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> 
 </head>
 
 <body>
-    <h1>Welcome.</h1>
+
+  <!--parallax big image-->
+  <div class="step-img-1">
+    <div class="step-caption">
+      <spam class="step-border">
+        <h1 class="step-outline">COMPSCI:GO</h1>
+        <a href="userAuthPage.html"><button class="step-button">PLAY</button></a>
+      </spam>
+    </div>
+  </div>
+
+  <!--small description-->
+  <div class="step-wrap, step-align">
+    <h2>About Our Game</h2>
+    <p>
+      The objective of this capstone project is to create a web application
+      that allows people interested in computer science to explore various career pathways
+      in a way that is encouraging and engaging. Immerse yourself in the world of “COMPSCI:GO”. 
+      Start as an Intern and as you learn more about the career pathways of computer science 
+      with every advancing level you can collect memes and level up. 
+      PLAY, LEARN, Collect MEMES……..COMPSCI:GO
+    </p>
+  </div>
+
+  <div class="step-img-2"></div><br>
+
+  <!--Creators section -->
+  <div class="step-wrap">
+    <h2>The Team</h2>
+    <div class="row">
+
+      <div class="step-team-column">
+        <div class="step-team-card">
+          <img class ="intern-pic" src="images/many.jpg" alt="Jane" >
+          <div class="step-team-container">
+            <h3>Manuel Gutierrez</h3>
+            <a href="https://mangutierrez-step-20202.uc.r.appspot.com/">
+              <p><button class="step-team-button">Contact</button></p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-team-column">
+        <div class="step-team-card">
+          <img class ="intern-pic" src="images/leah.jpg" alt="Mike" >
+          <div class="step-team-container">
+            <h3>Leah Attai</h3>
+            <a href="https://leahattai-step-2020.appspot.com/comments.html">
+              <p><button class="step-team-button">Contact</button></p>
+            </a>
+          </div>
+        </div>
+      </div>
+    
+      <div class="step-team-column">
+        <div class="step-team-card">
+          <img class ="intern-pic" src="images/zoe.jpg" alt="John">
+          <div class="step-team-container">
+            <h3>Zoe Baker</h3>
+            <a href="http://zoebaker-step-2020.appspot.com/">
+              <p><button class="step-team-button">Contact</button></p>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><br>
+
+  <div class="step-img-3"></div><br>
+
+  <!--footer with other content-->
+  <h2>Links to Resources</h2>
+  <div class="step-row">
+
+    <div class="step-column">
+      <h4>Learn to code</h4>
+      <ul class="resource-link">
+        <li>
+          <a href="https://bit.ly/2BNeFLw" target="_blank">CodeAcademy: Teaches you how to code</a>
+        </li>
+        <li>
+          <a href="https://bit.ly/389Z6cO" target="_blank">Udemy: A gallery of online clases for all subjects</a>
+        </li>
+        <li>
+          <a href="https://bit.ly/2Bb4u3H" target="_blank">Java Tutorial for Complete Beginners</a>
+        </li>
+        <li>
+          <a href="https://bit.ly/3i4nZv8" target="_blank">GeeksforGeeks: Website that teaches you how to code with examples and videos</a>
+        </li>
+        <li>
+          <a href="https://bit.ly/2Ad8Wyj" target="_blank">YouTube: Videos about How start coding</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="step-column">
+      <h4>Interviewing</h4>
+        <ul class="resource-link">
+          <li>
+            <a href="https://che.gg/3dCqKjP" target="_blank">Cracking the Coding Interview</a> 
+          </li>
+          <li>
+            <a href="https://bit.ly/31rBX4C" target="_blank">Leetcode: Provides a vast amount of problems to practice</a>
+          </li>
+          <li>
+            <a href="https://bit.ly/38b7SYe" target="_blank">CodeWars: Provides a vast amount of problems to practice</a>
+          </li>
+          <li>
+            <a href="https://bit.ly/3iaG0Ia" target="_blank">YouTube: Coding Interview videos</a>
+          </li>
+          <li>
+            <a href="https://bit.ly/3i9HF0I" target="_blank">How to handle being Interviewed</a>
+          </li>
+        </ul>
+    </div>
+
+    <div class="step-column">
+      <h4>Career Pathways</h4>
+      <div id="accordion">
+
+        <section id="link1">
+          <a href="#link1">What is a Full-Stack Software Engineer</a>
+            <ul class="resource-link">
+              <li>
+                <a href="https://bit.ly/2NxlWlg" target="_blank">Definition and Details</a>
+              </li>
+              <li>
+                <a href="https://bit.ly/388ga2U" target="_blank">Udemy: Full Stack Dev trainings</a>
+              </li>
+              <li>
+                <a href="https://bit.ly/38aJVjV" target="_blank">YouTube: Tutorials and more</a>
+              </li>
+              <li>
+                <a href="https://bit.ly/31rDQxR" target="_blank">YouTube: Full-Stack Developer playlist</a>
+              </li>
+            </ul>
+        </section>
+
+        <section id="link2">
+          <a href="#link2">What is a Web Developer</a>
+          <ul class="resource-link">
+            <li>
+              <a href="https://bit.ly/2AaTXon" target="_blank">Definition and Details</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/2VrjH7v" target="_blank">Udemy: Web Developer trainings</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/2Vs2bju" target="_blank">Udemy: Personal pick for Web Development</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/2B9RriX" target="_blank">YouTube: Tutorials and more</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/31ouiUn" target="_blank">YouTube: Full Web Developer playlists</a>
+            </li>
+          </ul>
+        </section>
+
+        <section id="link3">
+          <a href="#link3">What is a Program Mannager</a>
+          <ul class="resource-link">
+            <li>
+              <a href="https://bit.ly/3dIbhyE" target="_blank">Definition and Details</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/3dFNKyv" target="_blank">Udemy: Program Mannager trainings</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/2ZhZzFZ" target="_blank">YouTube: Tutorials and more</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/3eI1WYZ" target="_blank">YouTube: Breakdown of a Program Mannager</a>
+            </li>
+          </ul>
+        </section>
+
+        <section id="link4">
+          <a href="#link4">What is a Data Scientist</a>
+          <ul class="resource-link">
+            <li>
+              <a href="https://bit.ly/3eKJJKo" target="_blank">Definition and Details</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/2VrAnvo" target="_blank">Udemy: Data Scientist trainings</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/31u6ZIT" target="_blank">YouTube: Tutorials and more</a>
+            </li>
+            <li>
+              <a href="https://bit.ly/2VrvX7Y" target="_blank">YouTube: Breakdown of a Data Scientist</a>
+            </li>
+          </ul>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
