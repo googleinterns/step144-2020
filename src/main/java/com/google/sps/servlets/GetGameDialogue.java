@@ -13,6 +13,7 @@
 // limitations under the License.
 package com.google.sps.servlets;
 
+import com.google.gson.Gson;
 import com.google.sps.data.GameStage;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -20,10 +21,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns a random quote. */
+/** Servlet that should respond with a JSON String that contains the desired dialogue */
 @WebServlet("/game-dialogue")
 public final class GetGameDialogue extends HttpServlet {
   private static final String TEXT_TO_HTML = "text/html;";
+  private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String SOFTWAREID = "software-engineering-0";
   private static final String TESTCONTENT = "hello this is a test";
 
@@ -32,7 +34,11 @@ public final class GetGameDialogue extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType(TEXT_TO_HTML);
-    response.getWriter().println(currentGameStage.getContent());
+
+    Gson gson = new Gson();
+    String dialogue = gson.toJson(currentGameStage.getContent());
+
+    response.setContentType(JSON_CONTENT_TYPE);
+    response.getWriter().println(dialogue);
   }
 }
