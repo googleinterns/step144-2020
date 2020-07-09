@@ -1,10 +1,5 @@
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.sps.data.Player;
-import com.google.sps.data.PlayerDatabase;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -31,7 +26,6 @@ public class UserAuthServlet extends HttpServlet {
   private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
   private static String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
 
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType(TEXT_CONTENT_TYPE);
@@ -40,9 +34,6 @@ public class UserAuthServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String id = user.getUserId();
-    Player player = new Player(user.getEmail(), user.getEmail());
-    PlayerDatabase.addPlayerToDatabase(player);
     response.sendRedirect(GAME_STAGE_REDIRECT);
   }
 

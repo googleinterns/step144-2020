@@ -2,8 +2,6 @@ package com.google.sps;
 
 import static org.mockito.Mockito.when;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
@@ -36,9 +34,12 @@ public final class UserAuthServletTest {
   private static final String TEST_ID_1 = "Id 1";
   private static final String EXPECTED_JSON_OUTPUT_LOGIN = "<p>Login <a href=";
   private static final String EXPECTED_JSON_OUTPUT_LOGOUT = "<p>Logout <a href=";
+  private static final String LOGGED_OUT_EXCEPTION =
+      "Player is currently logged out. Cannot process null user.";
   private static UserAuthServlet userAuthServlet;
   private static Player player = new Player(TEST_NAME_1, TEST_EMAIL_1);
   private static PlayerDatabase playerDatabase;
+  private static User user = null;
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
 
@@ -51,18 +52,12 @@ public final class UserAuthServletTest {
 
   // Creates local datastore
   public UserAuthServlet newUserAuthServlet() {
-    DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
-    playerDatabase = new PlayerDatabase(localDatastore);
-    playerDatabase.addPlayerToDatabase(player);
     UserAuthServlet userAuthServlet = new UserAuthServlet();
     return userAuthServlet;
   }
 
   @Test
-  public void doGetTest() throws IOException {
-    player.setID(TEST_ID_1);
-    player.setImageID("Image id");
-    player.setCurrentPageID("CurrentPageID");
+  public void doGetTest_UserAuthServlet() throws IOException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
@@ -71,11 +66,6 @@ public final class UserAuthServletTest {
     Assert.assertTrue(
         result.contains(EXPECTED_JSON_OUTPUT_LOGIN)
             || result.contains(EXPECTED_JSON_OUTPUT_LOGOUT));
-  }
-
-  @Test
-  public void getLoginLogoutLinkTest() throws IOException {
-      
   }
 
   @After

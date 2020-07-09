@@ -20,7 +20,7 @@ public class Player {
     return email;
   }
 
-  public String getID(){
+  public String getID() {
     return id;
   }
 

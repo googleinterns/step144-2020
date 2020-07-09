@@ -7,25 +7,26 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.sps.data.Player;
 import java.util.ArrayList;
+import java.util.List;
 
 // Manages the interface of the Player database for testing
-public final class PlayerDatabase {
+public class PlayerDatabase {
   private static DatastoreService datastore;
-  public static ArrayList<Player> players = new ArrayList<>();
+  public static List<Player> players = new ArrayList<>();
   private static final String ENTITY_QUERY_STRING = "player";
   private static final String DISPLAY_NAME_QUERY_STRING = "displayName";
   private static final String EMAIL_QUERY_STRING = "email";
   private static final String ID_QUERY_STRING = "id";
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
+  private static final String LOGGED_OUT_EXCEPTION =
+      "Player is currently logged out. Cannot process null user.";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
-  private static final User USER =  UserServiceFactory.getUserService().getCurrentUser();
-  public static final Entity currentPlayerEntity = getCurrentPlayerEntity();
+  private static final User USER = UserServiceFactory.getUserService().getCurrentUser();
+  private static boolean isLoggedIn = UserServiceFactory.getUserService().isUserLoggedIn();
 
-
-  public static ArrayList<Player> getPlayers() {
+  public static List<Player> getPlayers() {
     return players;
   }
 
@@ -54,14 +55,10 @@ public final class PlayerDatabase {
     return entity;
   }
 
-  public static void storeEntity(Entity entity) {
-    datastore.put(entity);
-  }
-
   // get entity
-  public static Entity getCurrentPlayerEntity() {
-    if (USER == null) {
-      return null;
+  public static Entity getCurrentPlayerEntity() throws Exception {
+    if (!isLoggedIn) {
+      throw new Exception(LOGGED_OUT_EXCEPTION);
     }
     String email = USER.getEmail();
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -76,49 +73,51 @@ public final class PlayerDatabase {
         return entity;
       }
     }
-    return null;
+    throw new Exception(LOGGED_OUT_EXCEPTION);
   }
 
   // get player current stage
-  public static String getEntityCurrentPageID() {
-    String currentPageID = currentPlayerEntity.getProperty(CURRENT_PAGE_ID_QUERY_STRING).toString();
+  public static String getEntityCurrentPageID() throws Exception {
+    String currentPageID =
+        getCurrentPlayerEntity().getProperty(CURRENT_PAGE_ID_QUERY_STRING).toString();
     return currentPageID;
   }
 
   // get image id
-  public static String getEntityImageID() {
-    String imageID = currentPlayerEntity.getProperty(IMAGE_ID_QUERY_STRING).toString();
+  public static String getEntityImageID() throws Exception {
+    String imageID = getCurrentPlayerEntity().getProperty(IMAGE_ID_QUERY_STRING).toString();
     return imageID;
   }
 
   // get id
-  public static String getEntityID() {
-    return USER.getUserId();
+  public static String getEntityID() throws Exception {
+    String id = getCurrentPlayerEntity().getProperty(ID_QUERY_STRING).toString();
+    return id;
   }
 
   // get displayname
-  public static String getEntityDisplayName() {
-    String displayName = currentPlayerEntity.getProperty(DISPLAY_NAME_QUERY_STRING).toString();
+  public static String getEntityDisplayName() throws Exception {
+    String displayName = getCurrentPlayerEntity().getProperty(DISPLAY_NAME_QUERY_STRING).toString();
     return displayName;
   }
 
   // set player current stage
-  public static void setEntityCurrentPageID(String currentPageID) {
-    currentPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
+  public static void setEntityCurrentPageID(String currentPageID) throws Exception {
+    getCurrentPlayerEntity().setProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
   }
 
   // set image id
-  public static void setEntityImageID(String imageID) {
-    currentPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, imageID);
+  public static void setEntityImageID(String imageID) throws Exception {
+    getCurrentPlayerEntity().setProperty(IMAGE_ID_QUERY_STRING, imageID);
   }
 
   // set id
-  public static void setEntityID(String id) {
-    currentPlayerEntity.setProperty(ID_QUERY_STRING, id);    
+  public static void setEntityID(String id) throws Exception {
+    getCurrentPlayerEntity().setProperty(ID_QUERY_STRING, id);
   }
 
   // set displayname
-  public static void setEntityDisplayName(String displayName) {
-    currentPlayerEntity.setProperty(DISPLAY_NAME_QUERY_STRING, displayName);
+  public static void setEntityDisplayName(String displayName) throws Exception {
+    getCurrentPlayerEntity().setProperty(DISPLAY_NAME_QUERY_STRING, displayName);
   }
 }

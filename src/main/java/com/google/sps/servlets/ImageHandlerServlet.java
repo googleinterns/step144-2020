@@ -7,8 +7,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
-import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -21,12 +21,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * When the user submits the form, Blobstore processes the file upload and then forwards the request
- * to this servlet. This servlet can then process the request using the file URL we get from
- * Blobstore.
+ * This servlet is responsible for accessing the files that the user has uploaded to the blobstore.
  */
 @WebServlet("/image-handler")
-public class ImageHandlerServlet extends HttpServlet {    
+public class ImageHandlerServlet extends HttpServlet {
   private BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
   private static String displayName;
   private static String imageID;
@@ -44,35 +42,46 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
   private static final String DEFAULT_IMAGE_GS_LOCATION =
       "/gs/cs-career-step-2020.appspot.com/face.jpg";
-  private static Entity currentPlayer = PlayerDatabase.getCurrentPlayerEntity();
+  private static Entity currentPlayer = currentPlayer();
+  private static boolean isLoggedIn = UserServiceFactory.getUserService().isUserLoggedIn();
+
+  private static Entity currentPlayer() {
+    Entity entity = new Entity("Player");
+    try {
+      entity = PlayerDatabase.getCurrentPlayerEntity();
+    } catch (Exception e) {
+    }
+    return entity;
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String imageUrl;
-    if (currentPlayer == null) {
-      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);
-    } else {
-      // Get the displayName entered by the user.
-      String displayName = request.getParameter(DISPLAY_NAME_PARAMETER);
-      // Get the imageName to check if a file was uploaded.
-      String imageName = request.getParameter(IMAGE_PARAMETER);
-      if (imageName == null) { // Default image path
-        BlobKey defaultBlobKey = blobstoreService.createGsBlobKey(DEFAULT_IMAGE_GS_LOCATION);
-        imageUrl = getFileUrl(defaultBlobKey);
+    try {
+      if (!isLoggedIn) {
+        response.sendRedirect(LOGIN_REDIRECT_PARAMETER);
       } else {
-        // Get the URL of the image that the user uploaded to Blobstore.
-        BlobKey uploadedBlobKey = createUploadedBlobKey(request, IMAGE_PARAMETER);
-        imageUrl = getFileUrl(uploadedBlobKey);
-      }
-      Entity currentPlayerEntity = PlayerDatabase.getCurrentPlayerEntity();
-      currentPlayerEntity = PlayerDatabase.getCurrentPlayerEntity();
-      // Assign imageUrl to current player
-      PlayerDatabase.setEntityImageID(imageUrl);
+        // Get the displayName entered by the user.
+        String displayName = request.getParameter(DISPLAY_NAME_PARAMETER);
+        // Get the imageName to check if a file was uploaded.
+        String imageName = request.getParameter(IMAGE_PARAMETER);
+        if (imageName == null) { // Default image path
+          BlobKey defaultBlobKey = blobstoreService.createGsBlobKey(DEFAULT_IMAGE_GS_LOCATION);
+          imageUrl = getFileUrl(defaultBlobKey);
+        } else {
+          // Get the URL of the image that the user uploaded to Blobstore.
+          BlobKey uploadedBlobKey = createUploadedBlobKey(request, IMAGE_PARAMETER);
+          imageUrl = getFileUrl(uploadedBlobKey);
+        }
+        // Assign imageUrl to current player
+        PlayerDatabase.setEntityImageID(imageUrl);
 
-      // Assign displayName to current player
-      PlayerDatabase.setEntityDisplayName(displayName);
+        // Assign displayName to current player
+        PlayerDatabase.setEntityDisplayName(displayName);
+      }
+      response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
+    } catch (Exception e) {
     }
-    response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
   }
 
   // Gets the URL of the uploaded file; null if no file was uploaded
@@ -110,15 +119,20 @@ public class ImageHandlerServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.getWriter();
-    if (currentPlayer != null) {
-      imageID = PlayerDatabase.getEntityImageID();
-      displayName = PlayerDatabase.getEntityDisplayName();
-      response.getWriter().println(CURRENT_PLAYER_TRUE_PARAMETER);
-    } else {
+    try {
+      response.getWriter();
+      if (isLoggedIn) {
+        Player player = new Player("", "");
+        PlayerDatabase.addPlayerToDatabase(player);
+        imageID = PlayerDatabase.getEntityImageID();
+        displayName = PlayerDatabase.getEntityDisplayName();
+        response.getWriter().println(CURRENT_PLAYER_TRUE_PARAMETER);
+      } else {
         response.getWriter().println(CURRENT_PLAYER_FALSE_PARAMETER);
+      }
+      response.getWriter().println(imageID);
+      response.getWriter().println(displayName);
+    } catch (Exception e) {
     }
-    response.getWriter().println(imageID);
-    response.getWriter().println(displayName);
   }
 }

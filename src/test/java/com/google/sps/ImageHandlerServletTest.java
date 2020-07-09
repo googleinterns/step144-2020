@@ -6,6 +6,7 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.sps.data.PlayerDatabase;
 import com.google.sps.servlets.ImageHandlerServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,6 +32,8 @@ public final class ImageHandlerServletTest {
   private static final String EXPECTED_JSON_OUTPUT_FALSE = "false";
   private static ImageHandlerServlet imageHandlerServlet;
   private static BlobstoreService localBlobstore = BlobstoreServiceFactory.getBlobstoreService();
+  private static boolean isLoggedIn = false;
+  private static PlayerDatabase playerDatabase;
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
@@ -55,8 +58,7 @@ public final class ImageHandlerServletTest {
     this.imageHandlerServlet.doGet(this.request, this.response);
     String result = stringWriter.toString();
     Assert.assertTrue(
-        result.contains(EXPECTED_JSON_OUTPUT_TRUE)
-            || result.contains(EXPECTED_JSON_OUTPUT_FALSE));
+        result.contains(EXPECTED_JSON_OUTPUT_TRUE) || result.contains(EXPECTED_JSON_OUTPUT_FALSE));
   }
 
   @After
