@@ -17,7 +17,7 @@ function getDialogue() {
 }
 
 function handleResponse(response) {
-  const textPromise = response.text();
+  const textPromise = response.json();
   textPromise.then(addDialogueToDom);
 }
 
