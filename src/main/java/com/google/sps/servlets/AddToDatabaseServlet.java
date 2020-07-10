@@ -29,10 +29,7 @@ public class AddToDatabaseServlet extends HttpServlet {
       "Choices and career paths need to be split by semicolons.";
   private static final String NUMBER_CHOICES_DONT_MATCH_CAREER_PATHS =
       "The number of choices given is not the same as the number of career paths given.";
-      
-
   private static final Gson gson = new Gson();
-
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private ArrayList<QuizQuestion> quizQuestions;
 
