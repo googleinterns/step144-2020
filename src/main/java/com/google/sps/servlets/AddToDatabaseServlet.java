@@ -3,7 +3,6 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
-import com.google.sps.data.ProcessCareerQuizResults;
 import com.google.sps.data.QuestionChoice;
 import com.google.sps.data.QuestionDatabase;
 import com.google.sps.data.QuizQuestion;
@@ -46,18 +45,17 @@ public class AddToDatabaseServlet extends HttpServlet {
 
   private void addCareerQuizQuestion(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    QuestionDatabase careerQuestionDatabase = new QuestionDatabase(
-        datastore, CAREER_DATABASE_ENTITY_QUERY_STRING);
+    QuestionDatabase careerQuestionDatabase =
+        new QuestionDatabase(datastore, CAREER_DATABASE_ENTITY_QUERY_STRING);
     boolean validInput = true;
     String question = new String();
     List<String> choiceText = new ArrayList();
     List<String> careerPaths = new ArrayList();
     try {
       question = request.getParameter(CAREER_QUIZ_QUESTION_PARAMETER);
-      choiceText = Arrays.asList(
-          request.getParameter(CAREER_QUIZ_CHOICETEXT_PARAMETER).split(";"));
-      careerPaths = Arrays.asList(
-          request.getParameter(CAREER_QUIZ_CAREERPATH_PARAMETER).split(";"));
+      choiceText = Arrays.asList(request.getParameter(CAREER_QUIZ_CHOICETEXT_PARAMETER).split(";"));
+      careerPaths =
+          Arrays.asList(request.getParameter(CAREER_QUIZ_CAREERPATH_PARAMETER).split(";"));
     } catch (PatternSyntaxException e) {
       validInput = false;
       handleInvalidInputError(CANT_SPLIT_STRING, response);

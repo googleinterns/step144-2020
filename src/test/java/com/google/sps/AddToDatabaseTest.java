@@ -16,8 +16,8 @@ import com.google.sps.servlets.AddToDatabaseServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,9 +57,10 @@ public final class AddToDatabaseTest {
   private static final String NUMBER_CHOICES_DONT_MATCH_CAREER_PATHS =
       "The number of choices given is not the same as the number of career paths given.";
   private static final List<QuestionChoice> QUESTION_CHOICES =
-      Arrays.asList(new QuestionChoice(CHOICE_1, CAREER_1), 
-                    new QuestionChoice(CHOICE_2, CAREER_2),
-                    new QuestionChoice(CHOICE_3, CAREER_3));
+      Arrays.asList(
+          new QuestionChoice(CHOICE_1, CAREER_1), 
+          new QuestionChoice(CHOICE_2, CAREER_2),
+          new QuestionChoice(CHOICE_3, CAREER_3));
 
   @Before
   public void setUp() {
@@ -92,14 +93,15 @@ public final class AddToDatabaseTest {
 
     this.addToDatabaseServlet.doPost(this.request, this.response);
 
-    QuestionDatabase questionDatabase = new QuestionDatabase(datastore, CAREER_DATABASE_ENTITY_QUERY_STRING);
+    QuestionDatabase questionDatabase =
+        new QuestionDatabase(datastore, CAREER_DATABASE_ENTITY_QUERY_STRING);
     ArrayList<QuizQuestion> databaseQuestions = questionDatabase.getQuizQuestions();
     Assert.assertEquals(databaseQuestions.size(), 1);
 
-    // converting to JsonElements to do deep equality checks 
+    // converting to JsonElements to do deep equality checks
     JsonElement result = JsonParser.parseString(gson.toJson(databaseQuestions.get(0)));
-    JsonElement expected = JsonParser.parseString(gson.toJson(
-        new QuizQuestion(QUESTION_1, QUESTION_CHOICES)));
+    JsonElement expected =
+        JsonParser.parseString(gson.toJson(new QuizQuestion(QUESTION_1, QUESTION_CHOICES)));
     Assert.assertEquals(result, expected);
   }
 
@@ -133,11 +135,12 @@ public final class AddToDatabaseTest {
     Assert.assertEquals(result, expected);
   }
 
-  private void mockUserCareerQuestionInput(String questionInput, String choiceTextInput, String careerPathInput) {
+  private void mockUserCareerQuestionInput(
+      String questionInput, String choiceTextInput, String careerPathInput) {
     when(this.request.getParameter(CAREER_QUIZ_FORM_SUBMIT_PARAMETER))
-                     .thenReturn(CAREER_QUIZ_FORM_SUBMIT_PARAMETER);
+        .thenReturn(CAREER_QUIZ_FORM_SUBMIT_PARAMETER);
     when(this.request.getParameter(CAREER_QUIZ_QUESTION_PARAMETER)).thenReturn(questionInput);
     when(this.request.getParameter(CAREER_QUIZ_CHOICETEXT_PARAMETER)).thenReturn(choiceTextInput);
-    when(this.request.getParameter(CAREER_QUIZ_CAREERPATH_PARAMETER)).thenReturn(careerPathInput);    
+    when(this.request.getParameter(CAREER_QUIZ_CAREERPATH_PARAMETER)).thenReturn(careerPathInput);
   }
 }
