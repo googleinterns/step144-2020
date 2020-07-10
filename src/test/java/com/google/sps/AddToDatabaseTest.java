@@ -30,7 +30,6 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 /** Tests that the AddToDatabaseServlet correctly adds static entities to the game datastore */
 @RunWith(JUnit4.class)
 public final class AddToDatabaseTest {
@@ -58,7 +57,7 @@ public final class AddToDatabaseTest {
       "The number of choices given is not the same as the number of career paths given.";
   private static final List<QuestionChoice> QUESTION_CHOICES =
       Arrays.asList(
-          new QuestionChoice(CHOICE_1, CAREER_1), 
+          new QuestionChoice(CHOICE_1, CAREER_1),
           new QuestionChoice(CHOICE_2, CAREER_2),
           new QuestionChoice(CHOICE_3, CAREER_3));
 
@@ -124,14 +123,15 @@ public final class AddToDatabaseTest {
 
     this.addToDatabaseServlet.doPost(this.request, this.response);
 
-    QuestionDatabase questionDatabase = new QuestionDatabase(datastore, CAREER_DATABASE_ENTITY_QUERY_STRING);
+    QuestionDatabase questionDatabase =
+        new QuestionDatabase(datastore, CAREER_DATABASE_ENTITY_QUERY_STRING);
     ArrayList<QuizQuestion> databaseQuestions = questionDatabase.getQuizQuestions();
     // check that nothing has been added to the database
     Assert.assertEquals(databaseQuestions.size(), 0);
 
     JsonElement result = JsonParser.parseString(stringWriter.toString());
-    JsonElement expected = JsonParser.parseString(gson.toJson(
-        NUMBER_CHOICES_DONT_MATCH_CAREER_PATHS));
+    JsonElement expected =
+        JsonParser.parseString(gson.toJson(NUMBER_CHOICES_DONT_MATCH_CAREER_PATHS));
     Assert.assertEquals(result, expected);
   }
 
