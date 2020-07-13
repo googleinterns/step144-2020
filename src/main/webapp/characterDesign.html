@@ -2,20 +2,18 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Blobstore Fetch Example</title>
-    <link rel="stylesheet" href="characterDesign.css">
+    <title>Character Design</title>
+    <link rel="stylesheet" href="style.css">
     <script src="characterDesign.js"></script>
   </head>
-  <body onload="fetchBlobstoreUrl()">
-    <h1>Blobstore Fetch Example</h1>
-    <p>Type a message and click submit:</p>
-
+  <body onload="loadCharacterDesignScripts()">
+    <h1>Character Design</h1>
     <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
       <p>Type nickname:</p>
-      <textarea name="message"></textarea>
+      <textarea name="message" required></textarea>
       <br/>
       <p>Upload an image:</p>
-      <input type="file" name="image">
+      <input type="file" name="image" class="file-input" id="image">
       <br/><br/>
       <button>Submit</button>
     </form>
