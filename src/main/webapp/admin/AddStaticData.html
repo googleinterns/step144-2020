@@ -5,16 +5,16 @@
 </head>
 
 <body>
-  <h1> Enter in entities to be added to the database here </h1>
+  <h1> Enter in entities one by one to be added to the database here </h1>
 
   <p> Career Quiz </p>
   <form action = "/addToDatabase" method = "POST" id = "careerQuizForm">
     <label>Question:</label><br>
-    <input type = "text" id = "careerquestion"><br>
+    <input type = "text" name = "careerQuestion" required = "true"><br>
     <label>Choices, seperated by semicolons (;)</label><br>
-    <input type = "text" id = "careerchoicetext">
+    <input type = "text" name = "careerChoiceText" required = "true"><br>
     <label>Associated career paths, seperated by semicolons (;)</label><br>
-    <input type = "text" id = "careerpath">
+    <input type = "text" name = "careerPath" required = "true">
   </form>
   <button type = "submit" form = "careerQuizForm" name = "careerQuizSubmit" value = "Submit">Submit</button>
 </body>
