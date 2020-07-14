@@ -64,6 +64,5 @@ public class GameStageDatabase {
         Boolean.parseBoolean(entity.getProperty(IS_LAST_STAGE_PROPERTY).toString());
     String nextStageID = entity.getProperty(NEXT_STAGE_PROPERTY).toString();
     return new GameStage(name, content, id, quizKey, isLastStage, nextStageID);
-
   }
 }
