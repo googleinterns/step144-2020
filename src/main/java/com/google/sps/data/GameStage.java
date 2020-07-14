@@ -13,8 +13,6 @@
 // limitations under the License.
 package com.google.sps.data;
 
-import com.google.appengine.api.datastore.Key;
-
 public class GameStage {
   /**
    * Game Stages are levels on the gameboard. Each level can be accessed by a player, but only one
@@ -46,10 +44,15 @@ public class GameStage {
   }
   
   public GameStage(
-      String name, String content, String id, String quizKey, Boolean isLastStage, String nextStageId) {
+      String name,
+      String content,
+      String id,
+      String quizKey,
+      Boolean isLastStage,
+      String nextStageId) {
     this.name = name;
     this.content = content;
-    this.id = id; 
+    this.id = id;
     this.quizKey = quizKey;
     this.isLastStage = isLastStage;
     this.nextStageId = nextStageId;

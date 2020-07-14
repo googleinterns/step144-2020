@@ -2,7 +2,6 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 
@@ -13,7 +12,7 @@ public class GameStageDatabase {
   private static Query query;
   private String NAME_PROPERTY = "name";
   private String ID_PROPERTY = "id";
-  private String CONTENT_PROPERTY = "content" ;
+  private String CONTENT_PROPERTY = "content";
   private String QUIZ_KEY_PROPERTY = "quizkey";
   private String IS_LAST_STAGE_PROPERTY = "islaststage";
   private String NEXT_STAGE_PROPERTY = "nextstage";
@@ -36,9 +35,9 @@ public class GameStageDatabase {
   }
 
   private Entity getGameStageEntityFromID(String id) {
-    Query query = new Query(QUERY_FOR_GAMESTAGE_ENTITY)
-        .setFilter(
-            new Query.FilterPredicate(ID_PROPERTY, Query.FilterOperator.EQUAL, id));
+    Query query =
+        new Query(QUERY_FOR_GAMESTAGE_ENTITY)
+            .setFilter(new Query.FilterPredicate(ID_PROPERTY, Query.FilterOperator.EQUAL, id));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
     return entity;
