@@ -29,7 +29,7 @@ public class GameStageDatabase {
     return gameStage;
   }
 
-  public void storeGameStage(GameStage gameStage){
+  public void storeGameStage(GameStage gameStage) {
     Entity gameStageEntity = createGameStageEntity(gameStage);
     this.datastore.put(gameStageEntity);
   }

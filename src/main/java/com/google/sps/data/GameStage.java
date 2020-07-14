@@ -37,12 +37,11 @@ public class GameStage {
    * @param name The name of the game stage
    * @param content The text content tied to the game stage
    */
-
   public GameStage(String name, String content) {
     this.name = name;
     this.content = content;
   }
-  
+
   public GameStage(
       String name,
       String content,
