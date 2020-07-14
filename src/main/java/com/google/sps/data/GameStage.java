@@ -26,8 +26,12 @@ public class GameStage {
   /** Represents the datastore ID */
   private String content;
   /** Represents what text content will be displayed once game stage is loaded */
-  private Key quizKey;
+  private String quizKey;
   /** Represents key of the quiz that is specific to this game stage */
+  private Boolean isLastStage;
+  /** if True, then this stage is a terminal stage along its career path */
+  private String nextStageId;
+  /** Stores the datastore ID of the stage that is reached by promotion */
 
   /**
    * Creates a game stage with the specified name and content
@@ -35,9 +39,20 @@ public class GameStage {
    * @param name The name of the game stage
    * @param content The text content tied to the game stage
    */
+
   public GameStage(String name, String content) {
     this.name = name;
     this.content = content;
+  }
+  
+  public GameStage(
+      String name, String content, String id, String quizKey, Boolean isLastStage, String nextStageId) {
+    this.name = name;
+    this.content = content;
+    this.id = id; 
+    this.quizKey = quizKey;
+    this.isLastStage = isLastStage;
+    this.nextStageId = nextStageId;
   }
 
   /**
@@ -67,12 +82,20 @@ public class GameStage {
     return content;
   }
 
+  public Boolean isLastStage() {
+    return isLastStage;
+  }
+
+  public String getNextStageID() {
+    return nextStageId;
+  }
+
   /**
    * Gets the game stage's quiz key
    *
    * @return A key representing the quiz of the game stage
    */
-  public Key getQuizKey() {
+  public String getQuizKey() {
     return quizKey;
   }
 
@@ -108,7 +131,7 @@ public class GameStage {
    *
    * @param quizKey A string representing the quiz key of the game stage
    */
-  public void setQuizKey(Key quizKey) {
+  public void setQuizKey(String quizKey) {
     this.quizKey = quizKey;
   }
 }
