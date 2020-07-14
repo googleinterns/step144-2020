@@ -13,8 +13,6 @@
 // limitations under the License.
 package com.google.sps.data;
 
-import com.google.appengine.api.datastore.Key;
-
 public class GameStage {
   /**
    * Game Stages are levels on the gameboard. Each level can be accessed by a player, but only one
@@ -26,8 +24,12 @@ public class GameStage {
   /** Represents the datastore ID */
   private String content;
   /** Represents what text content will be displayed once game stage is loaded */
-  private Key quizKey;
+  private String quizKey;
   /** Represents key of the quiz that is specific to this game stage */
+  private Boolean isFinalStage;
+  /** if True, then this stage is a terminal stage along its career path */
+  private String nextStageId;
+  /** Stores the datastore ID of the stage that is reached by promotion */
 
   /**
    * Creates a game stage with the specified name and content
@@ -38,6 +40,21 @@ public class GameStage {
   public GameStage(String name, String content) {
     this.name = name;
     this.content = content;
+  }
+
+  public GameStage(
+      String name,
+      String content,
+      String id,
+      String quizKey,
+      Boolean isFinalStage,
+      String nextStageId) {
+    this.name = name;
+    this.content = content;
+    this.id = id;
+    this.quizKey = quizKey;
+    this.isFinalStage = isFinalStage;
+    this.nextStageId = nextStageId;
   }
 
   /**
@@ -67,12 +84,20 @@ public class GameStage {
     return content;
   }
 
+  public Boolean isFinalStage() {
+    return isFinalStage;
+  }
+
+  public String getNextStageID() {
+    return nextStageId;
+  }
+
   /**
    * Gets the game stage's quiz key
    *
    * @return A key representing the quiz of the game stage
    */
-  public Key getQuizKey() {
+  public String getQuizKey() {
     return quizKey;
   }
 
@@ -108,7 +133,7 @@ public class GameStage {
    *
    * @param quizKey A string representing the quiz key of the game stage
    */
-  public void setQuizKey(Key quizKey) {
+  public void setQuizKey(String quizKey) {
     this.quizKey = quizKey;
   }
 }
