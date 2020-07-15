@@ -28,7 +28,7 @@ public class StoreGameStage extends HttpServlet {
   private DatastoreService datastore;
   private GameStageDatabase gameStageDatabase;
 
-  @Override 
+  @Override
   public void init() {
     this.gson = new Gson();
     this.datastore = DatastoreServiceFactory.getDatastoreService();

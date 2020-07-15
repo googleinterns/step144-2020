@@ -73,9 +73,9 @@ public final class StoreGameStageTest {
     String levelInput = LEVEL_1;
     String contentInput = TEST_CONTENT;
     String isFinalStageInput = NO_INPUT;
-    
+
     mockUserGameStageInput(nameInput, careerPathInput, levelInput, contentInput, isFinalStageInput);
-    
+
     String name = WEBDEV_LEVEL1_NAME;
     String content = TEST_CONTENT;
     String id = WEBDEV_INPUT + LEVEL_1;
