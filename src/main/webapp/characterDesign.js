@@ -25,7 +25,7 @@ function fetchImageHandler() {
 }
 
 function getFileInput() {
-  document.querySelector(".custom-file-input").addEventListener('change', function(e){
+  document.querySelector(".file-input").addEventListener('change', function(e){
     var fileName = document.getElementById("image").files[0].name;
     var nextElement = e.target.nextElementSibling;
     nextElement.innerText = fileName;
@@ -37,3 +37,30 @@ function loadCharacterDesignScripts() {
     fetchBlobstoreUrl();
 }
 
+function getImage() {  
+  fetch("/image-handler")
+      .then(response => response.text())
+      .then(message => {
+          const NICKNAME_CONTAINER = document.getElementById("nickname-container");
+          NICKNAME_CONTAINER.innerText = message;
+          var messageArray = message.split("\n");
+          const imageContainer = document.getElementById('image-container');
+          var blobkey = messageArray[1];
+          if (blobkey == "default") {
+              createImageElement("images/face.png");
+          }
+          else {
+            fetch('/get-image?blobkey=' + blobkey).then((pic) => {
+            createImageElement(pic.url);
+          });
+          }
+  });
+}
+
+function createImageElement(pic) {
+  let image = document.createElement("img");
+  image.src = pic;
+  image.id = "player-picture"
+  const imageContainer = document.getElementById('image-container');
+  imageContainer.append(image);
+}

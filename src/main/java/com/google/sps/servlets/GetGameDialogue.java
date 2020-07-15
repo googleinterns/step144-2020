@@ -14,11 +14,8 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.GameStage;
 import com.google.sps.data.GameStageDatabase;
@@ -37,25 +34,22 @@ public final class GetGameDialogue extends HttpServlet {
   private static final String SOFTWARE_ID = "software-engineering-0";
   private static final String TEST_CONTENT = "hello this is a test";
   private static final Gson gson = new Gson();
-
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private final PlayerDatabase playerDatabase = new PlayerDatabase(datastore);
   private final GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
 
-  //variables that make up the id
-  private static final String SOFTWARE_ENGINEER_INPUT = "Software Engineer";
-  private static final String LEVEL_1 = "1";
-  String id1 = SOFTWARE_ENGINEER_INPUT + LEVEL_1;
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    try{
-      //you can only use the PlayerDatabase sucessfully if you are running this on a live server because it requeres you to log in
-      GameStage currentGameStage = gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
+    try {
+      // you can only use the PlayerDatabase sucessfully if you are running this on a live server
+      // because it requires you to log in
+      GameStage currentGameStage =
+          gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
       String dialogue = gson.toJson(currentGameStage.getContent());
 
       response.setContentType(JSON_CONTENT_TYPE);
       response.getWriter().println(dialogue);
-    } catch(Exception nullPointer){}
+    } catch (Exception nullPointer) {
+    }
   }
 }

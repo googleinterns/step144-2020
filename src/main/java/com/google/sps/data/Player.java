@@ -7,9 +7,16 @@ public class Player {
   private String imageID;
   private String currentPageID;
 
-  public Player(String displayName, String email) {
+  public Player(String displayName, String email, String imageID) {
     this.displayName = displayName;
     this.email = email;
+    this.imageID = imageID;
+  }
+
+  public Player(String displayName, String email, String id, String imageID, String currentPageID) {
+    this(displayName, email, imageID);
+    this.id = id;
+    this.currentPageID = currentPageID;
   }
 
   public String getDisplayName() {
@@ -48,7 +55,6 @@ public class Player {
     this.imageID = imageID;
   }
 
-  //currentGamePage = currentPageId
   public void setCurrentPageID(String currentPageID) {
     this.currentPageID = currentPageID;
   }
