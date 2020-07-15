@@ -13,32 +13,47 @@
 // limitations under the License.
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import com.google.sps.data.GameStage;
+import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /** Servlet that should respond with a JSON String that contains the desired dialogue */
 @WebServlet("/game-dialogue")
 public final class GetGameDialogue extends HttpServlet {
   private static final String TEXT_TO_HTML = "text/html;";
   private static final String JSON_CONTENT_TYPE = "application/json";
-  private static final String SOFTWAREID = "software-engineering-0";
-  private static final String TESTCONTENT = "hello this is a test";
+  private static final String SOFTWARE_ID = "software-engineering-0";
+  private static final String TEST_CONTENT = "hello this is a test";
+  private static final Gson gson = new Gson();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final PlayerDatabase playerDatabase = new PlayerDatabase(datastore);
+  private final GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
 
-  // TODO: GameStage will change and be query from a database that will be implemented
-  private GameStage currentGameStage = new GameStage(SOFTWAREID, TESTCONTENT);
+  //variables that make up the id
+  private static final String SOFTWARE_ENGINEER_INPUT = "Software Engineer";
+  private static final String LEVEL_1 = "1";
+  String id1 = SOFTWARE_ENGINEER_INPUT + LEVEL_1;
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    try{
+      GameStage currentGameStage = gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
+      String dialogue = gson.toJson(currentGameStage.getContent());
 
-    Gson gson = new Gson();
-    String dialogue = gson.toJson(currentGameStage.getContent());
-
-    response.setContentType(JSON_CONTENT_TYPE);
-    response.getWriter().println(dialogue);
+      response.setContentType(JSON_CONTENT_TYPE);
+      response.getWriter().println(dialogue);
+    } catch(Exception e){} 
   }
 }
