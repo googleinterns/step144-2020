@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserAuthServlet extends HttpServlet {
 
   private static final String TEXT_CONTENT_TYPE = "text/html";
-  private static final String GAME_STAGE_REDIRECT = "/gameStage.html";
+  private static final String GAME_STAGE_REDIRECT = "/characterDesign.html";
   private static final String SLASH_PAGE_REDIRECT = "/index.html";
   private static final String DISPLAY_NAME_PARAMETER = "displayName";
   private static final String EMAIL_PARAMETER = "email";
