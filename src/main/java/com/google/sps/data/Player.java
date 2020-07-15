@@ -7,9 +7,10 @@ public class Player {
   private String imageID;
   private String currentPageID;
 
-  public Player(String displayName, String email) {
+  public Player(String displayName, String email, String imageID) {
     this.displayName = displayName;
     this.email = email;
+    this.imageID = imageID;
   }
 
   public String getDisplayName() {

@@ -31,13 +31,14 @@ public final class UserAuthServletTest {
   private static final User TEST_USER = new User("test@gmail.com", "gmail.com");
   private static final String TEST_NAME_1 = "Name 1";
   private static final String TEST_EMAIL_1 = "Email 1";
+  private static final String TEST_IMAGE_ID_1 = "ImageID 1";
   private static final String TEST_ID_1 = "Id 1";
   private static final String EXPECTED_JSON_OUTPUT_LOGIN = "<p>Login <a href=";
   private static final String EXPECTED_JSON_OUTPUT_LOGOUT = "<p>Logout <a href=";
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
   private static UserAuthServlet userAuthServlet;
-  private static Player player = new Player(TEST_NAME_1, TEST_EMAIL_1);
+  private static Player player = new Player(TEST_NAME_1, TEST_EMAIL_1, TEST_IMAGE_ID_1);
   private static PlayerDatabase playerDatabase;
   private static User user = null;
   @Mock private HttpServletRequest request;
