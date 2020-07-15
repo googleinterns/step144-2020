@@ -2,13 +2,14 @@
 
 <html lang="en">
 <head>
+    <script></script>
 </head>
 
 <body>
   <h1> Enter in entities one by one to be added to the database here </h1>
 
   <p> Career Quiz </p>
-  <form action = "/addToDatabase" method = "POST" id = "careerQuizForm">
+  <form action = "/addToDatabase" method = "POST" id = "careerQuizForm" name = "careerQuizForm">
     <label>Question:</label><br>
     <input type = "text" name = "careerQuestion" required = "true"><br>
     <label>Choices, seperated by semicolons (;)</label><br>
@@ -17,5 +18,31 @@
     <input type = "text" name = "careerPath" required = "true">
   </form>
   <button type = "submit" form = "careerQuizForm" name = "careerQuizSubmit" value = "Submit">Submit</button>
+
+  <p> Game Stage </p>
+  <form action = "/storeGameStage" method = "POST" id = "gameStageForm" name = "gameStageForm">
+    <label>Name:</label><br>
+    <input type = "text" name = "gameStageName" required = "true"><br>
+    <label>Career path:</label><br>
+    <input name = "gameStageCareerPath" list="careerPathOptions"><br>
+    <datalist id = "careerPathOptions">
+      <option value = "Software Engineer">
+      <option value = "Web Developer">
+      <option value = "Program Manager">
+      <option value = "Data Scientist">
+    </datalist>
+    <label>Level:</label><br>
+    <input type = "number" name = "gameStageLevel" min = "1" required = "true"><br>
+    <label>Dialogue content</label><br>
+    <input type = "text" name = "gameStageContent" required = "true"><br>
+    <label>Is this a terminal stage?</label><br>
+    <input name = "gameStageIsFinal" list="yesNoOptions"><br>
+    <datalist id = "yesNoOptions">
+      <option value = "Yes">
+      <option value = "No">
+    </datalist>
+  </form>
+  <button type = "submit" form = "gameStageForm" name = "gameStageSubmit" value = "Submit">Submit</button>
+
 </body>
 </html>
