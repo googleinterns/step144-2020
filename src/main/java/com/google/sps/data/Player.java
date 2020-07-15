@@ -48,6 +48,7 @@ public class Player {
     this.imageID = imageID;
   }
 
+  //currentGamePage = currentPageId
   public void setCurrentPageID(String currentPageID) {
     this.currentPageID = currentPageID;
   }

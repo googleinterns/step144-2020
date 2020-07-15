@@ -76,7 +76,7 @@ public class PlayerDatabase {
     throw new Exception(LOGGED_OUT_EXCEPTION);
   }
 
-  // get player current stage
+  // get player current stage //alsoknown as GameStageID
   public static String getEntityCurrentPageID() throws Exception {
     String currentPageID =
         getCurrentPlayerEntity().getProperty(CURRENT_PAGE_ID_QUERY_STRING).toString();
