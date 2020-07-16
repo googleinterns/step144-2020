@@ -39,7 +39,7 @@ public class PlayerDatabase {
     Entity entity = createEntityFromPlayer(player);
     datastore.put(entity);
   }
-
+  
   public static Entity createEntityFromPlayer(Player player) {
     String displayName = player.getDisplayName();
     String id = player.getID();

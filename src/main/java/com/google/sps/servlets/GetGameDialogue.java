@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -28,7 +29,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 /** Servlet that should respond with a JSON String that contains the desired dialogue */
 @WebServlet("/game-dialogue")
 public final class GetGameDialogue extends HttpServlet {
@@ -37,6 +37,7 @@ public final class GetGameDialogue extends HttpServlet {
   private static final String SOFTWARE_ID = "software-engineering-0";
   private static final String TEST_CONTENT = "hello this is a test";
   private static final Gson gson = new Gson();
+
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private final PlayerDatabase playerDatabase = new PlayerDatabase(datastore);
   private final GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
@@ -49,11 +50,12 @@ public final class GetGameDialogue extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try{
+      //you can only use the PlayerDatabase sucessfully if you are running this on a live server because it requeres you to log in
       GameStage currentGameStage = gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
       String dialogue = gson.toJson(currentGameStage.getContent());
 
       response.setContentType(JSON_CONTENT_TYPE);
       response.getWriter().println(dialogue);
-    } catch(Exception e){} 
+    } catch(Exception nullPointer){}
   }
 }
