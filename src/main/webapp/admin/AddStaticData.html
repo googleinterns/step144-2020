@@ -19,6 +19,28 @@
   </form>
   <button type = "submit" form = "careerQuizForm" name = "careerQuizSubmit" value = "Submit">Submit</button>
 
+  <p> Promotion Quiz </p>
+  <form action = "/storePromotion" method = "POST" id = "promotionQuizForm" name = "promotionQuizForm">
+    <label>Question:</label><br>
+    <input type = "text" name = "promotionQuestion" required = "true"><br>
+    <label>Choices, seperated by semicolons (;)</label><br>
+    <input type = "text" name = "promotionChoiceText" required = "true"><br>
+    <label>Is an accepted choice (y/n), seperated by semicolons (;)</label><br>
+    <input type = "text" name = "promotionAcceptedChoice" required = "true"><br>
+    <label>Career path (of quiz):</label><br>
+    <input name = "promotionCareerPath" list="careerPathOptions"><br>
+    <datalist id = "careerPathOptions">
+      <option value = "Software Engineer">
+      <option value = "Web Developer">
+      <option value = "Program Manager">
+      <option value = "Data Scientist">
+    </datalist>
+    <label>Level:</label><br>
+    <input type = "number" name = "promotionQuizLevel" min = "1" required = "true"><br>
+  </form>
+  <button type = "submit" form = "promotionQuizForm" name = "promotionQuizSubmit" value = "Submit">Submit</button>
+
+
   <p> Game Stage </p>
   <form action = "/storeGameStage" method = "POST" id = "gameStageForm" name = "gameStageForm">
     <label>Name:</label><br>
