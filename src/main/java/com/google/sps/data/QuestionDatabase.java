@@ -11,8 +11,8 @@ import java.util.List;
 public class QuestionDatabase {
   private DatastoreService datastore;
   private ArrayList<QuizQuestion> quizQuestions;
-  private static String entityQueryString;
-  private static Query query;
+  private String entityQueryString;
+  private Query query;
   public static final String QUESTION_QUERY_STRING = "question";
   public static final String CHOICETEXT_QUERY_STRING = "choiceText";
   private static final String ASSOCIATED_CAREER_PATH_QUERY_STRING = "associatedCareerPath";
