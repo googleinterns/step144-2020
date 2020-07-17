@@ -118,8 +118,13 @@ public class PlayerDatabase {
   }
 
   // set id
+<<<<<<< HEAD
   public void setEntityID(String id) throws Exception {
     setPlayerProperty(ID_QUERY_STRING, id);
+=======
+  public static void setEntityID(String id) {
+    currentPlayerEntity.setProperty(ID_QUERY_STRING, id);
+>>>>>>> master
   }
 
   // set displayname
