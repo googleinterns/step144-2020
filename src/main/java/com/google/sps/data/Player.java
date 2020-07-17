@@ -14,10 +14,8 @@ public class Player {
   }
 
   public Player(String displayName, String email, String id, String imageID, String currentPageID) {
-    this.displayName = displayName;
-    this.email = email;
+    this(displayName, email, imageID);
     this.id = id;
-    this.imageID = imageID;
     this.currentPageID = currentPageID;
   }
 

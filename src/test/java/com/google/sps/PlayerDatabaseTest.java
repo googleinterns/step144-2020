@@ -18,7 +18,9 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -32,6 +34,8 @@ public final class PlayerDatabaseTest {
   private static final String ID_QUERY_STRING = "id";
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
+  private static final String LOGGED_OUT_EXCEPTION =
+      "Player is currently logged out. Cannot process null user.";
   // Mock current user for testing
   private static final String NAME = "Bob";
   private static final String NEW_NAME = "Bob2.0";
@@ -187,5 +191,16 @@ public final class PlayerDatabaseTest {
     String result = resultJsonObject.get("propertyMap").toString();
     String expected = expectedJsonObject.get("propertyMap").toString();
     Assert.assertEquals(result, expected);
+  }
+
+  @Rule public ExpectedException loggedOutExceptionRule = ExpectedException.none();
+
+  /** Test that logged out player causes exceptions */
+  @Test
+  public void gettingCurrentPlayerWithLoggedOutUser_ThrowsException() throws Exception {
+    helper.setEnvIsLoggedIn(false);
+    loggedOutExceptionRule.expect(Exception.class);
+    loggedOutExceptionRule.expectMessage(LOGGED_OUT_EXCEPTION);
+    this.playerDatabase.getCurrentPlayerEntity();
   }
 }
