@@ -47,19 +47,20 @@ function getImage() {
           const imageContainer = document.getElementById('image-container');
           var blobkey = messageArray[1];
           if (blobkey == "default") {
-              createImageElement("images/face.jpg");
+              createImageElement("images/face.png");
           }
           else {
             fetch('/get-image?blobkey=' + blobkey).then((pic) => {
             createImageElement(pic.url);
           });
           }
-      });
+  });
 }
 
 function createImageElement(pic) {
   let image = document.createElement("img");
   image.src = pic;
+  image.id = "player-picture"
   const imageContainer = document.getElementById('image-container');
   imageContainer.append(image);
 }
