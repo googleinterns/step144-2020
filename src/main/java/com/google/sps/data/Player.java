@@ -13,6 +13,12 @@ public class Player {
     this.imageID = imageID;
   }
 
+  public Player(String displayName, String email, String id, String imageID, String currentPageID) {
+    this(displayName, email, imageID);
+    this.id = id;
+    this.currentPageID = currentPageID;
+  }
+
   public String getDisplayName() {
     return displayName;
   }
