@@ -363,13 +363,12 @@ a:hover {
   height : 185px;
 }
 
-#pixel-body {
+#pixel-avatar {
   position: absolute;
   width : 260px;
   left : 10px;
   top : 160px;
   height : 260px;
-    
 }
 
 #image-container {
