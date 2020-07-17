@@ -1,11 +1,11 @@
 package com.google.sps.data;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +23,23 @@ public class PlayerDatabase {
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
-  private static final User USER = UserServiceFactory.getUserService().getCurrentUser();
-  private static boolean isLoggedIn = UserServiceFactory.getUserService().isUserLoggedIn();
+  private User user;
+  private static String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
+  private static String userID = UserServiceFactory.getUserService().getCurrentUser().getUserId();
+  private static boolean isLoggedIn;
 
   public static List<Player> getPlayers() {
     return players;
   }
 
   public PlayerDatabase(DatastoreService datastore) {
+    this(datastore, UserServiceFactory.getUserService());
+  }
+
+  public PlayerDatabase(DatastoreService datastore, UserService userService) {
     this.datastore = datastore;
+    this.user = userService.getCurrentUser();
+    this.isLoggedIn = userService.isUserLoggedIn();
   }
 
   public static void addPlayerToDatabase(Player player) {
@@ -60,13 +68,11 @@ public class PlayerDatabase {
     if (!isLoggedIn) {
       throw new Exception(LOGGED_OUT_EXCEPTION);
     }
-    String email = USER.getEmail();
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    String email = userEmail;
     Query query =
         new Query(ENTITY_QUERY_STRING)
             .setFilter(
-                new Query.FilterPredicate(
-                    ID_QUERY_STRING, Query.FilterOperator.EQUAL, USER.getUserId()));
+                new Query.FilterPredicate(ID_QUERY_STRING, Query.FilterOperator.EQUAL, userID));
     PreparedQuery results = datastore.prepare(query);
     for (Entity entity : results.asIterable()) {
       if (email.equals(entity.getProperty(EMAIL_QUERY_STRING).toString())) {
@@ -103,21 +109,27 @@ public class PlayerDatabase {
 
   // set player current stage
   public static void setEntityCurrentPageID(String currentPageID) throws Exception {
-    getCurrentPlayerEntity().setProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
+    setPlayerProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
   }
 
   // set image id
   public static void setEntityImageID(String imageID) throws Exception {
-    getCurrentPlayerEntity().setProperty(IMAGE_ID_QUERY_STRING, imageID);
+    setPlayerProperty(IMAGE_ID_QUERY_STRING, imageID);
   }
 
   // set id
   public static void setEntityID(String id) throws Exception {
-    getCurrentPlayerEntity().setProperty(ID_QUERY_STRING, id);
+    setPlayerProperty(ID_QUERY_STRING, id);
   }
 
   // set displayname
   public static void setEntityDisplayName(String displayName) throws Exception {
-    getCurrentPlayerEntity().setProperty(DISPLAY_NAME_QUERY_STRING, displayName);
+    setPlayerProperty(DISPLAY_NAME_QUERY_STRING, displayName);
+  }
+
+  private static void setPlayerProperty(String propertyName, String newValue) throws Exception {
+    Entity entity = getCurrentPlayerEntity();
+    entity.setProperty(propertyName, newValue);
+    datastore.put(entity);
   }
 }
