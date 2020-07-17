@@ -40,7 +40,7 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String IMAGE_ID_PARAMETER = "imageID";
   private static final String IMAGE_PARAMETER = "image";
   private static final String DEFAULT_PARAMETER = "default";
-  private static final String PLAYER_QUERY_PARAMETER = "Player";
+  private static final String PLAYER_QUERY_PARAMETER = "player";
   private static final String UPLOADED_REDIRECT_PARAMETER = "/uploaded.html";
   private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
   private static final String CHARACTER_DESIGN_REDIRECT_PARAMETER = "/characterDesign.html";

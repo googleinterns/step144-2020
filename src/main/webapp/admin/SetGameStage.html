@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <script></script>
+</head>
+
+<body>
+  <h1> Set your own career path and level for testing purposes </h1>
+  <p> 
+      Note: only do this after you have created a character in the character design stage, so that your
+      game stage can be properly found and updated. 
+  </p>
+
+  <form action = "/setGameStage" method = "POST" id = "setGameStageForm" name = "setGameStageForm">
+  <label>Career path:</label><br>
+    <input name = "careerPath" list="careerPathOptions" required = "true"><br>
+    <datalist id = "careerPathOptions">
+      <option value = "Software Engineer">
+      <option value = "Web Developer">
+      <option value = "Program Manager">
+      <option value = "Data Scientist">
+    </datalist>
+    <label>Level:</label><br>
+    <input type = "number" name = "level" min = "1" required = "true"><br>
+  </form>
+  <button type = "submit" form = "setGameStageForm" name = "setGameStageSubmit" value = "Submit">Submit</button>
+
+</body>
+</html>
