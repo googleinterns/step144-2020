@@ -63,6 +63,7 @@ public final class ImageHandlerServletTest {
   private final String EXPECTED_OUTPUT_FALSE = "false";
   private final String EXPECTED_OUTPUT_DEFAULT = "default";
   private final String EXPECTED_OUTPUT_EMPTY = "empty";
+  private final String IMAGE_PARAMETER = "image";
   private final String IMAGE_ID_PARAMETER = "imageID";
   private String imageBlobKeyString;
   private ImageHandlerServlet imageHandlerServlet;
@@ -90,6 +91,12 @@ public final class ImageHandlerServletTest {
     this.imageBlobKeyString = "";
     MockitoAnnotations.initMocks(this);
   }
+
+  @After
+  public void tearDown() {
+    helper.tearDown();
+  }
+
   // Creating local handle servlet
   public ImageHandlerServlet newImageHandlerServlet() {
     ImageHandlerServlet imageHandlerServlet = new ImageHandlerServlet();
@@ -134,7 +141,7 @@ public final class ImageHandlerServletTest {
   public void doGet_emptyImage() throws IOException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
-    when(this.request.getParameter(IMAGE_ID_PARAMETER)).thenReturn(EXPECTED_OUTPUT_DEFAULT);
+    when(this.blobInfo.getSize()).thenReturn(0L);
     when(this.response.getWriter()).thenReturn(printWriter);
     this.imageHandlerServlet.doGet(this.request, this.response);
     String result = stringWriter.toString();
@@ -160,10 +167,5 @@ public final class ImageHandlerServletTest {
     when(this.response.getWriter()).thenReturn(printWriter);
     loggedOutExceptionRule.expect(NullPointerException.class);
     this.imageHandlerServlet.doGet(this.request, this.response);
-  }
-
-  @After
-  public void tearDown() {
-    helper.tearDown();
   }
 }

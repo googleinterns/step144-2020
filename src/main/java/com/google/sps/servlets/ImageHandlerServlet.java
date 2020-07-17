@@ -95,16 +95,15 @@ public class ImageHandlerServlet extends HttpServlet {
 
     BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
 
+    // User submitted form without selecting a file, so we have a pointless blobKey. (live server)
+    if (blobInfo.getSize() == 0) {
+      return DEFAULT_PARAMETER;
+    }
+
     // Checks that the file is the right type.
     if (!blobInfo.getContentType().contains(IMAGE_PARAMETER)) {
       blobstoreService.delete(blobKey);
       throw new IllegalArgumentException(ILLEGAL_FILE_TYPE_MESSAGE);
-    }
-
-    // User submitted form without selecting a file, so we have a pointless blobKey. (live server)
-    if (blobInfo.getSize() == 0) {
-      blobstoreService.delete(blobKey);
-      return DEFAULT_PARAMETER;
     }
 
     return blobKey.getKeyString();

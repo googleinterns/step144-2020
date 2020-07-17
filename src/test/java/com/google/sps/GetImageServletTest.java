@@ -46,6 +46,11 @@ public final class GetImageServletTest {
     return getImageServlet;
   }
 
+  @After
+  public void tearDown() {
+    helper.tearDown();
+  }
+
   @Rule public ExpectedException emptyImageRule = ExpectedException.none();
 
   @Test
@@ -68,10 +73,5 @@ public final class GetImageServletTest {
     when(this.response.getWriter()).thenReturn(printWriter);
     emptyImageRule.expect(IllegalArgumentException.class);
     this.getImageServlet.doGet(this.request, this.response);
-  }
-
-  @After
-  public void tearDown() {
-    helper.tearDown();
   }
 }
