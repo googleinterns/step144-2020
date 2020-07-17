@@ -8,15 +8,9 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-<<<<<<< HEAD
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-=======
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ServingUrlOptions;
->>>>>>> master
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import java.util.List;
@@ -46,8 +40,7 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String IMAGE_ID_PARAMETER = "imageID";
   private static final String IMAGE_PARAMETER = "image";
   private static final String DEFAULT_PARAMETER = "default";
-  private static final String PLAYER_QUERY_PARAMETER = "Player";
-  private static final String PNG_PARAMETER = ".png";
+  private static final String PLAYER_QUERY_PARAMETER = "player";
   private static final String UPLOADED_REDIRECT_PARAMETER = "/gameStage.html";
   private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
   private static final String CHARACTER_DESIGN_REDIRECT_PARAMETER = "/characterDesign.html";
