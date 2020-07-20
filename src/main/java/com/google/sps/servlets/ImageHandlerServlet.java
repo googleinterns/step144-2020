@@ -134,7 +134,8 @@ public class ImageHandlerServlet extends HttpServlet {
   }
 
   private void handleLoggedOutUser(HttpServletResponse response) throws IOException {
-     imageID = EMPTY_PARAMETER;
+    response.getWriter().println(CURRENT_PLAYER_FALSE_PARAMETER);
+    imageID = EMPTY_PARAMETER;
     displayName = EMPTY_PARAMETER;
   }
 }
