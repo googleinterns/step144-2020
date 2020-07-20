@@ -352,3 +352,28 @@ a:hover {
   border: 5px solid #e76f51;
   background-color: rgba(0, 0, 0, 0.3)
 }
+
+/** Player Sprite **/
+#player-picture {
+  object-fit: cover;
+  position: absolute;
+  border-radius: 50%;
+  left : 50px;
+  width : 170px;
+  height : 185px;
+}
+
+#pixel-avatar {
+  position: absolute;
+  width : 260px;
+  left : 10px;
+  top : 160px;
+  height : 260px;
+}
+
+#image-container {
+  position: absolute;
+  height : 550px;
+  left : 70%;
+  float : left;
+}
