@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class StoreGameStage extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String GAME_STAGE_FORM_SUBMIT_PARAMETER = "gameStageSubmit";
-  private static final String GAME_STAGE_NAME_PARAMETER = "gameStageQuestion";
+  private static final String GAME_STAGE_NAME_PARAMETER = "gameStageName";
   private static final String GAME_STAGE_CAREERPATH_PARAMETER = "gameStageCareerPath";
   private static final String GAME_STAGE_LEVEL_PARAMETER = "gameStageLevel";
   private static final String GAME_STAGE_CONTENT_PARAMETER = "gameStageContent";
