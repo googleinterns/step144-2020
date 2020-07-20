@@ -5,7 +5,6 @@
 
 const QUIZ_SERVLET = document.currentScript.getAttribute('servletName'); 
 const SUBMIT_BUTTON_NAME = document.currentScript.getAttribute('submitButtonName');
-const REDIRECT_PAGE = document.currentScript.getAttribute('redirect');
 
 function getQuestionsAndChoices() {
   const responsePromise = fetch(QUIZ_SERVLET);
@@ -80,6 +79,5 @@ function createSubmitButton(name) {
   const submitButton = document.createElement('input'); 
   submitButton.setAttribute('type','submit');
   submitButton.setAttribute('name', name);
-  submitButton.setAttribute('onclick', REDIRECT_PAGE);
   return submitButton;
 }
