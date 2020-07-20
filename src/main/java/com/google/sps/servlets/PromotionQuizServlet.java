@@ -2,7 +2,12 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.data.GameStage;
+import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.PlayerDatabase;
 import com.google.sps.data.ProcessPromotionQuizResults;
 import com.google.sps.data.PromotionMessage;
 import com.google.sps.data.QuestionChoice;
@@ -10,6 +15,7 @@ import com.google.sps.data.QuestionDatabase;
 import com.google.sps.data.QuizQuestion;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,36 +27,44 @@ public class PromotionQuizServlet extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String QUIZ_SUBMIT = "promotionQuizSubmit";
   // this will be replaced by the game stage id queried from the user
-  private static final String HARDCODED_QUIZ_KEY = "softwareEngineerLevel1";
   private static final String PROMOTED_MESSAGE =
       "Congratulations, you passed the quiz and were promoted!";
   private static final String NOT_PROMOTED_MESSAGE =
       "You did not pass the quiz. Study the content and try again later";
-  private static final Double CORRECT_NEEDED_THRESHOLD = 0.5;
-
-  private static final Gson gson = new Gson();
+  private static final String IS_FINAL_STAGE_MESSAGE =
+      "Congratulations! You reached the final stage! You may no longer be promoted in this path.";
   // future: threshold based on level https://github.com/googleinterns/step144-2020/issues/89
-
-  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private QuestionDatabase questionDatabase;
-  private ArrayList<QuizQuestion> quizQuestions;
+  private static final Double CORRECT_NEEDED_THRESHOLD = 0.5;
+  private static Gson gson;
+  private DatastoreService datastore;
+  private UserService userService;
+  private GameStageDatabase gameStageDatabase;
+  private PlayerDatabase playerDatabase;
+  private List<QuizQuestion> quizQuestions;
 
   @Override
   public void init() {
-    String queryString = getGameStageSpecific_PromotionQuizQueryString();
-    this.setQuestionDatabase(new QuestionDatabase(datastore, queryString));
-  }
-
-  public void setQuestionDatabase(QuestionDatabase questionDatabase) {
-    this.questionDatabase = questionDatabase;
+    this.gson = new Gson();
+    this.userService = UserServiceFactory.getUserService();
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.gameStageDatabase = new GameStageDatabase(datastore);
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    this.quizQuestions = this.questionDatabase.getQuizQuestions();
-    String quizQuestionsJson = gson.toJson(quizQuestions);
     response.setContentType(JSON_CONTENT_TYPE);
-    response.getWriter().println(quizQuestionsJson);
+    try {
+      if (isUserOnFinalStage()) {
+        response.getWriter().println(gson.toJson(IS_FINAL_STAGE_MESSAGE));
+      } else {
+        this.quizQuestions = getQuizQuestions(response);
+        String quizQuestionsJson = gson.toJson(quizQuestions);
+        response.getWriter().println(quizQuestionsJson);
+      }
+    } catch (Exception e) {
+      handleNotLoggedInUser(e.getMessage(), response);
+    }
   }
 
   /**
@@ -60,18 +74,41 @@ public class PromotionQuizServlet extends HttpServlet {
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    this.quizQuestions = this.questionDatabase.getQuizQuestions();
-    Boolean isPromoted = handleQuizSubmission(request);
-    PromotionMessage promotionMessage =
-        new PromotionMessage(isPromoted, isPromoted ? PROMOTED_MESSAGE : NOT_PROMOTED_MESSAGE);
-    if (isPromoted) {
-      // TODO: https://github.com/googleinterns/step144-2020/issues/88
-      // then get the next id by calling currentGameStage.getNextStageId()
-      // then set the players gameStage to the next id
+    try {
+      this.quizQuestions = getQuizQuestions(response);
+      Boolean isPromoted = handleQuizSubmission(request);
+      PromotionMessage promotionMessage =
+          new PromotionMessage(isPromoted, isPromoted ? PROMOTED_MESSAGE : NOT_PROMOTED_MESSAGE);
+      if (isPromoted) {
+        String nextGameStageId = getCurrentGameStage().getNextStageID();
+        this.playerDatabase.setEntityCurrentPageID(nextGameStageId);
+      }
+      String promotionJson = gson.toJson(promotionMessage);
+      response.getWriter().println(promotionJson);
+    } catch (Exception e) {
+      handleNotLoggedInUser(e.getMessage(), response);
     }
-    String promotionJson = gson.toJson(promotionMessage);
-    response.setContentType(JSON_CONTENT_TYPE);
-    response.getWriter().println(promotionJson);
+  }
+
+  private GameStage getCurrentGameStage() throws Exception {
+    String currentGameStageId = this.playerDatabase.getEntityCurrentPageID();
+    return this.gameStageDatabase.getGameStage(currentGameStageId);
+  }
+
+  private boolean isUserOnFinalStage() throws Exception {
+    GameStage currentGameStage = getCurrentGameStage();
+    return currentGameStage.isFinalStage();
+  }
+
+  private List<QuizQuestion> getQuizQuestions(HttpServletResponse response) throws IOException {
+    String queryString = new String();
+    try {
+      queryString = getCurrentGameStage().getQuizKey();
+    } catch (Exception e) {
+      handleNotLoggedInUser(e.getMessage(), response);
+    }
+    QuestionDatabase questionDatabase = new QuestionDatabase(this.datastore, queryString);
+    return questionDatabase.getQuizQuestions();
   }
 
   private Boolean handleQuizSubmission(HttpServletRequest request) {
@@ -86,13 +123,9 @@ public class PromotionQuizServlet extends HttpServlet {
     return isPromoted;
   }
 
-  public String getGameStageSpecific_PromotionQuizQueryString() {
-    // TODO: https://github.com/googleinterns/step144-2020/pull/76
-    // replace HARDCODED_GAME_STAGE_ID_STRING with:
-    // creating a PlayerDatabase
-    // calling getEntityCurrentPageID().getCurrentPageID();
-    // (lookup page ID in game stage database and fetch appropriate game stage)
-    // return gameStage.getQuizKey();
-    return HARDCODED_QUIZ_KEY;
+  private void handleNotLoggedInUser(String message, HttpServletResponse response)
+      throws IOException {
+    response.setContentType(JSON_CONTENT_TYPE);
+    response.getWriter().println(gson.toJson(message));
   }
 }

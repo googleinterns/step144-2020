@@ -375,5 +375,6 @@ a:hover {
   position: absolute;
   height : 550px;
   left : 70%;
+  top : 250px;
   float : left;
 }

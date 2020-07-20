@@ -32,6 +32,10 @@ function getImage() {
       .then(response => response.text())
       .then(message => {
           var messageArray = message.split("\n");
+          // messageArray is an array of three parts : 
+          // 0) Boolean is user logged in
+          // 1) String image blobkey
+          // 2) String user display name
           const imageContainer = document.getElementById('image-container');
           var blobkey = messageArray[1];
           if (blobkey == "default") {

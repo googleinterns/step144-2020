@@ -34,7 +34,7 @@ public final class StoreGameStageTest {
   private StoreGameStage storeGameStage;
   private GameStageDatabase gameStageDatabase;
   private static final String GAME_STAGE_FORM_SUBMIT_PARAMETER = "gameStageSubmit";
-  private static final String GAME_STAGE_NAME_PARAMETER = "gameStageQuestion";
+  private static final String GAME_STAGE_NAME_PARAMETER = "gameStageName";
   private static final String GAME_STAGE_CAREERPATH_PARAMETER = "gameStageCareerPath";
   private static final String GAME_STAGE_LEVEL_PARAMETER = "gameStageLevel";
   private static final String GAME_STAGE_CONTENT_PARAMETER = "gameStageContent";
