@@ -18,6 +18,8 @@ public class GameStage {
    * Game Stages are levels on the gameboard. Each level can be accessed by a player, but only one
    * at a time.
    */
+  private static final String DEFAULT_NEXT_ID_IF_FINAL_STAGE = "finalStage";
+
   private String name;
   /** Represents the title of the game stage */
   private String id;
@@ -54,7 +56,7 @@ public class GameStage {
     this.id = id;
     this.quizKey = quizKey;
     this.isFinalStage = isFinalStage;
-    this.nextStageId = nextStageId;
+    this.nextStageId = isFinalStage ? DEFAULT_NEXT_ID_IF_FINAL_STAGE : nextStageId;
   }
 
   /**
