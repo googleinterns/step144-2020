@@ -25,3 +25,34 @@ function addDialogueToDom(dialogue) {
   const quoteContainer = document.getElementById('dialogue-container');
   quoteContainer.innerText = dialogue;
 }
+
+
+function getImage() {  
+  fetch("/image-handler")
+      .then(response => response.text())
+      .then(message => {
+          var messageArray = message.split("\n");
+          // messageArray is an array of three parts : 
+          // 0) Boolean is user logged in
+          // 1) String image blobkey
+          // 2) String user display name
+          const imageContainer = document.getElementById('image-container');
+          var blobkey = messageArray[1];
+          if (blobkey == "default") {
+              createImageElement("images/face.png");
+          }
+          else {
+            fetch('/get-image?blobkey=' + blobkey).then((pic) => {
+            createImageElement(pic.url);
+          });
+          }
+  });
+}
+
+function createImageElement(pic) {
+  let image = document.createElement("img");
+  image.src = pic;
+  image.id = "player-picture"
+  const imageContainer = document.getElementById('image-container');
+  imageContainer.append(image);
+}
