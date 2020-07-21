@@ -31,5 +31,9 @@ function handleResponse(response) {
 
 function addDialogueToDom(authInfo) {
   const quoteContainer = document.getElementById(LOGIN_CONTAINER);
-  quoteContainer.innerHTML = authInfo;
+  if (authInfo.includes("Logout")) {
+    window.location.replace(window.location.origin + "/characterDesign.html");
+  } else {
+    quoteContainer.innerHTML = authInfo;
+  }
 }
