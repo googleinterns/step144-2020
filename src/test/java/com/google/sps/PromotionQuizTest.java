@@ -15,6 +15,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.sps.data.GameStage;
 import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.data.PromotionMessage;
@@ -181,7 +182,8 @@ public final class PromotionQuizTest {
 
   /** If user is on final stage of a path, doGet outputs a message instead of questions */
   @Test
-  public void testGetMethodResponds_WithMessageNotQuestion_ifOnFinalStage() throws Exception {
+  public void testGetMethodResponds_WithMessageNotQuestion_ifOnFinalStage()
+      throws IOException, LoggedOutException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(writer);
@@ -209,7 +211,7 @@ public final class PromotionQuizTest {
 
   /** Tests that the doPost methods responds with being promoted or not */
   @Test
-  public void testPostMethodRespondsWith_Promoted() throws IOException, Exception {
+  public void testPostMethodRespondsWith_Promoted() throws IOException, LoggedOutException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(writer);
@@ -250,7 +252,7 @@ public final class PromotionQuizTest {
   }
 
   @Test
-  public void testPostMethodRespondsWith_NotPromoted() throws IOException, Exception {
+  public void testPostMethodRespondsWith_NotPromoted() throws IOException, LoggedOutException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(writer);
@@ -290,7 +292,7 @@ public final class PromotionQuizTest {
     Assert.assertEquals(expectedGameStageId, resultGameStageId);
   }
 
-  /** Test that logged out player causes exception message to be written */
+  /** Test that logged out player causes LoggedOutException message to be written */
   @Test
   public void getPromotionQuizWithLoggedOutUser_ExceptionMessageWritten() throws IOException {
     helper.setEnvIsLoggedIn(false);
