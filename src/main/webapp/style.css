@@ -378,3 +378,11 @@ a:hover {
   top : 250px;
   float : left;
 }
+
+#promotion-button {
+  margin-top: 10px;
+  margin-right: 10px;
+  position:absolute;
+  top:0;
+  right:0;
+}
