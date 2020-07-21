@@ -11,6 +11,7 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.google.gson.Gson;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.servlets.SetGameStage;
@@ -96,7 +97,7 @@ public final class SetGameStageTest {
 
   /** Tests that an admin can update their game state once */
   @Test
-  public void doPost_AdminInputChangesTheirGameState() throws IOException, Exception {
+  public void doPost_AdminInputChangesTheirGameState() throws IOException, LoggedOutException {
     // set user as an arbitrary player
     User currentUser = this.localUserService.getCurrentUser();
     String displayName = NAME;
@@ -121,7 +122,8 @@ public final class SetGameStageTest {
 
   /** Tests that an admin can update their game state multiple times */
   @Test
-  public void doPost_AdminInputChangesTheirGameState_MultipleTimes() throws IOException, Exception {
+  public void doPost_AdminInputChangesTheirGameState_MultipleTimes()
+      throws IOException, LoggedOutException {
     // set user as an arbitrary player
     User currentUser = this.localUserService.getCurrentUser();
     String displayName = NAME;
@@ -158,7 +160,7 @@ public final class SetGameStageTest {
     Assert.assertEquals(expected2, result2);
   }
 
-  /** Test that logged out player causes exception message to be written */
+  /** Test that logged out player causes LoggedOutException message to be written */
   @Test
   public void setGameStageWithLoggedOutUser_ExceptionMessageWritten() throws IOException {
     helper.setEnvIsLoggedIn(false);

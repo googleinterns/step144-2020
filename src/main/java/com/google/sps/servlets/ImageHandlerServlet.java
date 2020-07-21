@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import java.util.List;
@@ -126,7 +127,7 @@ public class ImageHandlerServlet extends HttpServlet {
     PlayerDatabase playerDatabase = new PlayerDatabase(DATASTORE);
     try {
       player = playerDatabase.getCurrentPlayerEntity();
-    } catch (Exception e) {
+    } catch (LoggedOutException e) {
     }
     imageID = player.getProperty(IMAGE_ID_PARAMETER).toString();
     displayName = player.getProperty(DISPLAY_NAME_PARAMETER).toString();

@@ -7,6 +7,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.GameStage;
 import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.data.ProcessPromotionQuizResults;
 import com.google.sps.data.PromotionMessage;
@@ -62,7 +63,7 @@ public class PromotionQuizServlet extends HttpServlet {
         String quizQuestionsJson = gson.toJson(quizQuestions);
         response.getWriter().println(quizQuestionsJson);
       }
-    } catch (Exception e) {
+    } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }
   }
@@ -85,17 +86,17 @@ public class PromotionQuizServlet extends HttpServlet {
       }
       String promotionJson = gson.toJson(promotionMessage);
       response.getWriter().println(promotionJson);
-    } catch (Exception e) {
+    } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }
   }
 
-  private GameStage getCurrentGameStage() throws Exception {
+  private GameStage getCurrentGameStage() throws LoggedOutException {
     String currentGameStageId = this.playerDatabase.getEntityCurrentPageID();
     return this.gameStageDatabase.getGameStage(currentGameStageId);
   }
 
-  private boolean isUserOnFinalStage() throws Exception {
+  private boolean isUserOnFinalStage() throws LoggedOutException {
     GameStage currentGameStage = getCurrentGameStage();
     return currentGameStage.isFinalStage();
   }
@@ -104,7 +105,7 @@ public class PromotionQuizServlet extends HttpServlet {
     String queryString = new String();
     try {
       queryString = getCurrentGameStage().getQuizKey();
-    } catch (Exception e) {
+    } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }
     QuestionDatabase questionDatabase = new QuestionDatabase(this.datastore, queryString);
