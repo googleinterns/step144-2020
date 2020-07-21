@@ -20,6 +20,7 @@ public class CareerQuizServlet extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String QUIZ_SUBMIT = "careerQuizSubmit";
   private static final String ENTITY_QUERY_STRING = "careerQuizQuestionAndChoices";
+  private static final String RESULT_REDIRECT_PAGE = "choosebranch.html";
   private static final Gson gson = new Gson();
 
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -46,6 +47,7 @@ public class CareerQuizServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     this.quizQuestions = this.questionDatabase.getQuizQuestions();
     String recommendedPath = handleQuizSubmission(request);
+    response.sendRedirect(RESULT_REDIRECT_PAGE + "?recommendedPath=" + recommendedPath);
     response.setContentType(JSON_CONTENT_TYPE);
     response.getWriter().println(gson.toJson(recommendedPath));
   }
