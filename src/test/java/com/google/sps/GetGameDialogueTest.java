@@ -1,16 +1,15 @@
 package com.google.sps;
 
-import static org.mockito.Mockito.when;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.sps.servlets.GetGameDialogue;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
+import com.google.sps.data.GameStage;
+import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.Player;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,34 +22,84 @@ import org.mockito.MockitoAnnotations;
 public final class GetGameDialogueTest {
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
-  private GetGameDialogue getGameDialogue = new GetGameDialogue();
-  private static final Gson gson = new Gson();
-  private static final String TEST_STRING = "hello this is a test";
+  private final LocalServiceTestHelper helper =
+      new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+  private static final String WEBDEV_LEVEL1_NAME = "Web Developer Level 1";
+  private static final String WEBDEV_INPUT = "Web Developer";
+  private static final String LEVEL_1 = "1";
+  private static final String LEVEL_2 = "2";
+  private static final String QUIZ_ID = "quizkey";
+  private static final String IMG_ID = "image";
+  private static final String PLAYER_ID = "Entitie ID";
+  private static final String TEST_CONTENT = "Some test content here.";
+  private static final Boolean IS_NOT_LAST_STAGE = false;
+  private static final Boolean IS_LAST_STAGE = true;
+  private static final String NAME_PLAYER = "many_admin";
+  private static final String EMAIL_PLAYER = "admin@google.com";
+  private GameStageDatabase gameStageDatabase;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
+    helper.setUp(); // initialize local datastore for testing
+    DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
+    this.gameStageDatabase = new GameStageDatabase(localDatastore);
+  }
+
+  @After
+  public void tearDown() {
+    helper.tearDown();
   }
 
   /**
-   * Tests that the doGet method returns JSON containing database queried career question and
-   * choices
+   * Tests that the GameStage is stored sucessfully and can be queried from the database sucessfully
    */
   @Test
-  public void testGetGameDialogue_Outputs() throws IOException {
-    // mocks the HttpServletResponse, which uses a writer to output JSON response
-    StringWriter stringWriter = new StringWriter();
-    PrintWriter printWriter = new PrintWriter(stringWriter);
+  public void get_GameStageFrom_Id_CompareContent_succeeds() {
+    String name = WEBDEV_LEVEL1_NAME;
+    String content = TEST_CONTENT;
+    String id = WEBDEV_INPUT + LEVEL_1;
+    String quizKey = QUIZ_ID;
+    Boolean isFinalStage = IS_NOT_LAST_STAGE;
+    String nextLevelId = WEBDEV_INPUT + LEVEL_2;
 
-    when(this.response.getWriter()).thenReturn(printWriter);
+    GameStage expectedGameStage =
+        new GameStage(name, content, id, quizKey, isFinalStage, nextLevelId);
+    gameStageDatabase.storeGameStage(expectedGameStage);
 
-    // mocks the result of querying the GetGameDialogue
-    this.getGameDialogue.doGet(this.request, this.response);
-    // checks that the string writer used in servlet mock response contains the database object JSON
-    // that matches with the hardcoded CareerQAndChoice given be the mock database
-    Gson gson = new Gson();
-    JsonElement expected = JsonParser.parseString(gson.toJson(TEST_STRING));
-    JsonElement result = JsonParser.parseString(stringWriter.toString());
-    Assert.assertEquals(expected, result);
+    GameStage resultGameStage = this.gameStageDatabase.getGameStage(WEBDEV_INPUT, 1);
+
+    String result = resultGameStage.getContent();
+    String expected = expectedGameStage.getContent();
+    Assert.assertEquals(result, expected);
+  }
+
+  /**
+   * Tests that the objects that queried from the database sucessfully and compare the content by
+   * getting a gameStage
+   */
+  @Test
+  public void doGet_gameStageFromPlayerId_succeeds() {
+    String nameP = NAME_PLAYER;
+    String email = EMAIL_PLAYER;
+    String id = PLAYER_ID;
+    String img_id = IMG_ID;
+    String currentPageID = WEBDEV_INPUT + LEVEL_1;
+    Player admin = new Player(nameP, email, id, img_id, currentPageID);
+
+    String name = WEBDEV_LEVEL1_NAME;
+    String content = TEST_CONTENT;
+    String quizKey = QUIZ_ID;
+    Boolean isFinalStage = IS_NOT_LAST_STAGE;
+    String nextLevelId = WEBDEV_INPUT + LEVEL_2;
+
+    GameStage expectedGameStage =
+        new GameStage(name, content, currentPageID, quizKey, isFinalStage, nextLevelId);
+    gameStageDatabase.storeGameStage(expectedGameStage);
+    GameStage currentGameStageForPlayer = gameStageDatabase.getGameStage(admin.getCurrentPageID());
+
+    String result = currentGameStageForPlayer.getContent();
+    String expected = TEST_CONTENT;
+    Assert.assertEquals(result, expected);
   }
 }
