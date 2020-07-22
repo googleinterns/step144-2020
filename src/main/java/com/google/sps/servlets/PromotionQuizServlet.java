@@ -10,7 +10,6 @@ import com.google.sps.data.GameStageDatabase;
 import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.data.ProcessPromotionQuizResults;
-import com.google.sps.data.PromotionMessage;
 import com.google.sps.data.QuestionChoice;
 import com.google.sps.data.QuestionDatabase;
 import com.google.sps.data.QuizQuestion;
@@ -27,13 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 public class PromotionQuizServlet extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String QUIZ_SUBMIT = "promotionQuizSubmit";
-  // this will be replaced by the game stage id queried from the user
-  private static final String PROMOTED_MESSAGE =
-      "Congratulations, you passed the quiz and were promoted!";
-  private static final String NOT_PROMOTED_MESSAGE =
-      "You did not pass the quiz. Study the content and try again later";
   private static final String IS_FINAL_STAGE_MESSAGE =
       "Congratulations! You reached the final stage! You may no longer be promoted in this path.";
+  private static final String RESULT_REDIRECT_PAGE = "promotionresults.html";
   // future: threshold based on level https://github.com/googleinterns/step144-2020/issues/89
   private static final Double CORRECT_NEEDED_THRESHOLD = 0.5;
   private static Gson gson;
@@ -78,14 +73,11 @@ public class PromotionQuizServlet extends HttpServlet {
     try {
       this.quizQuestions = getQuizQuestions(response);
       Boolean isPromoted = handleQuizSubmission(request);
-      PromotionMessage promotionMessage =
-          new PromotionMessage(isPromoted, isPromoted ? PROMOTED_MESSAGE : NOT_PROMOTED_MESSAGE);
       if (isPromoted) {
         String nextGameStageId = getCurrentGameStage().getNextStageID();
         this.playerDatabase.setEntityCurrentPageID(nextGameStageId);
       }
-      String promotionJson = gson.toJson(promotionMessage);
-      response.getWriter().println(promotionJson);
+      response.sendRedirect(RESULT_REDIRECT_PAGE + "?isPromoted=" + Boolean.toString(isPromoted));
     } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }

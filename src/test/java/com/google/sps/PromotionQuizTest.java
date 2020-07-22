@@ -18,7 +18,6 @@ import com.google.sps.data.GameStageDatabase;
 import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
-import com.google.sps.data.PromotionMessage;
 import com.google.sps.data.QuestionChoice;
 import com.google.sps.data.QuestionDatabase;
 import com.google.sps.data.QuizQuestion;
@@ -103,10 +102,6 @@ public final class PromotionQuizTest {
       "You did not pass the quiz. Study the content and try again later";
   private static final String IS_FINAL_STAGE_MESSAGE =
       "Congratulations! You reached the final stage! You may no longer be promoted in this path.";
-  private static final PromotionMessage IS_PROMOTED =
-      new PromotionMessage(/*isPromoted = */ true, PROMOTED_MESSAGE);
-  private static final PromotionMessage IS_NOT_PROMOTED =
-      new PromotionMessage(/*isPromoted = */ false, NOT_PROMOTED_MESSAGE);
   private static final List<QuestionChoice> HARD_CODED_CHOICES =
       Arrays.asList(
           new QuestionChoice(CHOICE_1, CAREER_1, ACCEPTABLE),
@@ -240,11 +235,6 @@ public final class PromotionQuizTest {
 
     this.promotionQuizServlet.doPost(this.request, this.response);
 
-    // checks that user promotion message is correct
-    JsonElement expectedMessage = JsonParser.parseString(gson.toJson(IS_PROMOTED));
-    JsonElement resultMessage = JsonParser.parseString(stringWriter.toString());
-    Assert.assertEquals(expectedMessage, resultMessage);
-
     // checks that user game stage is updated to next level
     String expectedGameStageId = WEB_DEVELOPER + LEVEL_3;
     String resultGameStageId = this.playerDatabase.getEntityCurrentPageID();
@@ -280,11 +270,6 @@ public final class PromotionQuizTest {
     when(this.request.getParameter(QUESTION)).thenReturn(choiceJson);
 
     this.promotionQuizServlet.doPost(this.request, this.response);
-
-    // checks that user promotion message is correct
-    JsonElement expectedMessage = JsonParser.parseString(gson.toJson(IS_NOT_PROMOTED));
-    JsonElement resultMessage = JsonParser.parseString(stringWriter.toString());
-    Assert.assertEquals(expectedMessage, resultMessage);
 
     // checks that user game stage is *not* updated to next level
     String expectedGameStageId = PROJECT_MANAGER + LEVEL_2;
