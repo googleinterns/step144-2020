@@ -11,10 +11,13 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+const FINAL_STAGE_BUTTON_VALUE = 'COMPLETE PATH';
+const FINAL_STAGE_REDIRECTION = 'CompletedPath.html';
 
 var dialogueArray;
 var i;
 function loadFunctions() {
+  modifyIfFinalStage();
   getImage();
   getDialogue();
 }
@@ -73,4 +76,19 @@ function createImageElement(pic) {
   image.id = "player-picture"
   const imageContainer = document.getElementById('image-container');
   imageContainer.append(image);
+}
+
+function modifyIfFinalStage() {
+  fetch("/isFinalStage")
+      .then(response => response.text())
+      .then(message => {
+        let isFinalStage = (message.includes('true'));
+        if (isFinalStage) {
+          const promotionButton = document.getElementById('promotion-button');
+          promotionButton.innerHTML = FINAL_STAGE_BUTTON_VALUE;
+          promotionButton.onclick = function() {
+            location.href = FINAL_STAGE_REDIRECTION;
+          }
+        }
+      });
 }
