@@ -11,6 +11,14 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+var dialogueArray;
+var i;
+function loadFunctions() {
+  getImage();
+  getDialogue();
+}
+
 function getDialogue() {
   const responsePromise = fetch('/game-dialogue');
   responsePromise.then(handleResponse);
@@ -23,7 +31,17 @@ function handleResponse(response) {
 
 function addDialogueToDom(dialogue) {
   const quoteContainer = document.getElementById('dialogue-container');
-  quoteContainer.innerText = dialogue;
+  dialogueArray = dialogue.split(";");
+  i = 0;
+  quoteContainer.innerText = dialogueArray[i];
+}
+
+function nextLine() {
+  const quoteContainer = document.getElementById('dialogue-container');
+  if (i < dialogueArray.length-1){
+    i ++;
+  }
+  quoteContainer.innerText = dialogueArray[i];
 }
 
 
