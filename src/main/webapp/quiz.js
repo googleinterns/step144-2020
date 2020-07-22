@@ -28,6 +28,8 @@ function addToDom(questionsAndChoicesList) {
     choices = questionsAndChoicesList[i].choices;
     questionsForm.appendChild(
         createQuestionAndChoices(question, choices));
+    questionsForm.appendChild(document.createElement('br'));
+    questionsForm.appendChild(document.createElement('br'));
  }
   let submitButton = createSubmitButton(SUBMIT_BUTTON_NAME);
   questionsForm.appendChild(submitButton);
@@ -36,9 +38,10 @@ function addToDom(questionsAndChoicesList) {
 
 function createQuestionAndChoices(question, choices) {
   const formSection = document.createElement('div');
-
+  formSection.id = "quiz-container";
   const questionText = document.createElement('p');
   questionText.innerHTML = question;
+  questionText.id = "question-text";
   formSection.appendChild(questionText);
 
   const choiceInput = addChoiceInput(question, choices);
@@ -49,12 +52,14 @@ function createQuestionAndChoices(question, choices) {
 
 function addChoiceInput(question, choices) {
   const choicesDiv = document.createElement('div');
+  choicesDiv.id = "choices-container";
   for (let i = 0; i < choices.length; i++) {
     let choiceLabel = createLabel(choices[i].choiceText);
     const buttonValue = JSON.stringify(choices[i]);
-    let choiceRadio = createRadioButton(question, buttonValue);
-    choicesDiv.appendChild(choiceLabel);
+    let choiceRadio = createRadioButton(question, buttonValue, choices[i].choiceText);
     choicesDiv.appendChild(choiceRadio);
+    choicesDiv.appendChild(choiceLabel);
+    choicesDiv.appendChild(document.createElement('br'));
    }
   return choicesDiv;
 }
@@ -66,11 +71,12 @@ function createLabel(text) {
   return label;
 }
 
-function createRadioButton(name, value) {
+function createRadioButton(name, value, text) {
   const button = document.createElement('input');
   button.setAttribute('type', 'radio');
   button.setAttribute('name', name);
   button.setAttribute('value', value);
+  button.setAttribute('id', text);
   button.required = true;
   return button;
 }
@@ -79,5 +85,6 @@ function createSubmitButton(name) {
   const submitButton = document.createElement('input'); 
   submitButton.setAttribute('type','submit');
   submitButton.setAttribute('name', name);
+  submitButton.setAttribute("class", "step-button");
   return submitButton;
 }
