@@ -423,6 +423,26 @@ a:hover {
   height: 630px; 
 }
 
-.step-color {
-    color: var(--yellow);
+.step-yellow {
+  color: var(--yellow);
 }
+
+/** imageHandler classes **/
+.step-textarea {
+  border: 2px solid var(--orange);
+}
+
+.step-oneline {
+  display:flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+}
+
+.step-center-imagehandler {
+  position:absolute;
+  margin-left: 39%;
+  margin-right: 39%;
+}
+
+
