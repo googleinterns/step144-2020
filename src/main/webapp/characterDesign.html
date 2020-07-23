@@ -8,15 +8,21 @@
     <script src="characterDesign.js"></script>
   </head>
   <body onload="loadCharacterDesignScripts()">
-    <h1>Character Design</h1>
+    <h1 class="step-outline">Character Design</h1>
     <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
-      <p>Type nickname:</p>
-      <textarea name="message" required></textarea>
+    <div class="step-center-imagehandler">
+      <span class="step-oneline">
+        <p>Type nickname:</p>
+        <textarea class="step-outline" name="message" required></textarea>
+      </span>
       <br/>
-      <p>Upload an image:</p>
-      <input type="file" name="image" class="file-input" id="image">
-      <br/><br/>
-      <button>Submit</button>
+      <span class="step-oneline">
+        <p>Upload an image:</p>
+        <input type="file" name="image" class="file-input" id="image">
+      </span>
+      <br/>
+      <button class="step-button">Submit</button>
+      </div>
     </form>
   </body>
 </html>
