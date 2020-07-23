@@ -24,16 +24,7 @@ function fetchImageHandler() {
         })
 }
 
-function getFileInput() {
-  document.querySelector(".file-input").addEventListener('change', function(e){
-    var fileName = document.getElementById("image").files[0].name;
-    var nextElement = e.target.nextElementSibling;
-    nextElement.innerText = fileName;
-  });
-}
-
 function loadCharacterDesignScripts() {
-    getFileInput();
     fetchBlobstoreUrl();
 }
 
@@ -63,4 +54,13 @@ function createImageElement(pic) {
   image.id = "player-picture"
   const imageContainer = document.getElementById('image-container');
   imageContainer.append(image);
+}
+
+/** Show uploaded image on player preview as soon as it is changed */
+function previewImage(event) {
+  const playerPicture = document.getElementById('player-picture');
+  playerPicture.src = URL.createObjectURL(event.target.files[0]);
+  playerPicture.onload = function() {
+    URL.revokeObjectURL(playerPicture.src) // free memory
+  }
 }

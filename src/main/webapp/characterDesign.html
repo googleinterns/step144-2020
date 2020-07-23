@@ -18,11 +18,15 @@
       <br/>
       <span class="step-oneline">
         <p>Upload an image:</p>
-        <input type="file" name="image" class="file-input" id="image">
+        <input onchange = "previewImage(event)" type="file" name="image" class="file-input" id="image">
       </span>
       <br/>
       <button class="step-button">Submit</button>
       </div>
     </form>
+     <div id="image-container">
+        <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
+        <img id="player-picture" src="images/face.png" alt="uploaded face">
+    </div>
   </body>
 </html>
