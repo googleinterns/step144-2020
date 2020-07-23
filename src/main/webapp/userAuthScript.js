@@ -18,6 +18,7 @@
 */
 var FETCH_LOGIN = '/login';
 var LOGIN_CONTAINER = 'login-container';
+var BUTTON_CONTAINER = 'button-container';
 
 function login() {
   const responsePromise = fetch(FETCH_LOGIN);
@@ -32,8 +33,41 @@ function handleResponse(response) {
 function addDialogueToDom(authInfo) {
   const quoteContainer = document.getElementById(LOGIN_CONTAINER);
   if (authInfo.includes("Logout")) {
-    window.location.replace(window.location.origin + "/characterDesign.html");
-  } else {
-    quoteContainer.innerHTML = authInfo;
+    loadOptions(authInfo);
   }
+  quoteContainer.innerHTML = authInfo;
+  
+}
+
+function loadOptions (logoutLink) {
+  let lastStageButton = document.createElement("button");
+  let newGameButton = document.createElement("button");
+  let lastStageLink = document.createElement("a");
+  let newGameLink = document.createElement("a");
+
+  lastStageButton.className = "step-button";
+  newGameButton.className = "step-button";
+  lastStageButton.innerText = "Return to Last Stage";
+  newGameButton.innerText = "New Game";
+
+  lastStageLink.href ="gameStage.html";
+  lastStageLink.appendChild(lastStageButton);
+  newGameLink.href = "characterDesign.html";
+  newGameLink.appendChild(newGameButton);
+
+  //lastStageButton.onclick = getLastGameStage();
+  newGameLink.onclick = newGame;
+  const buttonContainer = document.getElementById(BUTTON_CONTAINER);
+  buttonContainer.appendChild(lastStageLink);
+  buttonContainer.appendChild(document.createElement("br"));
+  buttonContainer.appendChild(newGameLink);
+  buttonContainer.appendChild(document.createElement("br"));
+}
+
+
+function newGame() {
+  const params = new URLSearchParams();
+  fetch('/delete-user', {method: 'POST', body: params}); 
+  // This needs to also change the player database to delete the player 
+  // already associated with this user's email;
 }
