@@ -70,7 +70,7 @@ function getImage() {
 function createImageElement(pic) {
   let image = document.createElement("img");
   image.src = pic;
-  image.id = "player-picture"
+  image.id = "player-picture";
   const imageContainer = document.getElementById('image-container');
   imageContainer.append(image);
 }

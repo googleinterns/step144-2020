@@ -406,12 +406,23 @@ a:hover {
 }
 
 #question-text {
-    font-weight: 900;
-    color: var(--charcoal);
+  font-weight: 900;
+  color: var(--charcoal);
 }
 
 #choices-container {
-    text-align: left;
-    width: 70%;
-    margin: auto;
+  text-align: left;
+  width: 70%;
+  margin: auto;
+}
+
+/** promotion quiz classes **/
+.step-meme img {
+  border: 5px solid var(--orange);
+  width: 600px;
+  height: 630px; 
+}
+
+.step-color {
+    color: var(--yellow);
 }
