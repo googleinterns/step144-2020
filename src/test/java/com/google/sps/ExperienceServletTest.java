@@ -67,7 +67,7 @@ public final class ExperienceServletTest {
   private static final String DISPLAY_NAME = "TestName";
   private static final String EMAIL = "TestName@email.com";
   private static final Gson gson = new Gson();
-  private static final String EXPERIENCE_PARAMETER = "experience";
+  private static final String EXPERIENCE_PARAMETER = "experiencePoints";
   private static final String TEST_EXPERIENCE = "12";
   private static final String TEST_EXPERIENCE_PLUS_ONE = "13";
   private static final String NEW_LINE = "\n";
@@ -94,11 +94,10 @@ public final class ExperienceServletTest {
     helper.tearDown();
   }
 
-  @Rule public ExpectedException notImplementedRule = ExpectedException.none();
+  @Rule public ExpectedException emptyImageRule = ExpectedException.none();
 
   @Test
   public void doGet_successfulPath_retrievePlayerExp() throws IOException, LoggedOutException {
-    notImplementedRule.expect(UnsupportedOperationException.class);
     User currentUser = this.localUserService.getCurrentUser();
     Player player = createCurrentPlayer(this.playerDatabase, currentUser);
     this.playerDatabase.addPlayerToDatabase(player);
@@ -113,7 +112,6 @@ public final class ExperienceServletTest {
 
   @Test
   public void doPost_successfulPath_updatesPlayerExp() throws IOException, LoggedOutException {
-    notImplementedRule.expect(UnsupportedOperationException.class);
     User currentUser = this.localUserService.getCurrentUser();
     Player player = createCurrentPlayer(this.playerDatabase, currentUser);
     this.playerDatabase.addPlayerToDatabase(player);

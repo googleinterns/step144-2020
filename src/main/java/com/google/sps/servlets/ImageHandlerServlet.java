@@ -39,6 +39,7 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String EMPTY_PARAMETER = "empty";
   private static final String ID_PARAMETER = "id";
   private static final String IMAGE_ID_PARAMETER = "imageID";
+  private static final String EXPERIENCE_PARAMETER = "experience";
   private static final String IMAGE_PARAMETER = "image";
   private static final String DEFAULT_PARAMETER = "default";
   private static final String PLAYER_QUERY_PARAMETER = "player";
@@ -46,6 +47,7 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
   private static final String CHARACTER_DESIGN_REDIRECT_PARAMETER = "/characterDesign.html";
   private static final String CONTENT_TYPE = "text/html";
+  private static final int NO_EXPERIENCE = 0;
   private User user = UserServiceFactory.getUserService().getCurrentUser();
   private Entity player;
   private DatastoreService DATASTORE = DatastoreServiceFactory.getDatastoreService();
@@ -79,6 +81,7 @@ public class ImageHandlerServlet extends HttpServlet {
     player.setProperty(IMAGE_ID_PARAMETER, imageBlobKeyString);
     player.setProperty(DISPLAY_NAME_PARAMETER, displayName);
     player.setProperty(ID_PARAMETER, user.getUserId());
+    player.setProperty(EXPERIENCE_PARAMETER, NO_EXPERIENCE);
     return player;
   }
 

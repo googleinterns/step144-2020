@@ -100,7 +100,6 @@ public class PlayerDatabase {
     return id;
   }
 
-  // get experience
   public int getEntityExperience() throws LoggedOutException {
     String experienceString =
         getCurrentPlayerEntity().getProperty(EXPERIENCE_QUERY_STRING).toString();
@@ -128,7 +127,6 @@ public class PlayerDatabase {
     setPlayerProperty(ID_QUERY_STRING, id);
   }
 
-  // set experience
   public void setEntityExperience(int experience) throws LoggedOutException {
     setPlayerProperty(EXPERIENCE_QUERY_STRING, Integer.toString(experience));
   }
