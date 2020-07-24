@@ -92,3 +92,15 @@ function modifyIfFinalStage() {
         }
       });
 }
+
+//play button functions
+function playmusic() {
+  //TODO: change the play and pause to toggle on and off icons
+  if(document.getElementById('player-button').innerText == "PAUSE"){
+    document.getElementById('player-button').innerText = "PLAY";
+  }
+  else{
+    document.getElementById('player-button').innerText = "PAUSE";
+  }
+  document.getElementById('player').muted=!document.getElementById('player').muted;
+}
