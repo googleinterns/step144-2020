@@ -20,6 +20,7 @@ public class PlayerDatabase {
   private static final String ID_QUERY_STRING = "id";
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
+  private static final String EXPERIENCE_QUERY_STRING = "experience";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
   private User user;
   private String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
@@ -99,6 +100,13 @@ public class PlayerDatabase {
     return id;
   }
 
+  // get experience
+  public int getEntityExperience() throws LoggedOutException {
+    String experienceString =
+        getCurrentPlayerEntity().getProperty(EXPERIENCE_QUERY_STRING).toString();
+    return Integer.parseInt(experienceString);
+  }
+
   // get displayname
   public String getEntityDisplayName() throws LoggedOutException {
     String displayName = getCurrentPlayerEntity().getProperty(DISPLAY_NAME_QUERY_STRING).toString();
@@ -118,6 +126,11 @@ public class PlayerDatabase {
   // set id
   public void setEntityID(String id) throws LoggedOutException {
     setPlayerProperty(ID_QUERY_STRING, id);
+  }
+
+  // set experience
+  public void setEntityExperience(int experience) throws LoggedOutException {
+    setPlayerProperty(EXPERIENCE_QUERY_STRING, Integer.toString(experience));
   }
 
   // set displayname
