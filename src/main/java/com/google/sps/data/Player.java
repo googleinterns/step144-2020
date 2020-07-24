@@ -6,6 +6,7 @@ public class Player {
   private String id;
   private String imageID;
   private String currentPageID;
+  private int experience;
 
   public Player(String displayName, String email, String imageID) {
     this.displayName = displayName;
@@ -17,6 +18,17 @@ public class Player {
     this(displayName, email, imageID);
     this.id = id;
     this.currentPageID = currentPageID;
+  }
+
+  public Player(
+      String displayName,
+      String email,
+      String id,
+      String imageID,
+      String currentPageID,
+      int experience) {
+    this(displayName, email, id, imageID, currentPageID);
+    this.experience = experience;
   }
 
   public String getDisplayName() {
@@ -39,6 +51,10 @@ public class Player {
     return currentPageID;
   }
 
+  public int getExperience() {
+    return experience;
+  }
+
   public void setDisplayName(String displayName) {
     this.displayName = displayName;
   }
@@ -57,5 +73,9 @@ public class Player {
 
   public void setCurrentPageID(String currentPageID) {
     this.currentPageID = currentPageID;
+  }
+
+  public void setExperience(int experience) {
+    this.experience = experience;
   }
 }

@@ -68,7 +68,10 @@ public final class ExperienceServletTest {
   private static final String EMAIL = "TestName@email.com";
   private static final Gson gson = new Gson();
   private static final String EXPERIENCE_PARAMETER = "experience";
-  private static final int TEST_EXPERIENCE = 12;
+  private static final String TEST_EXPERIENCE = "12";
+  private static final String TEST_EXPERIENCE_PLUS_ONE = "13";
+  private static final String NEW_LINE = "\n";
+  private int experience;
   private static ExperienceServlet experienceServlet;
 
   @Mock private HttpServletRequest request;
@@ -81,6 +84,7 @@ public final class ExperienceServletTest {
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.experienceServlet = new ExperienceServlet();
     this.experienceServlet.init();
+    this.experience = 12;
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     MockitoAnnotations.initMocks(this);
   }
@@ -94,13 +98,16 @@ public final class ExperienceServletTest {
 
   @Test
   public void doGet_successfulPath_getsPlayerExp() throws IOException, LoggedOutException {
+    User currentUser = this.localUserService.getCurrentUser();
+    Player player = createCurrentPlayer(this.playerDatabase, currentUser);
+    this.playerDatabase.addPlayerToDatabase(player);
+    this.playerDatabase.setEntityExperience(12);
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
     this.experienceServlet.doGet(this.request, this.response);
-    // int result = Integer.parseInt(stringWriter.toString());
-    Assert.assertTrue(true);
-    // Assert.assertTrue(result == TEST_EXPERIENCE);
+    String result = stringWriter.toString().split(NEW_LINE)[0];
+    Assert.assertTrue(result.equals(TEST_EXPERIENCE));
   }
 
   @Test
@@ -108,17 +115,15 @@ public final class ExperienceServletTest {
     User currentUser = this.localUserService.getCurrentUser();
     Player player = createCurrentPlayer(this.playerDatabase, currentUser);
     this.playerDatabase.addPlayerToDatabase(player);
-    String testExperiencePlusOne = Integer.toString(TEST_EXPERIENCE + 1);
-    when(this.request.getParameter(EXPERIENCE_PARAMETER)).thenReturn(testExperiencePlusOne);
+    when(this.request.getParameter(EXPERIENCE_PARAMETER)).thenReturn(TEST_EXPERIENCE_PLUS_ONE);
     this.experienceServlet.doPost(this.request, this.response);
 
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
     this.experienceServlet.doGet(this.request, this.response);
-    // int result = Integer.parseInt(stringWriter.toString());
-    Assert.assertTrue(true);
-    // Assert.assertTrue(result == (TEST_EXPERIENCE + 1));
+    String result = stringWriter.toString().split(NEW_LINE)[0];
+    Assert.assertTrue(result.equals(TEST_EXPERIENCE_PLUS_ONE));
   }
 
   private Player createCurrentPlayer(PlayerDatabase playerDatabase, User currentUser) {
