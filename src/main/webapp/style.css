@@ -391,6 +391,18 @@ a:hover {
   position:absolute;
   top:0;
   right:0;
+  width: 370px;
+  text-align: center;
+}
+
+#exp-container {
+    position: absolute;
+    font-size: 30px;
+    width : 300px;
+    color: white;
+    top: 300px;
+    font-family: 'Press Start 2P', cursive; 
+    left: -300px;
 }
 
 /** Quiz Pages **/
