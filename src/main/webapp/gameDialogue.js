@@ -15,11 +15,16 @@ const FINAL_STAGE_BUTTON_VALUE = 'COMPLETE PATH';
 const FINAL_STAGE_REDIRECTION = 'CompletedPath.html';
 
 var dialogueArray;
-var i;
+var dialogueRegex;
+var experience;
+var threshold = 15;
+
 function loadFunctions() {
   modifyIfFinalStage();
+  workPromoButtonSwitch();
   getImage();
   getDialogue();
+  getExperience();
 }
 
 function getDialogue() {
@@ -35,16 +40,16 @@ function handleResponse(response) {
 function addDialogueToDom(dialogue) {
   const quoteContainer = document.getElementById('dialogue-container');
   dialogueArray = dialogue.split(";");
-  i = 0;
-  quoteContainer.innerText = dialogueArray[i];
+  dialogueRegex = 0;
+  quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
 
 function nextLine() {
   const quoteContainer = document.getElementById('dialogue-container');
-  if (i < dialogueArray.length-1){
-    i ++;
+  if (dialogueRegex < dialogueArray.length-1){
+    dialogueRegex ++;
   }
-  quoteContainer.innerText = dialogueArray[i];
+  quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
 
 
@@ -93,14 +98,58 @@ function modifyIfFinalStage() {
       });
 }
 
-//play button functions
-function playmusic() {
-  //TODO: change the play and pause to toggle on and off icons
-  if(document.getElementById('player-button').innerText == "PAUSE"){
-    document.getElementById('player-button').innerText = "PLAY";
+function getExperience() {
+  fetch("/experience")
+  .then(response => response.text())
+  .then(expString => {
+    experience = parseInt(expString);
+    showExperience(experience);
+  });
+}
+
+function showExperience(experience) {
+  const expContainer = document.getElementById('experience-container');
+  expContainer.innerText = "EXP:" + experience;
+}
+
+function changeExperience() {
+  experience ++;
+  workPromoButtonSwitch();
+  showExperience(experience);
+  const params = new URLSearchParams();
+  params.append('experience', experience);
+  fetch('/experience', {method: 'POST', body: params});
+}
+
+function workPromoButtonSwitch() {
+  if (experience == threshold) {
+    // Changes button to "TRY FOR PROMOTION"
+    const promoButton = document.getElementById('promotion-button');
+    promoButton.innerText = "TRY FOR PROMOTION";
+  } else if (experience == threshold + 1) {
+    // Changes button link to promotion.html, and removes button onclick (null)
+    showPromoButton(true, null);
+  } else {
+    // Changes button onclick to increase experience and removes button link
+    showPromoButton(false, changeExperience);
   }
-  else{
-    document.getElementById('player-button').innerText = "PAUSE";
+}
+
+function showPromoButton(isLinkActive, onclick) {
+  const promoButton = document.getElementById('promotion-button');
+  const promoLink = document.getElementById('promotion-link');
+  if (isLinkActive) {
+    promoLink.href = "promotionquiz.html";
+  } else {
+    promoLink.removeAttribute("href");
   }
-  document.getElementById('player').muted=!document.getElementById('player').muted;
+  promoButton.onclick = onclick;
+  promoButton.innerText = getWorkButtonTask();
+}
+
+function getWorkButtonTask() {
+  var taskArray = ["WRITE SOME CODE", "ASK MANAGER FOR FEEDBACK",
+      "ATTEND A MEETING", "TEST YOUR CODE", "FIX A BUG", "GET SOME COFFEE", "DEBUG CODE"];
+  var randomNum = Math.floor(Math.random() * taskArray.length);
+  return taskArray[randomNum];
 }
