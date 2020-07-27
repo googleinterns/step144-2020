@@ -18,13 +18,18 @@ const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
 const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
 
 var dialogueArray;
-var i;
 var isPlayingmusic = true;
+var dialogueRegex;
+var experience;
+var threshold = 15;
+
 function loadFunctions() {
   modifyIfFinalStage();
+  workPromoButtonSwitch();
   getImage();
   getDialogue();
   playmusic();
+  getExperience();
 }
 
 function getDialogue() {
@@ -40,18 +45,17 @@ function handleResponse(response) {
 function addDialogueToDom(dialogue) {
   const quoteContainer = document.getElementById('dialogue-container');
   dialogueArray = dialogue.split(";");
-  i = 0;
-  quoteContainer.innerText = dialogueArray[i];
+  dialogueRegex = 0;
+  quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
 
 function nextLine() {
   const quoteContainer = document.getElementById('dialogue-container');
-  if (i < dialogueArray.length-1){
-    i ++;
+  if (dialogueRegex < dialogueArray.length-1){
+    dialogueRegex ++;
   }
-  quoteContainer.innerText = dialogueArray[i];
+  quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
-
 
 function getImage() {  
   fetch("/image-handler")
@@ -109,4 +113,60 @@ function playmusic() {
     isPlayingmusic = true;
     document.getElementById('player').muted=!document.getElementById('player').muted;
   }
+}
+
+function getExperience() {
+  fetch("/experience")
+  .then(response => response.text())
+  .then(expString => {
+    experience = parseInt(expString);
+    showExperience(experience);
+  });
+}
+
+function showExperience(experience) {
+  const expContainer = document.getElementById('experience-container');
+  expContainer.innerText = "EXP:" + experience;
+}
+
+function changeExperience() {
+  experience ++;
+  workPromoButtonSwitch();
+  showExperience(experience);
+  const params = new URLSearchParams();
+  params.append('experience', experience);
+  fetch('/experience', {method: 'POST', body: params});
+}
+
+function workPromoButtonSwitch() {
+  if (experience == threshold) {
+    // Changes button to "TRY FOR PROMOTION"
+    const promoButton = document.getElementById('promotion-button');
+    promoButton.innerText = "TRY FOR PROMOTION";
+  } else if (experience == threshold + 1) {
+    // Changes button link to promotion.html, and removes button onclick (null)
+    showPromoButton(true, null);
+  } else {
+    // Changes button onclick to increase experience and removes button link
+    showPromoButton(false, changeExperience);
+  }
+}
+
+function showPromoButton(isLinkActive, onclick) {
+  const promoButton = document.getElementById('promotion-button');
+  const promoLink = document.getElementById('promotion-link');
+  if (isLinkActive) {
+    promoLink.href = "promotionquiz.html";
+  } else {
+    promoLink.removeAttribute("href");
+  }
+  promoButton.onclick = onclick;
+  promoButton.innerText = getWorkButtonTask();
+}
+
+function getWorkButtonTask() {
+  var taskArray = ["WRITE SOME CODE", "ASK MANAGER FOR FEEDBACK",
+      "ATTEND A MEETING", "TEST YOUR CODE", "FIX A BUG", "GET SOME COFFEE", "DEBUG CODE"];
+  var randomNum = Math.floor(Math.random() * taskArray.length);
+  return taskArray[randomNum];
 }
