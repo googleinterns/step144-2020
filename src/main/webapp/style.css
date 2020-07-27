@@ -277,7 +277,7 @@ a:hover {
   background-color: #555; 
 }
 
-/** Responsive media classes to addapt to diffrent devices **/
+/** Responsive media classes to adapt to diffrent devices **/
 @media screen and (max-width: 650px) {
   .step-team-column {
     width: 100%;
@@ -455,4 +455,24 @@ a:hover {
   position:absolute;
   margin-left: 39%;
   margin-right: 39%;
+}
+
+/* classes for music player */
+.align-bottom-center{
+  position: absolute;
+  margin-left: 50%;
+  margin-right: 50%;
+  margin-top: 25%;
+}
+
+audio {
+  float: left;
+}
+
+.step-align-icon {
+  margin-top: 10px;
+  margin-left: 10px;
+  position:absolute;
+  top:0;
+  left:0;
 }

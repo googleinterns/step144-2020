@@ -13,8 +13,12 @@
 // limitations under the License.
 const FINAL_STAGE_BUTTON_VALUE = 'COMPLETE PATH';
 const FINAL_STAGE_REDIRECTION = 'CompletedPath.html';
+const MUSIC_ICON= 'musicIcon';
+const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
+const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
 
 var dialogueArray;
+var isPlayingmusic = true;
 var dialogueRegex;
 var experience;
 var threshold = 15;
@@ -24,6 +28,7 @@ function loadFunctions() {
   workPromoButtonSwitch();
   getImage();
   getDialogue();
+  playmusic();
   getExperience();
 }
 
@@ -51,7 +56,6 @@ function nextLine() {
   }
   quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
-
 
 function getImage() {  
   fetch("/image-handler")
@@ -96,6 +100,19 @@ function modifyIfFinalStage() {
           }
         }
       });
+}
+
+//play button functions
+function playmusic() {
+  const audio = document.getElementById(MUSIC_ICON);
+  if(isPlayingmusic) {
+    audio.innerHTML = UNMUTE_ICON;
+    isPlayingmusic = false;
+  } else {
+    audio.innerHTML = MUTE_ICON;
+    isPlayingmusic = true;
+    document.getElementById('player').muted=!document.getElementById('player').muted;
+  }
 }
 
 function getExperience() {
