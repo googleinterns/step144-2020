@@ -13,13 +13,18 @@
 // limitations under the License.
 const FINAL_STAGE_BUTTON_VALUE = 'COMPLETE PATH';
 const FINAL_STAGE_REDIRECTION = 'CompletedPath.html';
+const MUSIC_ICON= 'musicIcon';
+const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
+const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
 
 var dialogueArray;
 var i;
+var isPlayingmusic = true;
 function loadFunctions() {
   modifyIfFinalStage();
   getImage();
   getDialogue();
+  playmusic();
 }
 
 function getDialogue() {
@@ -95,12 +100,13 @@ function modifyIfFinalStage() {
 
 //play button functions
 function playmusic() {
-  //TODO: change the play and pause to toggle on and off icons
-  if(document.getElementById('player-button').innerText == "PAUSE"){
-    document.getElementById('player-button').innerText = "PLAY";
+  const audio = document.getElementById(MUSIC_ICON);
+  if(isPlayingmusic) {
+    audio.innerHTML = UNMUTE_ICON;
+    isPlayingmusic = false;
+  } else {
+    audio.innerHTML = MUTE_ICON;
+    isPlayingmusic = true;
+    document.getElementById('player').muted=!document.getElementById('player').muted;
   }
-  else{
-    document.getElementById('player-button').innerText = "PAUSE";
-  }
-  document.getElementById('player').muted=!document.getElementById('player').muted;
 }

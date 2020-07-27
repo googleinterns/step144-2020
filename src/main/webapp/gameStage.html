@@ -9,32 +9,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 
-
   <script src="gameDialogue.js"></script>
 </head>
-<body onload = "loadFunctions()">
+<body class="step-body" onload="loadFunctions()"> 
 
-  <audio id='player' src="music/lofi-sound.mp3" autoplay loop ></audio>
-  <div>
-    <button style="float:left;" class="step-button" id="player-button" onclick="playbutton()">PAUSE</button>
-  </div>
+  <audio id="player" src="music/lofi-sound.mp3" autoplay loop></audio>
+  <button id="promotion-button" class="step-button" onclick="window.location='promotionquiz.html'">TRY FOR PROMOTION</button>
+  <a href="#" class="step-align-icon" id="musicIcon" onclick="playmusic()"></a>
 
   <h2 class="step-outline">Welcome!</h2>
-  <img style="float:left;" src="images/teach-all.png" alt="pixel teacher">
-
   <div class="step-wrap, step-dialogue">
-      <div>
-          <p id="dialogue-container"></p>
-      </div>
-      <span>
-        <button id="step-button" class="step-button" onclick="nextLine()" name="nextButton">NEXT</button>
-      </span>
-      <button id="promotion-button" class="step-button" onclick="window.location='promotionquiz.html'">TRY FOR PROMOTION</button>
+    <div>
+      <p id="dialogue-container"></p>
+    </div>
+
+    <span>
+      <button id="step-button" class="step-button" onclick="nextLine()" name="nextButton">NEXT</button>
+    </span>
   </div>
+
+  <img src="images/teach-all.png" alt="pixel teacher">
 
   <div id="image-container">
-      <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
+    <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
   </div>
-
 </body>
 </html>
