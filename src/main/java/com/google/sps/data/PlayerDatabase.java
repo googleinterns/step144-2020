@@ -20,7 +20,7 @@ public class PlayerDatabase {
   private static final String ID_QUERY_STRING = "id";
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
-  private static final String EXPERIENCE_QUERY_STRING = "experience";
+  private static final String EXPERIENCE_POINTS_QUERY_STRING = "experiencePoints";
   private static final String ALL_ACCESSORIES_QUERY_STRING = "allAccesories";
   private static final String EQUIPPED_HAT_QUERY_STRING = "equippedHat";
   private static final String EQUIPPED_GLASSES_QUERY_STRING = "equippedGlasses";
@@ -122,7 +122,7 @@ public class PlayerDatabase {
 
   public int getEntityExperience() throws LoggedOutException {
     String experienceString =
-        getCurrentPlayerEntity().getProperty(EXPERIENCE_QUERY_STRING).toString();
+        getCurrentPlayerEntity().getProperty(EXPERIENCE_POINTS_QUERY_STRING).toString();
     return Integer.parseInt(experienceString);
   }
 
@@ -181,7 +181,7 @@ public class PlayerDatabase {
   }
 
   public void setEntityExperience(int experience) throws LoggedOutException {
-    setPlayerProperty(EXPERIENCE_QUERY_STRING, Integer.toString(experience));
+    setPlayerProperty(EXPERIENCE_POINTS_QUERY_STRING, Integer.toString(experience));
   }
 
   public void setEntityEquippedHatID(String equippedHatID) throws LoggedOutException {
