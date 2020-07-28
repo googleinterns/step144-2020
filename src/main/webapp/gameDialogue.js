@@ -111,7 +111,7 @@ function playmusic() {
   } else {
     audio.innerHTML = MUTE_ICON;
     isPlayingmusic = true;
-    document.getElementById('player').muted=!document.getElementById('player').muted;
+    document.getElementById('musicPlayer').muted=!document.getElementById('musicPlayer').muted;
   }
 }
 
