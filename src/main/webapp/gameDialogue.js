@@ -21,15 +21,18 @@ var dialogueArray;
 var isPlayingmusic = true;
 var dialogueRegex;
 var experience;
-var threshold = 15;
+var threshold;
+// For now, this is hard coded, will change with new servlet
+// https://github.com/googleinterns/step144-2020/issues/171
+var newThreshold = 20;
 
 function loadFunctions() {
+  threshold = getThreshold();
+  getExperience();
   modifyIfFinalStage();
-  workPromoButtonSwitch();
   getImage();
   getDialogue();
   playmusic();
-  getExperience();
 }
 
 function getDialogue() {
@@ -131,14 +134,18 @@ function showExperience(experience) {
 
 function changeExperience() {
   experience ++;
+  const params = new URLSearchParams();
+  params.append('experiencePoints', experience);
+  fetch('/experience', {method: 'POST', body: params});
   workPromoButtonSwitch();
   showExperience(experience);
-  const params = new URLSearchParams();
-  params.append('experience', experience);
-  fetch('/experience', {method: 'POST', body: params});
 }
 
+
 function workPromoButtonSwitch() {
+  if (threshold == null) {
+    getThreshold();
+  }
   if (experience == threshold) {
     // Changes button to "TRY FOR PROMOTION"
     const promoButton = document.getElementById('promotion-button');
@@ -157,6 +164,7 @@ function showPromoButton(isLinkActive, onclick) {
   const promoLink = document.getElementById('promotion-link');
   if (isLinkActive) {
     promoLink.href = "promotionquiz.html";
+    promoButton.onclick = changeThreshold();
   } else {
     promoLink.removeAttribute("href");
   }
@@ -169,4 +177,19 @@ function getWorkButtonTask() {
       "ATTEND A MEETING", "TEST YOUR CODE", "FIX A BUG", "GET SOME COFFEE", "DEBUG CODE"];
   var randomNum = Math.floor(Math.random() * taskArray.length);
   return taskArray[randomNum];
+}
+
+function getThreshold() {
+  fetch("/promotion-threshold")
+  .then(response => response.text())
+  .then(thresholdString => {
+    threshold = parseInt(thresholdString);
+    workPromoButtonSwitch();
+  });
+}
+
+function changeThreshold() {
+  const params = new URLSearchParams();
+  params.append('promotionThreshold', newThreshold);
+  fetch('/promotion-threshold', {method: 'POST', body: params});
 }
