@@ -26,10 +26,10 @@ var threshold = 15;
 function loadFunctions() {
   modifyIfFinalStage();
   workPromoButtonSwitch();
-  getImage();
   getDialogue();
-  playmusic();
   getExperience();
+  playmusic();
+  getImage();
 }
 
 function getDialogue() {
@@ -125,7 +125,7 @@ function getExperience() {
 }
 
 function showExperience(experience) {
-  const expContainer = document.getElementById('experience-container');
+  const expContainer = document.getElementById('exp-container');
   expContainer.innerText = "EXP:" + experience;
 }
 
