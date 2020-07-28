@@ -60,6 +60,7 @@ public final class PlayerDatabaseTest {
   private static final List<String> ALL_ACCESSORIES =
       Arrays.asList(HAT_ID, GLASSES_ID, COMPANION_ID);
   private static final int NO_EXPERIENCE = 0;
+  private static final int THRESHOLD = 15;
   private static Map<String, Object> USER_ID_CONFIG = new HashMap<>();
 
   static {
@@ -106,7 +107,14 @@ public final class PlayerDatabaseTest {
   public void getPlayer_worksSuccessfully() throws LoggedOutException {
     Player player =
         new Player(
-            NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID, ALL_ACCESSORIES, NO_EXPERIENCE);
+            NAME,
+            EMAIL,
+            CURR_USER_ID,
+            IMAGE_ID,
+            GAME_STAGE_ID,
+            ALL_ACCESSORIES,
+            NO_EXPERIENCE,
+            THRESHOLD);
     player.setEquippedHatID(HAT_ID);
     player.setEquippedGlassesID(GLASSES_ID);
     player.setEquippedCompanionID(COMPANION_ID);
@@ -140,7 +148,14 @@ public final class PlayerDatabaseTest {
   public void getIndividualProperties_worksSuccessfully() throws LoggedOutException {
     Player player =
         new Player(
-            NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID, ALL_ACCESSORIES, NO_EXPERIENCE);
+            NAME,
+            EMAIL,
+            CURR_USER_ID,
+            IMAGE_ID,
+            GAME_STAGE_ID,
+            ALL_ACCESSORIES,
+            NO_EXPERIENCE,
+            THRESHOLD);
     player.setEquippedHatID(HAT_ID);
     player.setEquippedGlassesID(GLASSES_ID);
     player.setEquippedCompanionID(COMPANION_ID);
@@ -248,7 +263,14 @@ public final class PlayerDatabaseTest {
       throws LoggedOutException {
     Player player =
         new Player(
-            NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID, ALL_ACCESSORIES, NO_EXPERIENCE);
+            NAME,
+            EMAIL,
+            CURR_USER_ID,
+            IMAGE_ID,
+            GAME_STAGE_ID,
+            ALL_ACCESSORIES,
+            NO_EXPERIENCE,
+            THRESHOLD);
     this.playerDatabase.addPlayerToDatabase(player);
 
     Entity expectedPlayerEntity = new Entity(ENTITY_QUERY_STRING);
