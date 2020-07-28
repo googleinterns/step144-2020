@@ -5,6 +5,12 @@
 *  #e76f51- orange can be used as buttons
 */
 
+:root {
+    --charcoal: #264653;
+    --green: #2A9D8F;
+    --yellow: #E9C46A;
+    --orange: #e76f51;
+}
 
 /** style rules for index.html **/
 html {
@@ -14,11 +20,11 @@ html {
 body, html {
   height: 100%;
   text-align: center;
-  background-color: #264653;
+  background-color: var(--charcoal);
 }
 
 h1, h2, h3, h4 { 
-  color: #2a9d8f;
+  color: var(--green);
   text-align: center;
   font-family: 'Press Start 2P', cursive;
 }
@@ -37,11 +43,11 @@ h3 {
 
 h4 {
     font-size: 0.90rem;
-    color: #e76f51;
+    color: var(--orange);
 }
 
 p {
-  color: #e9c46a;
+  color: var(--yellow);
   font-size: 1.4rem;
   line-height: 2.6rem;
   font-family: 'B612', sans-serif;
@@ -49,7 +55,7 @@ p {
 
 a {
   text-decoration: none;
-  color: #e9c46a; 
+  color: var(--yellow); 
   opacity: 0.75;
 }
 
@@ -68,7 +74,7 @@ a:hover {
 
 .step-outline {
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: #e76f51;
+  -webkit-text-stroke-color: var(--orange);
 }
 
 /** parallax Image class **/
@@ -142,7 +148,7 @@ a:hover {
 .step-table-align img {
     height: 355px;
     width: 355px;
-    border: 2px solid #e76f51;
+    border: 2px solid var(--orange);
 }
 
 .step-figcaption {
@@ -155,7 +161,7 @@ a:hover {
 
 /** style for the buttons **/
 .step-button{
-  background-color: #e76f51;
+  background-color: var(--orange);
   border: none;
   color: white;
   padding: 20px;
@@ -193,12 +199,12 @@ a:hover {
 
 .resource-link li {
   list-style-type: none;
-  color: #E9C46A;
+  color: var(--yellow);
   text-align: left;
 }
 
 .resource-link a:visited {
-  color: #E9C46A;
+  color: var(--yellow);
 }
 
 /** accordian pop up for resources **/
@@ -227,7 +233,7 @@ a:hover {
 .intern-pic {
   height: 400px;
   width: 355px;
-  border: 2px solid #e76f51;
+  border: 2px solid var(--orange);
 }
 
 *, *:before, *:after {
@@ -261,7 +267,7 @@ a:hover {
   display: inline-block;
   padding: 8px;
   color: white;
-  background-color:#e76f51;
+  background-color:var(--orange);
   text-align: center;
   cursor: pointer;
   width: 100%;
@@ -271,7 +277,7 @@ a:hover {
   background-color: #555; 
 }
 
-/** Responsive media classes to addapt to diffrent devices **/
+/** Responsive media classes to adapt to diffrent devices **/
 @media screen and (max-width: 650px) {
   .step-team-column {
     width: 100%;
@@ -349,7 +355,7 @@ a:hover {
   margin-left: 100px;
   margin-right:100px;
   padding: 16px;
-  border: 5px solid #e76f51;
+  border: 5px solid var(--orange);
   background-color: rgba(0, 0, 0, 0.3)
 }
 
@@ -375,5 +381,98 @@ a:hover {
   position: absolute;
   height : 550px;
   left : 70%;
+  top : 250px;
   float : left;
+}
+
+#promotion-button {
+  margin-top: 10px;
+  margin-right: 10px;
+  position:absolute;
+  top:0;
+  right:0;
+  width: 370px;
+  text-align: center;
+}
+
+#exp-container {
+    position: absolute;
+    font-size: 30px;
+    width : 300px;
+    color: white;
+    top: 300px;
+    font-family: 'Press Start 2P', cursive; 
+    left: -300px;
+}
+
+/** Quiz Pages **/
+#quiz-container {
+  padding-top : 5px;
+  padding-bottom : 20px;
+  background-color: var(--orange);
+  border-radius: 8px;
+  border-style: solid;
+  border-color: var(--yellow);
+  width: 70%;
+  margin: auto;
+}
+
+#question-text {
+  font-weight: 900;
+  color: var(--charcoal);
+}
+
+#choices-container {
+  text-align: left;
+  width: 70%;
+  margin: auto;
+}
+
+/** promotion quiz classes **/
+.step-meme img {
+  border: 5px solid var(--orange);
+  width: 600px;
+  height: 630px; 
+}
+
+.step-yellow {
+  color: var(--yellow);
+}
+
+/** imageHandler classes **/
+.step-textarea {
+  border: 2px solid var(--orange);
+}
+
+.step-oneline {
+  display:flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+}
+
+.step-center-imagehandler {
+  position:absolute;
+  margin-left: 39%;
+  margin-right: 39%;
+}
+
+/* classes for music player */
+.align-bottom-center{
+  position: absolute;
+  margin-left: 50%;
+  margin-right: 50%;
+  margin-top: 25%;
+}
+
+audio {
+  float: left;
+}
+
+.step-align-icon {
+  margin-top: 10px;
+  margin-left: 10px;
+  position:absolute;
+  top:0;
+  left:0;
 }

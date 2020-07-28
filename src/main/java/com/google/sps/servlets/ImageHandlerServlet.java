@@ -11,6 +11,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import java.util.List;
@@ -38,14 +39,16 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String EMPTY_PARAMETER = "empty";
   private static final String ID_PARAMETER = "id";
   private static final String IMAGE_ID_PARAMETER = "imageID";
+  private static final String EXPERIENCE_PARAMETER = "experience";
   private static final String IMAGE_PARAMETER = "image";
   private static final String DEFAULT_PARAMETER = "default";
   private static final String PLAYER_QUERY_PARAMETER = "player";
-  private static final String UPLOADED_REDIRECT_PARAMETER = "/gameStage.html";
+  private static final String UPLOADED_REDIRECT_PARAMETER = "/careerquiz.html";
   private static final String LOGIN_REDIRECT_PARAMETER = "/userAuthPage.html";
   private static final String CHARACTER_DESIGN_REDIRECT_PARAMETER = "/characterDesign.html";
   private static final String CONTENT_TYPE = "text/html";
-  private final User USER = UserServiceFactory.getUserService().getCurrentUser();
+  private static final int NO_EXPERIENCE = 0;
+  private User user = UserServiceFactory.getUserService().getCurrentUser();
   private Entity player;
   private DatastoreService DATASTORE = DatastoreServiceFactory.getDatastoreService();
   private boolean isLoggedIn = UserServiceFactory.getUserService().isUserLoggedIn();
@@ -72,11 +75,13 @@ public class ImageHandlerServlet extends HttpServlet {
   }
 
   private Entity newPlayerEntity(String imageBlobKeyString, String displayName) {
+    user = UserServiceFactory.getUserService().getCurrentUser();
     player = new Entity(PLAYER_QUERY_PARAMETER);
-    player.setProperty(EMAIL_PARAMETER, USER.getEmail());
+    player.setProperty(EMAIL_PARAMETER, user.getEmail());
     player.setProperty(IMAGE_ID_PARAMETER, imageBlobKeyString);
     player.setProperty(DISPLAY_NAME_PARAMETER, displayName);
-    player.setProperty(ID_PARAMETER, USER.getUserId());
+    player.setProperty(ID_PARAMETER, user.getUserId());
+    player.setProperty(EXPERIENCE_PARAMETER, NO_EXPERIENCE);
     return player;
   }
 
@@ -126,7 +131,7 @@ public class ImageHandlerServlet extends HttpServlet {
     PlayerDatabase playerDatabase = new PlayerDatabase(DATASTORE);
     try {
       player = playerDatabase.getCurrentPlayerEntity();
-    } catch (Exception e) {
+    } catch (LoggedOutException e) {
     }
     imageID = player.getProperty(IMAGE_ID_PARAMETER).toString();
     displayName = player.getProperty(DISPLAY_NAME_PARAMETER).toString();

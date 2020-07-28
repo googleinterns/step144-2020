@@ -24,9 +24,6 @@ public final class GetGameDialogueTest {
   @Mock private HttpServletResponse response;
   private final LocalServiceTestHelper helper =
       new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-  private static String QUERY_FOR_GAMESTAGE_ENTITY = "gamestage";
-  private static final String SOFTWARE_ENGINEER_LEVEL1_NAME = "Software Engineer Level 1";
-  private static final String SOFTWARE_ENGINEER_INPUT = "Software Engineer";
   private static final String WEBDEV_LEVEL1_NAME = "Web Developer Level 1";
   private static final String WEBDEV_INPUT = "Web Developer";
   private static final String LEVEL_1 = "1";
@@ -55,7 +52,7 @@ public final class GetGameDialogueTest {
   }
 
   /**
-   * Tests that the GameStage is store sucessfully and can be queried from the database sucessfully
+   * Tests that the GameStage is stored sucessfully and can be queried from the database sucessfully
    */
   @Test
   public void get_GameStageFrom_Id_CompareContent_succeeds() {
@@ -82,7 +79,7 @@ public final class GetGameDialogueTest {
    * getting a gameStage
    */
   @Test
-  public void doGet_gameStageFromPlayerId_succeeds() throws Exception {
+  public void doGet_gameStageFromPlayerId_succeeds() {
     String nameP = NAME_PLAYER;
     String email = EMAIL_PLAYER;
     String id = PLAYER_ID;

@@ -15,9 +15,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.sps.data.GameStage;
 import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
-import com.google.sps.data.PromotionMessage;
 import com.google.sps.data.QuestionChoice;
 import com.google.sps.data.QuestionDatabase;
 import com.google.sps.data.QuizQuestion;
@@ -102,10 +102,6 @@ public final class PromotionQuizTest {
       "You did not pass the quiz. Study the content and try again later";
   private static final String IS_FINAL_STAGE_MESSAGE =
       "Congratulations! You reached the final stage! You may no longer be promoted in this path.";
-  private static final PromotionMessage IS_PROMOTED =
-      new PromotionMessage(/*isPromoted = */ true, PROMOTED_MESSAGE);
-  private static final PromotionMessage IS_NOT_PROMOTED =
-      new PromotionMessage(/*isPromoted = */ false, NOT_PROMOTED_MESSAGE);
   private static final List<QuestionChoice> HARD_CODED_CHOICES =
       Arrays.asList(
           new QuestionChoice(CHOICE_1, CAREER_1, ACCEPTABLE),
@@ -181,7 +177,8 @@ public final class PromotionQuizTest {
 
   /** If user is on final stage of a path, doGet outputs a message instead of questions */
   @Test
-  public void testGetMethodResponds_WithMessageNotQuestion_ifOnFinalStage() throws Exception {
+  public void testGetMethodResponds_WithMessageNotQuestion_ifOnFinalStage()
+      throws IOException, LoggedOutException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(writer);
@@ -209,7 +206,7 @@ public final class PromotionQuizTest {
 
   /** Tests that the doPost methods responds with being promoted or not */
   @Test
-  public void testPostMethodRespondsWith_Promoted() throws IOException, Exception {
+  public void testPostMethodRespondsWith_Promoted() throws IOException, LoggedOutException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(writer);
@@ -238,11 +235,6 @@ public final class PromotionQuizTest {
 
     this.promotionQuizServlet.doPost(this.request, this.response);
 
-    // checks that user promotion message is correct
-    JsonElement expectedMessage = JsonParser.parseString(gson.toJson(IS_PROMOTED));
-    JsonElement resultMessage = JsonParser.parseString(stringWriter.toString());
-    Assert.assertEquals(expectedMessage, resultMessage);
-
     // checks that user game stage is updated to next level
     String expectedGameStageId = WEB_DEVELOPER + LEVEL_3;
     String resultGameStageId = this.playerDatabase.getEntityCurrentPageID();
@@ -250,7 +242,7 @@ public final class PromotionQuizTest {
   }
 
   @Test
-  public void testPostMethodRespondsWith_NotPromoted() throws IOException, Exception {
+  public void testPostMethodRespondsWith_NotPromoted() throws IOException, LoggedOutException {
     StringWriter stringWriter = new StringWriter();
     PrintWriter writer = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(writer);
@@ -279,18 +271,13 @@ public final class PromotionQuizTest {
 
     this.promotionQuizServlet.doPost(this.request, this.response);
 
-    // checks that user promotion message is correct
-    JsonElement expectedMessage = JsonParser.parseString(gson.toJson(IS_NOT_PROMOTED));
-    JsonElement resultMessage = JsonParser.parseString(stringWriter.toString());
-    Assert.assertEquals(expectedMessage, resultMessage);
-
     // checks that user game stage is *not* updated to next level
     String expectedGameStageId = PROJECT_MANAGER + LEVEL_2;
     String resultGameStageId = this.playerDatabase.getEntityCurrentPageID();
     Assert.assertEquals(expectedGameStageId, resultGameStageId);
   }
 
-  /** Test that logged out player causes exception message to be written */
+  /** Test that logged out player causes LoggedOutException message to be written */
   @Test
   public void getPromotionQuizWithLoggedOutUser_ExceptionMessageWritten() throws IOException {
     helper.setEnvIsLoggedIn(false);

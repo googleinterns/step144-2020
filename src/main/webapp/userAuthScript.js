@@ -18,6 +18,7 @@
 */
 var FETCH_LOGIN = '/login';
 var LOGIN_CONTAINER = 'login-container';
+var BUTTON_CONTAINER = 'button-container';
 
 function login() {
   const responsePromise = fetch(FETCH_LOGIN);
@@ -31,5 +32,35 @@ function handleResponse(response) {
 
 function addDialogueToDom(authInfo) {
   const quoteContainer = document.getElementById(LOGIN_CONTAINER);
+  if (authInfo.includes("Logout")) {
+    loadOptions(authInfo);
+  }
   quoteContainer.innerHTML = authInfo;
+  
+}
+
+function loadOptions (logoutLink) {
+  var lastStageLink = createButtonWithLink("Return to Last Stage", "gameStage.html", null);
+  var newGameLink = createButtonWithLink("New Game", "characterDesign.html", newGame);
+
+  const buttonContainer = document.getElementById(BUTTON_CONTAINER);
+  buttonContainer.appendChild(lastStageLink);
+  buttonContainer.appendChild(document.createElement("br"));
+  buttonContainer.appendChild(newGameLink);
+  buttonContainer.appendChild(document.createElement("br"));
+}
+
+function createButtonWithLink(text, linkHref, onclick) {
+  let button = document.createElement('button');
+  button.innerText = text;
+  button.className = "step-button";
+  let link = document.createElement('a');
+  link.href = linkHref;
+  link.appendChild(button);
+  return link;
+}
+
+function newGame() {
+  //Deletes player tied to email before user can create new player
+  fetch('/delete-user', {method: 'POST'});
 }

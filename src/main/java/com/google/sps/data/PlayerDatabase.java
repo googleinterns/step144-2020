@@ -20,8 +20,7 @@ public class PlayerDatabase {
   private static final String ID_QUERY_STRING = "id";
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
-  private static final String LOGGED_OUT_EXCEPTION =
-      "Player is currently logged out. Cannot process null user.";
+  private static final String EXPERIENCE_QUERY_STRING = "experience";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
   private User user;
   private String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
@@ -64,9 +63,9 @@ public class PlayerDatabase {
   }
 
   // get entity
-  public Entity getCurrentPlayerEntity() throws Exception {
+  public Entity getCurrentPlayerEntity() throws LoggedOutException {
     if (!isLoggedIn) {
-      throw new Exception(LOGGED_OUT_EXCEPTION);
+      throw new LoggedOutException();
     }
     String email = userEmail;
     Query query =
@@ -79,55 +78,65 @@ public class PlayerDatabase {
         return entity;
       }
     }
-    throw new Exception(LOGGED_OUT_EXCEPTION);
+    throw new LoggedOutException();
   }
 
   // get player current stage
-  public String getEntityCurrentPageID() throws Exception {
+  public String getEntityCurrentPageID() throws LoggedOutException {
     String currentPageID =
         getCurrentPlayerEntity().getProperty(CURRENT_PAGE_ID_QUERY_STRING).toString();
     return currentPageID;
   }
 
   // get image id
-  public String getEntityImageID() throws Exception {
+  public String getEntityImageID() throws LoggedOutException {
     String imageID = getCurrentPlayerEntity().getProperty(IMAGE_ID_QUERY_STRING).toString();
     return imageID;
   }
 
   // get id
-  public String getEntityID() throws Exception {
+  public String getEntityID() throws LoggedOutException {
     String id = getCurrentPlayerEntity().getProperty(ID_QUERY_STRING).toString();
     return id;
   }
 
+  public int getEntityExperience() throws LoggedOutException {
+    String experienceString =
+        getCurrentPlayerEntity().getProperty(EXPERIENCE_QUERY_STRING).toString();
+    return Integer.parseInt(experienceString);
+  }
+
   // get displayname
-  public String getEntityDisplayName() throws Exception {
+  public String getEntityDisplayName() throws LoggedOutException {
     String displayName = getCurrentPlayerEntity().getProperty(DISPLAY_NAME_QUERY_STRING).toString();
     return displayName;
   }
 
   // set player current stage
-  public void setEntityCurrentPageID(String currentPageID) throws Exception {
+  public void setEntityCurrentPageID(String currentPageID) throws LoggedOutException {
     setPlayerProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
   }
 
   // set image id
-  public void setEntityImageID(String imageID) throws Exception {
+  public void setEntityImageID(String imageID) throws LoggedOutException {
     setPlayerProperty(IMAGE_ID_QUERY_STRING, imageID);
   }
 
   // set id
-  public void setEntityID(String id) throws Exception {
+  public void setEntityID(String id) throws LoggedOutException {
     setPlayerProperty(ID_QUERY_STRING, id);
   }
 
+  public void setEntityExperience(int experience) throws LoggedOutException {
+    setPlayerProperty(EXPERIENCE_QUERY_STRING, Integer.toString(experience));
+  }
+
   // set displayname
-  public void setEntityDisplayName(String displayName) throws Exception {
+  public void setEntityDisplayName(String displayName) throws LoggedOutException {
     setPlayerProperty(DISPLAY_NAME_QUERY_STRING, displayName);
   }
 
-  private void setPlayerProperty(String propertyName, String newValue) throws Exception {
+  private void setPlayerProperty(String propertyName, String newValue) throws LoggedOutException {
     Entity entity = getCurrentPlayerEntity();
     entity.setProperty(propertyName, newValue);
     datastore.put(entity);

@@ -4,18 +4,29 @@
     <meta charset="UTF-8">
     <title>Character Design</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="characterDesign.js"></script>
   </head>
   <body onload="loadCharacterDesignScripts()">
-    <h1>Character Design</h1>
+    <h1 class="step-outline">Character Design</h1>
     <form id="my-form" class="hidden" method="POST" enctype="multipart/form-data">
-      <p>Type nickname:</p>
-      <textarea name="message" required></textarea>
+    <div class="step-center-imagehandler">
+      <span class="step-oneline">
+        <p>Type nickname:</p>
+        <textarea class="step-textarea " name="message" required></textarea>
+      </span>
       <br/>
-      <p>Upload an image:</p>
-      <input type="file" name="image" class="file-input" id="image">
-      <br/><br/>
-      <button>Submit</button>
+      <span class="step-oneline">
+        <p>Upload an image:</p>
+        <input onchange = "previewImage(event)" type="file" name="image" class="file-input" id="image">
+      </span>
+      <br/>
+      <button class="step-button">Submit</button>
+      </div>
     </form>
+     <div id="image-container">
+        <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
+        <img id="player-picture" src="images/face.png" alt="uploaded face">
+    </div>
   </body>
 </html>

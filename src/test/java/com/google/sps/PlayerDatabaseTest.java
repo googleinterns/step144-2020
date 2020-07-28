@@ -11,6 +11,7 @@ import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public final class PlayerDatabaseTest {
 
   /** Tests that the player entity is queried back sucessfully */
   @Test
-  public void getPlayer_worksSuccessfully() throws Exception {
+  public void getPlayer_worksSuccessfully() throws LoggedOutException {
     Player player = new Player(NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID);
     this.playerDatabase.addPlayerToDatabase(player);
 
@@ -115,7 +116,7 @@ public final class PlayerDatabaseTest {
 
   /** Test that all get methods return correct property */
   @Test
-  public void getIndividualProperties_worksSuccessfully() throws Exception {
+  public void getIndividualProperties_worksSuccessfully() throws LoggedOutException {
     Player player = new Player(NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID);
     this.playerDatabase.addPlayerToDatabase(player);
 
@@ -138,7 +139,7 @@ public final class PlayerDatabaseTest {
 
   /** Test that setting the currentPageId updates it while keeping other properties constant */
   @Test
-  public void setCurrentPageId_Succesfully() throws Exception {
+  public void setCurrentPageId_Succesfully() throws LoggedOutException {
     Player player = new Player(NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID);
     this.playerDatabase.addPlayerToDatabase(player);
 
@@ -165,7 +166,7 @@ public final class PlayerDatabaseTest {
 
   /** Set all properties to new properties, check that setting has worked */
   @Test
-  public void setAllProperties() throws Exception {
+  public void setAllProperties() throws LoggedOutException {
     Player player = new Player(NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID);
     this.playerDatabase.addPlayerToDatabase(player);
 
@@ -197,9 +198,9 @@ public final class PlayerDatabaseTest {
 
   /** Test that logged out player causes exceptions */
   @Test
-  public void gettingCurrentPlayerWithLoggedOutUser_ThrowsException() throws Exception {
+  public void gettingCurrentPlayerWithLoggedOutUser_ThrowsException() throws LoggedOutException {
     helper.setEnvIsLoggedIn(false);
-    loggedOutExceptionRule.expect(Exception.class);
+    loggedOutExceptionRule.expect(LoggedOutException.class);
     loggedOutExceptionRule.expectMessage(LOGGED_OUT_EXCEPTION);
     this.playerDatabase.getCurrentPlayerEntity();
   }

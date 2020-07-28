@@ -5,6 +5,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -48,7 +49,7 @@ public class SetGameStage extends HttpServlet {
     try {
       this.playerDatabase.setEntityCurrentPageID(gameStageID);
       response.sendRedirect(REDIRECTION_URL);
-    } catch (Exception e) {
+    } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }
   }

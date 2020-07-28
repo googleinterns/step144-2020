@@ -1,0 +1,32 @@
+/** color style guide 
+*  #264653 - charcoal can be used for background  
+*  #2A9D8F - persian green can be used as a header color
+*  #E9C46A - orange yellow can be used for text color
+*  #e76f51- orange can be used as buttons
+*/
+:root {
+  --persian-green:#2A9D8F;
+  --orange: #e76f51;
+  --orange-yellow: #E9C46A;
+}
+
+input[type="submit"] {
+  font-family: 'Press Start 2P', cursive; 
+  background-color: var(--orange);
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  cursor: pointer;
+  opacity: .75;
+  border-radius: 8px;
+}
+
+input[type="submit"]:hover {
+  opacity: 1.0;
+  color: var(--orange-yellow);
+}
+
+/* Highlight recommended path */
+.highlight {
+  border-color: var(--persian-green);
+}

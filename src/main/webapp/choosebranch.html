@@ -2,9 +2,23 @@
 
 <html lang="en">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chooseBranchAdditionalStyling.css">
   <script src="choosebranch.js"></script>
 </head>
 
-<body onload="getRecommendedCareerPath()"></body>
+<body onload="highlightRecommendedCareerPath()"></body>
+<div>
+  <p id="recommendedPathText"> </p>
+  <p id="choosePathHeader"> Choose your career path!</p>
+  <form action="/initializeGameStage" method="POST" name="choosePathForm">
+  <div id="branchButtons">
+    <input type="submit" id="Software Engineer" name="pathSubmit" value="Software Engineer">
+    <input type="submit" id="Web Developer" name="pathSubmit" value="Web Developer">
+    <input type="submit" id="Project Manager" name="pathSubmit" value="Project Manager">
+    <input type="submit" id="Data Scientist" name="pathSubmit" value="Data Scientist">
+  </div>
+  </form>
+</div>
 </html>

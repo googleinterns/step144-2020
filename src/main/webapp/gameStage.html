@@ -3,28 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name = "viewpoint" content="width=device-width, initial-scale=1">
-
+ 
   <title>COMPSCI:GO</title>
-
+ 
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-
-
+ 
+ 
   <script src="gameDialogue.js"></script>
 </head>
-<body onload = "getImage()">
+<body onload = "loadFunctions()">
   <h2 class="step-outline">Welcome!</h2>
-  <img style="float:left;" src="images/teach.png" alt="pixel teacher">
+  <img style="float:left;" src="images/teach-all.png" alt="pixel teacher">
+ 
+  <audio id="player" src="music/lofi-sound.mp3" autoplay loop></audio>
+  <a href="#" class="step-align-icon" id="musicIcon" onclick="playmusic()"></a>
+ 
   <div class="step-wrap, step-dialogue">
       <div>
           <p id="dialogue-container"></p>
       </div>
-      <spam>
-        <button class="step-button" onclick="getDialogue()" name="nextButton">NEXT</button>
-      </spam>
+      <span>
+        <button id="step-button" class="step-button" onclick="nextLine()" name="nextButton">NEXT</button>
+      </span>
+      <a id="promotion-link">
+        <button id="promotion-button" class="step-button" onclick="window.location='promotionquiz.html'">TRY FOR PROMOTION</button>
+      </a>
   </div>
-  <div id = 'image-container'>
-      <img id = "pixel-avatar" src="images/studentBody.png" alt="pixel you">
+  <div id="image-container">
+      <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
+      <div id="exp-container"></div>
   </div>
 </body>
 </html>
+
