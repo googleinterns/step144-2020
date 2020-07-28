@@ -26,6 +26,7 @@ public class PlayerDatabase {
   private static final String EQUIPPED_GLASSES_QUERY_STRING = "equippedGlasses";
   private static final String EQUIPPED_COMPANION_QUERY_STRING = "equippedCompanion";
   private static final String NONE_EQUIPPED = "noneEquipped";
+  private static final String PROMOTION_THRESHOLD_QUERY_STRING = "promotionThreshold";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
   private User user;
   private String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
@@ -152,6 +153,12 @@ public class PlayerDatabase {
     return equippedCompanionID;
   }
 
+  public int getEntityPromotionThreshold() throws LoggedOutException {
+    String promotionThresholdString =
+        getCurrentPlayerEntity().getProperty(PROMOTION_THRESHOLD_QUERY_STRING).toString();
+    return Integer.parseInt(promotionThresholdString);
+  }
+
   // get displayname
   public String getEntityDisplayName() throws LoggedOutException {
     String displayName = getCurrentPlayerEntity().getProperty(DISPLAY_NAME_QUERY_STRING).toString();
@@ -187,6 +194,10 @@ public class PlayerDatabase {
 
   public void setEntityEquippedCompanionID(String equippedCompanionID) throws LoggedOutException {
     setPlayerProperty(EQUIPPED_COMPANION_QUERY_STRING, defaultIfNoneEquipped(equippedCompanionID));
+  }
+
+  public void setEntityPromotionThreshold(int promotionThreshold) throws LoggedOutException {
+    setPlayerProperty(PROMOTION_THRESHOLD_QUERY_STRING, Integer.toString(promotionThreshold));
   }
 
   // set displayname
