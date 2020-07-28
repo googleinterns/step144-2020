@@ -21,6 +21,11 @@ public class PlayerDatabase {
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
   private static final String EXPERIENCE_QUERY_STRING = "experience";
+  private static final String ALL_ACCESSORIES_QUERY_STRING = "allAccesories";
+  private static final String EQUIPPED_HAT_QUERY_STRING = "equippedHat";
+  private static final String EQUIPPED_GLASSES_QUERY_STRING = "equippedGlasses";
+  private static final String EQUIPPED_COMPANION_QUERY_STRING = "equippedCompanion";
+  private static final String NONE_EQUIPPED = "noneEquipped";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
   private User user;
   private String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
@@ -47,18 +52,32 @@ public class PlayerDatabase {
     datastore.put(entity);
   }
 
+  private static String defaultIfNoneEquipped(String accessory) {
+    return accessory == null ? NONE_EQUIPPED : accessory;
+  }
+
   public static Entity createEntityFromPlayer(Player player) {
     String displayName = player.getDisplayName();
     String id = player.getID();
     String email = player.getEmail();
     String imageID = player.getImageID();
     String currentPageID = player.getCurrentPageID();
+    String equippedHatID = player.getEquippedHatID();
+    String equippedGlassesID = player.getEquippedGlassesID();
+    String equippedCompanionID = player.getEquippedCompanionID();
+    List<String> allAccessoryIDs = player.getAllAccessoryIDs();
+
     Entity entity = new Entity(ENTITY_QUERY_STRING);
+
     entity.setProperty(DISPLAY_NAME_QUERY_STRING, displayName);
     entity.setProperty(EMAIL_QUERY_STRING, email);
     entity.setProperty(ID_QUERY_STRING, id);
     entity.setProperty(IMAGE_ID_QUERY_STRING, imageID);
     entity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
+    entity.setProperty(EQUIPPED_HAT_QUERY_STRING, defaultIfNoneEquipped(equippedHatID));
+    entity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, defaultIfNoneEquipped(equippedGlassesID));
+    entity.setProperty(EQUIPPED_COMPANION_QUERY_STRING, defaultIfNoneEquipped(equippedCompanionID));
+    entity.setProperty(ALL_ACCESSORIES_QUERY_STRING, allAccessoryIDs);
     return entity;
   }
 
@@ -106,6 +125,33 @@ public class PlayerDatabase {
     return Integer.parseInt(experienceString);
   }
 
+  public List<String> getEntityAllAccessoryIDs() throws LoggedOutException {
+    // supress warnings/ casting used in GAE documentation to get multivalued attributes:
+    // https://cloud.google.com/appengine/docs/standard/java/datastore/entity-property-reference
+    @SuppressWarnings("unchecked")
+    List<String> allAccessoryIDs =
+        (List<String>) getCurrentPlayerEntity().getProperty(ALL_ACCESSORIES_QUERY_STRING);
+    return allAccessoryIDs;
+  }
+
+  public String getEntityEquippedHatID() throws LoggedOutException {
+    String equippedHatID =
+        getCurrentPlayerEntity().getProperty(EQUIPPED_HAT_QUERY_STRING).toString();
+    return equippedHatID;
+  }
+
+  public String getEntityEquippedGlassesID() throws LoggedOutException {
+    String equippedGlassesID =
+        getCurrentPlayerEntity().getProperty(EQUIPPED_GLASSES_QUERY_STRING).toString();
+    return equippedGlassesID;
+  }
+
+  public String getEntityEquippedCompanionID() throws LoggedOutException {
+    String equippedCompanionID =
+        getCurrentPlayerEntity().getProperty(EQUIPPED_COMPANION_QUERY_STRING).toString();
+    return equippedCompanionID;
+  }
+
   // get displayname
   public String getEntityDisplayName() throws LoggedOutException {
     String displayName = getCurrentPlayerEntity().getProperty(DISPLAY_NAME_QUERY_STRING).toString();
@@ -129,6 +175,18 @@ public class PlayerDatabase {
 
   public void setEntityExperience(int experience) throws LoggedOutException {
     setPlayerProperty(EXPERIENCE_QUERY_STRING, Integer.toString(experience));
+  }
+
+  public void setEntityEquippedHatID(String equippedHatID) throws LoggedOutException {
+    setPlayerProperty(EQUIPPED_HAT_QUERY_STRING, defaultIfNoneEquipped(equippedHatID));
+  }
+
+  public void setEntityEquippedGlassesID(String equippedGlassesID) throws LoggedOutException {
+    setPlayerProperty(EQUIPPED_GLASSES_QUERY_STRING, defaultIfNoneEquipped(equippedGlassesID));
+  }
+
+  public void setEntityEquippedCompanionID(String equippedCompanionID) throws LoggedOutException {
+    setPlayerProperty(EQUIPPED_COMPANION_QUERY_STRING, defaultIfNoneEquipped(equippedCompanionID));
   }
 
   // set displayname
