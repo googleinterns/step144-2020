@@ -18,6 +18,13 @@ public class Player {
    * the player recieves a reward. They are a scoring metric.
    */
   private int experiencePoints;
+  /**
+   * In order for a player to try for promotion, a player's experience points must reach an ever
+   * growing threshold. This threshold is specific to each player, and relative to their experience
+   * points number. When a player tries for promotion, the promotionThreshold increases, so a player
+   * has to do more work to try for the next promotion
+   */
+  private int promotionThreshold;
 
   public Player(String displayName, String email, String imageID) {
     this.displayName = displayName;
@@ -38,10 +45,12 @@ public class Player {
       String imageID,
       String currentPageID,
       List<String> allAccessoryIDs,
-      int experiencePoints) {
+      int experiencePoints,
+      int promotionThreshold) {
     this(displayName, email, id, imageID, currentPageID);
     this.allAccessoryIDs = allAccessoryIDs;
     this.experiencePoints = experiencePoints;
+    this.promotionThreshold = promotionThreshold;
   }
 
   public String getDisplayName() {
