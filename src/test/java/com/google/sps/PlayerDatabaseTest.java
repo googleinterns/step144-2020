@@ -14,7 +14,9 @@ import com.google.gson.JsonParser;
 import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.junit.After;
 import org.junit.Assert;
@@ -35,6 +37,11 @@ public final class PlayerDatabaseTest {
   private static final String ID_QUERY_STRING = "id";
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
+  private static final String ALL_ACCESSORIES_QUERY_STRING = "allAccesories";
+  private static final String EQUIPPED_HAT_QUERY_STRING = "equippedHat";
+  private static final String EQUIPPED_GLASSES_QUERY_STRING = "equippedGlasses";
+  private static final String EQUIPPED_COMPANION_QUERY_STRING = "equippedCompanion";
+  private static final String NONE_EQUIPPED = "noneEquipped";
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
   // Mock current user for testing
@@ -47,6 +54,12 @@ public final class PlayerDatabaseTest {
   private static final String NEW_IMAGE_ID = "newImageId";
   private static final String GAME_STAGE_ID = "gameStageId";
   private static final String NEW_GAME_STAGE_ID = "newGameStageId";
+  private static final String HAT_ID = "hat";
+  private static final String GLASSES_ID = "glasses";
+  private static final String COMPANION_ID = "companion";
+  private static final List<String> ALL_ACCESSORIES =
+      Arrays.asList(HAT_ID, GLASSES_ID, COMPANION_ID);
+  private static final int NO_EXPERIENCE = 0;
   private static Map<String, Object> USER_ID_CONFIG = new HashMap<>();
 
   static {
@@ -91,7 +104,12 @@ public final class PlayerDatabaseTest {
   /** Tests that the player entity is queried back sucessfully */
   @Test
   public void getPlayer_worksSuccessfully() throws LoggedOutException {
-    Player player = new Player(NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID);
+    Player player =
+        new Player(
+            NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID, ALL_ACCESSORIES, NO_EXPERIENCE);
+    player.setEquippedHatID(HAT_ID);
+    player.setEquippedGlassesID(GLASSES_ID);
+    player.setEquippedCompanionID(COMPANION_ID);
     this.playerDatabase.addPlayerToDatabase(player);
 
     Entity expectedPlayerEntity = new Entity(ENTITY_QUERY_STRING);
@@ -100,7 +118,10 @@ public final class PlayerDatabaseTest {
     expectedPlayerEntity.setProperty(ID_QUERY_STRING, CURR_USER_ID);
     expectedPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, IMAGE_ID);
     expectedPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, GAME_STAGE_ID);
-
+    expectedPlayerEntity.setProperty(ALL_ACCESSORIES_QUERY_STRING, ALL_ACCESSORIES);
+    expectedPlayerEntity.setProperty(EQUIPPED_HAT_QUERY_STRING, HAT_ID);
+    expectedPlayerEntity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, GLASSES_ID);
+    expectedPlayerEntity.setProperty(EQUIPPED_COMPANION_QUERY_STRING, COMPANION_ID);
     Entity resultPlayerEntity = this.playerDatabase.getCurrentPlayerEntity();
     // convert to JsonObject to compare properties of elements
 
@@ -117,7 +138,12 @@ public final class PlayerDatabaseTest {
   /** Test that all get methods return correct property */
   @Test
   public void getIndividualProperties_worksSuccessfully() throws LoggedOutException {
-    Player player = new Player(NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID);
+    Player player =
+        new Player(
+            NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID, ALL_ACCESSORIES, NO_EXPERIENCE);
+    player.setEquippedHatID(HAT_ID);
+    player.setEquippedGlassesID(GLASSES_ID);
+    player.setEquippedCompanionID(COMPANION_ID);
     this.playerDatabase.addPlayerToDatabase(player);
 
     String expectedCurrentPageId = GAME_STAGE_ID;
@@ -135,6 +161,22 @@ public final class PlayerDatabaseTest {
     String expectedDisplayName = NAME;
     String resultDisplayName = this.playerDatabase.getEntityDisplayName();
     Assert.assertEquals(expectedDisplayName, resultDisplayName);
+
+    List<String> expectedAccessories = ALL_ACCESSORIES;
+    List<String> resultAccessories = this.playerDatabase.getEntityAllAccessoryIDs();
+    Assert.assertEquals(expectedAccessories, resultAccessories);
+
+    String expectedHatID = HAT_ID;
+    String resultHatID = this.playerDatabase.getEntityEquippedHatID();
+    Assert.assertEquals(expectedHatID, resultHatID);
+
+    String expectedGlassesID = GLASSES_ID;
+    String resultGlassesID = this.playerDatabase.getEntityEquippedGlassesID();
+    Assert.assertEquals(expectedGlassesID, resultGlassesID);
+
+    String expectedCompanionID = COMPANION_ID;
+    String resultCompanionID = this.playerDatabase.getEntityEquippedCompanionID();
+    Assert.assertEquals(expectedCompanionID, resultCompanionID);
   }
 
   /** Test that setting the currentPageId updates it while keeping other properties constant */
@@ -173,6 +215,9 @@ public final class PlayerDatabaseTest {
     this.playerDatabase.setEntityCurrentPageID(NEW_GAME_STAGE_ID);
     this.playerDatabase.setEntityImageID(NEW_IMAGE_ID);
     this.playerDatabase.setEntityDisplayName(NEW_NAME);
+    this.playerDatabase.setEntityEquippedHatID(HAT_ID);
+    this.playerDatabase.setEntityEquippedGlassesID(GLASSES_ID);
+    this.playerDatabase.setEntityEquippedCompanionID(COMPANION_ID);
 
     Entity expectedPlayerEntity = new Entity(ENTITY_QUERY_STRING);
     expectedPlayerEntity.setProperty(DISPLAY_NAME_QUERY_STRING, NEW_NAME);
@@ -180,7 +225,42 @@ public final class PlayerDatabaseTest {
     expectedPlayerEntity.setProperty(ID_QUERY_STRING, CURR_USER_ID);
     expectedPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, NEW_IMAGE_ID);
     expectedPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, NEW_GAME_STAGE_ID);
+    expectedPlayerEntity.setProperty(EQUIPPED_HAT_QUERY_STRING, HAT_ID);
+    expectedPlayerEntity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, GLASSES_ID);
+    expectedPlayerEntity.setProperty(EQUIPPED_COMPANION_QUERY_STRING, COMPANION_ID);
 
+    Entity resultPlayerEntity = this.playerDatabase.getCurrentPlayerEntity();
+    // convert to JsonObject to compare properties of elements
+
+    JsonParser parser = new JsonParser();
+    JsonObject resultJsonObject = parser.parse(gson.toJson(resultPlayerEntity)).getAsJsonObject();
+    JsonObject expectedJsonObject =
+        parser.parse(gson.toJson(expectedPlayerEntity)).getAsJsonObject();
+
+    String result = resultJsonObject.get("propertyMap").toString();
+    String expected = expectedJsonObject.get("propertyMap").toString();
+    Assert.assertEquals(result, expected);
+  }
+
+  /** Default "noneEquipped" values are used when the player has nothing equipped */
+  @Test
+  public void ifPlayerHasNothingEquipped_ADefaultValueIsReturnedInsteadOfID()
+      throws LoggedOutException {
+    Player player =
+        new Player(
+            NAME, EMAIL, CURR_USER_ID, IMAGE_ID, GAME_STAGE_ID, ALL_ACCESSORIES, NO_EXPERIENCE);
+    this.playerDatabase.addPlayerToDatabase(player);
+
+    Entity expectedPlayerEntity = new Entity(ENTITY_QUERY_STRING);
+    expectedPlayerEntity.setProperty(DISPLAY_NAME_QUERY_STRING, NAME);
+    expectedPlayerEntity.setProperty(EMAIL_QUERY_STRING, EMAIL);
+    expectedPlayerEntity.setProperty(ID_QUERY_STRING, CURR_USER_ID);
+    expectedPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, IMAGE_ID);
+    expectedPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, GAME_STAGE_ID);
+    expectedPlayerEntity.setProperty(ALL_ACCESSORIES_QUERY_STRING, ALL_ACCESSORIES);
+    expectedPlayerEntity.setProperty(EQUIPPED_HAT_QUERY_STRING, NONE_EQUIPPED);
+    expectedPlayerEntity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, NONE_EQUIPPED);
+    expectedPlayerEntity.setProperty(EQUIPPED_COMPANION_QUERY_STRING, NONE_EQUIPPED);
     Entity resultPlayerEntity = this.playerDatabase.getCurrentPlayerEntity();
     // convert to JsonObject to compare properties of elements
 
