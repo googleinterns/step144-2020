@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name = "viewpoint" content="width=device-width, initial-scale=1">
+
+  <title>COMPSCI:GO</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="completedPath.js"></script>
+</head>
+<body class="step-img-4" onload="loadFunctions()">
+  <h2 class="step-outline">THE END?</h2>
+  <img class="step-pixel-professor" src="images/graduationTeacher.png" alt="pixel teacher">
+
+  <audio id="musicPlayer" src="music/graduationMusic.mp3" autoplay loop></audio>
+  <a href="#" class="step-align-iconv2" id="musicIcon" onclick="playmusic()"></a>
+
+  <div class="step-wrap, step-dialogue">
+      <div>
+          <!--TODO:add graduation speech as dialogue-->
+          <p id="dialogue-container"></p>
+      </div>
+      <span>
+        <button id="step-button" class="step-button" onclick="#" name="nextButton">NEXT</button>
+      </span>
+  </div>
+
+  <div id="image-container">
+      <!--TODO: give pixel avatar a hat-->
+      <img id="pixel-avatar" src="images/graduationavatar.png" alt="pixel you">
+  </div>
+</body>
+</html>
