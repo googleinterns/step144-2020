@@ -161,12 +161,8 @@ function workPromoButtonSwitch() {
 
 function showPromoButton(isLinkActive, onclick) {
   const promoButton = document.getElementById('promotion-button');
-  const promoLink = document.getElementById('promotion-link');
   if (isLinkActive) {
-    promoLink.href = "promotionquiz.html";
     promoButton.onclick = changeThreshold();
-  } else {
-    promoLink.removeAttribute("href");
   }
   promoButton.onclick = onclick;
   promoButton.innerText = getWorkButtonTask();
@@ -192,4 +188,5 @@ function changeThreshold() {
   const params = new URLSearchParams();
   params.append('promotionThreshold', newThreshold);
   fetch('/promotion-threshold', {method: 'POST', body: params});
+  window.location='promotionquiz.html';
 }
