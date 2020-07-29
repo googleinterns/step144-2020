@@ -64,7 +64,7 @@ a:hover {
 }
 
 /** big image class already imbeded in the pictures **/
-.step-img-1 {
+.step-img-1, .step-img-4 {
   position: relative;
   background-attachment: scroll;
   background-position: center;
@@ -101,6 +101,10 @@ a:hover {
 .step-img-3 {
   background-image: url(images/coding-glasses.jpg);
   min-height: 20%;
+}
+
+.step-img-4 {
+  background-image: url(images/graduationbackground.png);
 }
 
 /** This class allows for text to be centered to the image **/
@@ -471,6 +475,23 @@ audio {
 
 .step-align-icon {
   margin-top: 10px;
+  margin-left: 10px;
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+/** classes for completedPath.html **/
+.step-pixel-professor {
+  position: absolute;
+  left : 10px;
+  top : 260px;
+  width: 500px;
+  height: 586px;
+}
+
+.step-align-iconv2 {
+  margin-top: 5px;
   margin-left: 10px;
   position:absolute;
   top:0;
