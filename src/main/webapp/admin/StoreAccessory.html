@@ -18,6 +18,7 @@
       <label>The filename is:</label><br>
       <input onChange="getImage(this.value)" type="text" name="filepath" id="filepath" required><br>
     </p>
+    <p id="file-exists"> </p>
     <p>The type of the accessory is: <br>
       <input type="radio" name="type" value="HAT">hat<BR>
       <input type="radio" name="type" value="GLASSES">glasses<br>
@@ -41,7 +42,6 @@
     </p>
   </form>
   <button type="submit" form="accessoryForm" name="accessoryFormSubmit" value="Submit">Submit</button>
-
   <div id="image-container">
       <img id="pixel-avatar" src="../images/studentBody.png" alt="pixel you">
       <img id="player-picture" src="../images/face.png" alt="uploaded face">
