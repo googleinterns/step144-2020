@@ -12,6 +12,7 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.LoggedOutException;
+import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import java.util.List;
@@ -50,10 +51,22 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String CONTENT_TYPE = "text/html";
   private static final int NO_EXPERIENCE = 0;
   private static final int STARTER_THRESHOLD = 15;
-  private User user = UserServiceFactory.getUserService().getCurrentUser();
+  private static final String START_PAGE = "Character Design";
+  private User user;
+  private boolean isLoggedIn;
   private Entity player;
-  private DatastoreService DATASTORE = DatastoreServiceFactory.getDatastoreService();
-  private boolean isLoggedIn = UserServiceFactory.getUserService().isUserLoggedIn();
+  private DatastoreService datastore;
+  private UserService userService;
+  private PlayerDatabase playerDatabase;
+
+  @Override
+  public void init() {
+    this.userService = UserServiceFactory.getUserService();
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.user = this.userService.getCurrentUser();
+    this.isLoggedIn = this.userService.isUserLoggedIn();
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -66,8 +79,9 @@ public class ImageHandlerServlet extends HttpServlet {
     }
     try {
       String imageBlobKeyString = createUploadedBlobKey(request, IMAGE_PARAMETER);
-      // create and store store current player
-      DATASTORE.put(newPlayerEntity(imageBlobKeyString, displayName));
+      // create a new player from the currently logged in user and store it in PlayerDatabase
+      Player player = newPlayer(imageBlobKeyString, displayName);
+      this.playerDatabase.addPlayerToDatabase(player);
       response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
@@ -76,15 +90,12 @@ public class ImageHandlerServlet extends HttpServlet {
     }
   }
 
-  private Entity newPlayerEntity(String imageBlobKeyString, String displayName) {
-    user = UserServiceFactory.getUserService().getCurrentUser();
-    player = new Entity(PLAYER_QUERY_PARAMETER);
-    player.setProperty(EMAIL_PARAMETER, user.getEmail());
-    player.setProperty(IMAGE_ID_PARAMETER, imageBlobKeyString);
-    player.setProperty(DISPLAY_NAME_PARAMETER, displayName);
-    player.setProperty(ID_PARAMETER, user.getUserId());
-    player.setProperty(EXPERIENCE_POINTS_PARAMETER, NO_EXPERIENCE);
-    player.setProperty(PROMOTION_THRESHOLD_PARAMETER, STARTER_THRESHOLD);
+  private Player newPlayer(String imageBlobKeyString, String displayName) {
+    User user = UserServiceFactory.getUserService().getCurrentUser();
+    Player player =
+        new Player(displayName, user.getEmail(), user.getUserId(), imageBlobKeyString, START_PAGE);
+    player.setExperiencePoints(NO_EXPERIENCE);
+    player.setPromotionThreshold(STARTER_THRESHOLD);
     return player;
   }
 
@@ -131,7 +142,7 @@ public class ImageHandlerServlet extends HttpServlet {
   }
 
   private void handleLoggedInUser(HttpServletResponse response) throws IOException {
-    PlayerDatabase playerDatabase = new PlayerDatabase(DATASTORE);
+    PlayerDatabase playerDatabase = new PlayerDatabase(this.datastore);
     try {
       player = playerDatabase.getCurrentPlayerEntity();
     } catch (LoggedOutException e) {
