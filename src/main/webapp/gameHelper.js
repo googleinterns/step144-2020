@@ -61,7 +61,7 @@ function nextLine() {
   quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
  
-function getImage(faceUrl = "images/face.png") {  
+function getImage() {  
   fetch("/image-handler")
       .then(response => response.text())
       .then(message => {
@@ -73,7 +73,7 @@ function getImage(faceUrl = "images/face.png") {
           const imageContainer = document.getElementById('image-container');
           var blobkey = messageArray[1];
           if (blobkey == "default") {
-              createImageElement(faceUrl);
+              createImageElement("images/face.png");
           }
           else {
             fetch('/get-image?blobkey=' + blobkey).then((pic) => {
@@ -189,13 +189,4 @@ function changeThreshold() {
   params.append('promotionThreshold', newThreshold);
   fetch('/promotion-threshold', {method: 'POST', body: params});
   window.location='promotionquiz.html';
-}
-
-function getEquippedAccessories() {
-  fetch("/experience")
-  .then(response => response.text())
-  .then(expString => {
-    experience = parseInt(expString);
-    showExperience(experience);
-  });
 }
