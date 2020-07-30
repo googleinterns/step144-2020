@@ -11,57 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-const FINAL_STAGE_BUTTON_VALUE = 'COMPLETE PATH';
-const FINAL_STAGE_REDIRECTION = 'CompletedPath.html';
-const MUSIC_ICON= 'musicIcon';
-const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
-const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
-
-var isPlayingmusic = true;
 function loadFunctions() {
-  getImage();
   playmusic();
-}
-
-function getImage() {  
-  fetch("/image-handler")
-      .then(response => response.text())
-      .then(message => {
-          var messageArray = message.split("\n");
-          // messageArray is an array of three parts : 
-          // 0) Boolean is user logged in
-          // 1) String image blobkey
-          // 2) String user display name
-          const imageContainer = document.getElementById('image-container');
-          var blobkey = messageArray[1];
-          if (blobkey == "default") {
-              createImageElement("images/face.png");
-          }
-          else {
-            fetch('/get-image?blobkey=' + blobkey).then((pic) => {
-            createImageElement(pic.url);
-          });
-          }
-  });
-}
-
-function createImageElement(pic) {
-  let image = document.createElement("img");
-  image.src = pic;
-  image.id = "player-picture";
-  const imageContainer = document.getElementById('image-container');
-  imageContainer.append(image);
-}
-
-//play button functions
-function playmusic() {
-  const audio = document.getElementById(MUSIC_ICON);
-  if(isPlayingmusic) {
-    audio.innerHTML = UNMUTE_ICON;
-    isPlayingmusic = false;
-  } else {
-    audio.innerHTML = MUTE_ICON;
-    isPlayingmusic = true;
-    document.getElementById('musicPlayer').muted=!document.getElementById('musicPlayer').muted;
-  }
+  getImage();
 }
