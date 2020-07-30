@@ -14,4 +14,5 @@
 function loadFunctions() {
   playmusic();
   getImage();
+  getDialogue();
 }
