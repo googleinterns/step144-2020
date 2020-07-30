@@ -11,30 +11,19 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-// Copyright 2019 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 const FINAL_STAGE_BUTTON_VALUE = 'COMPLETE PATH';
 const FINAL_STAGE_REDIRECTION = 'completedPath.html';
 const MUSIC_ICON= 'musicIcon';
 const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
 const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
- 
 var dialogueArray;
 var isPlayingmusic = true;
 var dialogueRegex;
 var experience;
-var threshold = 15;
+var threshold;
+// For now, this is hard coded, will change with new servlet
+// https://github.com/googleinterns/step144-2020/issues/171
+var newThreshold = 20;
  
 function getDialogue() {
   const responsePromise = fetch('/game-dialogue');
@@ -143,6 +132,9 @@ function changeExperience() {
 }
  
 function workPromoButtonSwitch() {
+  if (threshold == null) {
+    getThreshold();
+  }
   if (experience == threshold) {
     // Changes button to "TRY FOR PROMOTION"
     const promoButton = document.getElementById('promotion-button');
@@ -158,11 +150,8 @@ function workPromoButtonSwitch() {
  
 function showPromoButton(isLinkActive, onclick) {
   const promoButton = document.getElementById('promotion-button');
-  const promoLink = document.getElementById('promotion-link');
   if (isLinkActive) {
-    promoLink.href = "promotionquiz.html";
-  } else {
-    promoLink.removeAttribute("href");
+    promoButton.onclick = changeThreshold();
   }
   promoButton.onclick = onclick;
   promoButton.innerText = getWorkButtonTask();
