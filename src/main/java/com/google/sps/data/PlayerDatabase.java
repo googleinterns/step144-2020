@@ -2,7 +2,9 @@ package com.google.sps.data;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
@@ -21,16 +23,16 @@ public class PlayerDatabase {
   private static final String IMAGE_ID_QUERY_STRING = "imageID";
   private static final String CURRENT_PAGE_ID_QUERY_STRING = "currentPageID";
   private static final String EXPERIENCE_POINTS_QUERY_STRING = "experiencePoints";
+  private static final String PROMOTION_THRESHOLD_QUERY_STRING = "promotionThreshold";
   private static final String ALL_ACCESSORIES_QUERY_STRING = "allAccesories";
   private static final String EQUIPPED_HAT_QUERY_STRING = "equippedHat";
   private static final String EQUIPPED_GLASSES_QUERY_STRING = "equippedGlasses";
   private static final String EQUIPPED_COMPANION_QUERY_STRING = "equippedCompanion";
   private static final String NONE_EQUIPPED = "noneEquipped";
-  private static final String PROMOTION_THRESHOLD_QUERY_STRING = "promotionThreshold";
   private static final Query query = new Query(ENTITY_QUERY_STRING);
   private User user;
-  private String userEmail = UserServiceFactory.getUserService().getCurrentUser().getEmail();
-  private String userID = UserServiceFactory.getUserService().getCurrentUser().getUserId();
+  private String userEmail;
+  private String userID;
   private boolean isLoggedIn;
 
   public static List<Player> getPlayers() {
@@ -44,6 +46,8 @@ public class PlayerDatabase {
   public PlayerDatabase(DatastoreService datastore, UserService userService) {
     this.datastore = datastore;
     this.user = userService.getCurrentUser();
+    this.userEmail = this.user.getEmail();
+    this.userID = this.user.getUserId();
     this.isLoggedIn = userService.isUserLoggedIn();
   }
 
@@ -63,18 +67,22 @@ public class PlayerDatabase {
     String email = player.getEmail();
     String imageID = player.getImageID();
     String currentPageID = player.getCurrentPageID();
+    int experiencePoints = player.getExperiencePoints();
+    int promotionThreshold = player.getPromotionThreshold();
     String equippedHatID = player.getEquippedHatID();
     String equippedGlassesID = player.getEquippedGlassesID();
     String equippedCompanionID = player.getEquippedCompanionID();
     List<String> allAccessoryIDs = player.getAllAccessoryIDs();
 
-    Entity entity = new Entity(ENTITY_QUERY_STRING);
+    Entity entity = new Entity(ENTITY_QUERY_STRING, id);
 
     entity.setProperty(DISPLAY_NAME_QUERY_STRING, displayName);
     entity.setProperty(EMAIL_QUERY_STRING, email);
     entity.setProperty(ID_QUERY_STRING, id);
     entity.setProperty(IMAGE_ID_QUERY_STRING, imageID);
     entity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, currentPageID);
+    entity.setProperty(EXPERIENCE_POINTS_QUERY_STRING, Integer.toString(experiencePoints));
+    entity.setProperty(PROMOTION_THRESHOLD_QUERY_STRING, Integer.toString(promotionThreshold));
     entity.setProperty(EQUIPPED_HAT_QUERY_STRING, defaultIfNoneEquipped(equippedHatID));
     entity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, defaultIfNoneEquipped(equippedGlassesID));
     entity.setProperty(EQUIPPED_COMPANION_QUERY_STRING, defaultIfNoneEquipped(equippedCompanionID));
@@ -84,21 +92,16 @@ public class PlayerDatabase {
 
   // get entity
   public Entity getCurrentPlayerEntity() throws LoggedOutException {
-    if (!isLoggedIn) {
+    if (!this.isLoggedIn) {
       throw new LoggedOutException();
     }
-    String email = userEmail;
-    Query query =
-        new Query(ENTITY_QUERY_STRING)
-            .setFilter(
-                new Query.FilterPredicate(ID_QUERY_STRING, Query.FilterOperator.EQUAL, userID));
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity entity : results.asIterable()) {
-      if (email.equals(entity.getProperty(EMAIL_QUERY_STRING).toString())) {
-        return entity;
-      }
+    Key key = KeyFactory.createKey(ENTITY_QUERY_STRING, this.userID);
+    try {
+      Entity entity = this.datastore.get(key);
+      return entity;
+    } catch (EntityNotFoundException e) {
+      throw new LoggedOutException();
     }
-    throw new LoggedOutException();
   }
 
   // get player current stage

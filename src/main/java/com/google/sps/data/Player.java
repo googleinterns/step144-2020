@@ -77,6 +77,10 @@ public class Player {
     return experiencePoints;
   }
 
+  public int getPromotionThreshold() {
+    return this.promotionThreshold;
+  }
+
   public List<String> getAllAccessoryIDs() {
     return this.allAccessoryIDs;
   }
@@ -127,5 +131,9 @@ public class Player {
 
   public void setExperiencePoints(int experiencePoints) {
     this.experiencePoints = experiencePoints;
+  }
+
+  public void setPromotionThreshold(int promotionThreshold) {
+    this.promotionThreshold = promotionThreshold;
   }
 }

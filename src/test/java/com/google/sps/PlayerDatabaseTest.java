@@ -42,6 +42,8 @@ public final class PlayerDatabaseTest {
   private static final String EQUIPPED_GLASSES_QUERY_STRING = "equippedGlasses";
   private static final String EQUIPPED_COMPANION_QUERY_STRING = "equippedCompanion";
   private static final String NONE_EQUIPPED = "noneEquipped";
+  private static final String PROMOTION_THRESHOLD_QUERY_STRING = "promotionThreshold";
+  private static final String EXPERIENCE_POINTS_QUERY_STRING = "experiencePoints";
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
   // Mock current user for testing
@@ -60,7 +62,8 @@ public final class PlayerDatabaseTest {
   private static final List<String> ALL_ACCESSORIES =
       Arrays.asList(HAT_ID, GLASSES_ID, COMPANION_ID);
   private static final int NO_EXPERIENCE = 0;
-  private static final int THRESHOLD = 15;
+  private static final int THRESHOLD_10 = 10;
+  private static final int THRESHOLD_15 = 15;
   private static Map<String, Object> USER_ID_CONFIG = new HashMap<>();
 
   static {
@@ -114,7 +117,7 @@ public final class PlayerDatabaseTest {
             GAME_STAGE_ID,
             ALL_ACCESSORIES,
             NO_EXPERIENCE,
-            THRESHOLD);
+            THRESHOLD_15);
     player.setEquippedHatID(HAT_ID);
     player.setEquippedGlassesID(GLASSES_ID);
     player.setEquippedCompanionID(COMPANION_ID);
@@ -126,6 +129,10 @@ public final class PlayerDatabaseTest {
     expectedPlayerEntity.setProperty(ID_QUERY_STRING, CURR_USER_ID);
     expectedPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, IMAGE_ID);
     expectedPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, GAME_STAGE_ID);
+    expectedPlayerEntity.setProperty(
+        EXPERIENCE_POINTS_QUERY_STRING, Integer.toString(NO_EXPERIENCE));
+    expectedPlayerEntity.setProperty(
+        PROMOTION_THRESHOLD_QUERY_STRING, Integer.toString(THRESHOLD_15));
     expectedPlayerEntity.setProperty(ALL_ACCESSORIES_QUERY_STRING, ALL_ACCESSORIES);
     expectedPlayerEntity.setProperty(EQUIPPED_HAT_QUERY_STRING, HAT_ID);
     expectedPlayerEntity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, GLASSES_ID);
@@ -155,7 +162,7 @@ public final class PlayerDatabaseTest {
             GAME_STAGE_ID,
             ALL_ACCESSORIES,
             NO_EXPERIENCE,
-            THRESHOLD);
+            THRESHOLD_10);
     player.setEquippedHatID(HAT_ID);
     player.setEquippedGlassesID(GLASSES_ID);
     player.setEquippedCompanionID(COMPANION_ID);
@@ -233,6 +240,7 @@ public final class PlayerDatabaseTest {
     this.playerDatabase.setEntityEquippedHatID(HAT_ID);
     this.playerDatabase.setEntityEquippedGlassesID(GLASSES_ID);
     this.playerDatabase.setEntityEquippedCompanionID(COMPANION_ID);
+    this.playerDatabase.setEntityPromotionThreshold(THRESHOLD_15);
 
     Entity expectedPlayerEntity = new Entity(ENTITY_QUERY_STRING);
     expectedPlayerEntity.setProperty(DISPLAY_NAME_QUERY_STRING, NEW_NAME);
@@ -240,6 +248,10 @@ public final class PlayerDatabaseTest {
     expectedPlayerEntity.setProperty(ID_QUERY_STRING, CURR_USER_ID);
     expectedPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, NEW_IMAGE_ID);
     expectedPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, NEW_GAME_STAGE_ID);
+    expectedPlayerEntity.setProperty(
+        EXPERIENCE_POINTS_QUERY_STRING, Integer.toString(NO_EXPERIENCE));
+    expectedPlayerEntity.setProperty(
+        PROMOTION_THRESHOLD_QUERY_STRING, Integer.toString(THRESHOLD_15));
     expectedPlayerEntity.setProperty(EQUIPPED_HAT_QUERY_STRING, HAT_ID);
     expectedPlayerEntity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, GLASSES_ID);
     expectedPlayerEntity.setProperty(EQUIPPED_COMPANION_QUERY_STRING, COMPANION_ID);
@@ -270,7 +282,7 @@ public final class PlayerDatabaseTest {
             GAME_STAGE_ID,
             ALL_ACCESSORIES,
             NO_EXPERIENCE,
-            THRESHOLD);
+            THRESHOLD_10);
     this.playerDatabase.addPlayerToDatabase(player);
 
     Entity expectedPlayerEntity = new Entity(ENTITY_QUERY_STRING);
@@ -279,6 +291,10 @@ public final class PlayerDatabaseTest {
     expectedPlayerEntity.setProperty(ID_QUERY_STRING, CURR_USER_ID);
     expectedPlayerEntity.setProperty(IMAGE_ID_QUERY_STRING, IMAGE_ID);
     expectedPlayerEntity.setProperty(CURRENT_PAGE_ID_QUERY_STRING, GAME_STAGE_ID);
+    expectedPlayerEntity.setProperty(
+        EXPERIENCE_POINTS_QUERY_STRING, Integer.toString(NO_EXPERIENCE));
+    expectedPlayerEntity.setProperty(
+        PROMOTION_THRESHOLD_QUERY_STRING, Integer.toString(THRESHOLD_10));
     expectedPlayerEntity.setProperty(ALL_ACCESSORIES_QUERY_STRING, ALL_ACCESSORIES);
     expectedPlayerEntity.setProperty(EQUIPPED_HAT_QUERY_STRING, NONE_EQUIPPED);
     expectedPlayerEntity.setProperty(EQUIPPED_GLASSES_QUERY_STRING, NONE_EQUIPPED);
