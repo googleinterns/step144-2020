@@ -1,0 +1,27 @@
+/** Player Sprite **/
+#image-container {
+  position: absolute;
+  height : 550px;
+  left : 70%;
+  top : 250px;
+  float : left;
+}
+
+#pixel-avatar {
+  position: absolute;
+  width : 260px;
+  left : 10px;
+  top : 160px;
+  height : 260px;
+  z-index: 0;
+}
+
+#player-picture {
+  object-fit: cover;
+  position: absolute;
+  border-radius: 50%;
+  left : 50px;
+  width : 170px;
+  height : 185px;
+  z-index: 1;
+}

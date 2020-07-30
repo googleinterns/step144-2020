@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name = "viewpoint" content="width=device-width, initial-scale=1">
+
+  <title>Store Accessory</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../player.css">
+
+  <script src="storeAccessory.js"></script>
+</head>
+<body>
+  <form action="/store-accessory" method="POST" id="accessoryForm" name="accessoryForm"> 
+    <p>
+      <label>The filename is:</label><br>
+      <input onChange="getImage(this.value)" type="text" name="filepath" id="filepath" required><br>
+    </p>
+    <p>The type of the accessory is: <br>
+      <input type="radio" name="type" value="HAT">hat<BR>
+      <input type="radio" name="type" value="GLASSES">glasses<br>
+      <input type="radio" name="type" value="COMPANION">companion<br>
+    </p>
+    <p>
+      <label>Height (in px)</label><br>
+      <input onChange="changeAccessory(this.name, this.value)" type="number" name="height" required><br>
+    </p>
+    <p>
+      <label>Width (in px)</label><br>
+      <input onChange="changeAccessory(this.name, this.value)" type="number" name="width" required><br>
+    </p>
+    <p>
+      <label>xPos (in px)</label><br>
+      <input onChange="changeAccessory(this.name, this.value)" type="number" name="xPos" required><br>
+    </p>
+    <p>
+      <label>yPos (in px)</label><br>
+      <input onChange="changeAccessory(this.name, this.value)" type="number" name="yPos" required><br>
+    </p>
+  </form>
+  <button type="submit" form="accessoryForm" name="accessoryFormSubmit" value="Submit">Submit</button>
+
+  <div id="image-container">
+      <img id="pixel-avatar" src="../images/studentBody.png" alt="pixel you">
+      <img id="player-picture" src="../images/face.png" alt="uploaded face">
+      <img id="accessory">
+  </div>
+</body>
+</html>
