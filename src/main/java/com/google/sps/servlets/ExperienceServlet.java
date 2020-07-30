@@ -24,16 +24,14 @@ public class ExperienceServlet extends HttpServlet {
   private static final String CONTENT_TYPE = "text/html";
   private static final String EXPERIENCE_PARAMETER = "experiencePoints";
   private static final String EMPTY_PARAMETER = "empty";
-  private static Gson gson;
+  private static Gson gson = new Gson();
   private static int experience;
   private DatastoreService datastore;
   private UserService userService;
   private PlayerDatabase playerDatabase;
   private boolean isLoggedIn;
 
-  @Override
-  public void init() {
-    this.gson = new Gson();
+  public void initEachTime() {
     this.userService = UserServiceFactory.getUserService();
     this.datastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
@@ -44,6 +42,7 @@ public class ExperienceServlet extends HttpServlet {
   // Experience Points are the scoring metric of the game.
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    initEachTime();
     try {
       experience = Integer.parseInt(request.getParameter(EXPERIENCE_PARAMETER).toString());
       playerDatabase.setEntityExperience(experience);
@@ -60,6 +59,7 @@ public class ExperienceServlet extends HttpServlet {
   // Experience Points are the scoring metric of the game.
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    initEachTime();
     if (isLoggedIn) {
       handleLoggedInUser(response);
     } else {

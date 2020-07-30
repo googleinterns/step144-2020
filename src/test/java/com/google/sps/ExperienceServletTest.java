@@ -83,7 +83,6 @@ public final class ExperienceServletTest {
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.experienceServlet = new ExperienceServlet();
-    this.experienceServlet.init();
     this.experience = 12;
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     MockitoAnnotations.initMocks(this);
