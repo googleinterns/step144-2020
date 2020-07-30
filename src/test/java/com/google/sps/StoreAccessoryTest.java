@@ -57,7 +57,7 @@ public final class StoreAccessoryTest {
 
   @Before
   public void setUp() throws IOException {
-    helper.setUp(); //initialize local datastore for testing
+    helper.setUp(); // initialize local datastore for testing
     DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.accessoryDatabase = new AccessoryDatabase(localDatastore);
     MockitoAnnotations.initMocks(this);
