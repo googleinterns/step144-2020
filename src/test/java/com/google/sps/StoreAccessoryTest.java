@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -58,7 +57,7 @@ public final class StoreAccessoryTest {
 
   @Before
   public void setUp() throws IOException {
-    helper.setUp();  //initialize local datastore for testing
+    helper.setUp(); //initialize local datastore for testing
     DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.accessoryDatabase = new AccessoryDatabase(localDatastore);
     MockitoAnnotations.initMocks(this);
@@ -93,8 +92,7 @@ public final class StoreAccessoryTest {
     int yPos = 20;
     String id = filepath + Type.GLASSES.name();
 
-    Accessory expectedAccessory =
-        new Accessory(id, filepath, type, height, width, xPos, yPos);
+    Accessory expectedAccessory = new Accessory(id, filepath, type, height, width, xPos, yPos);
 
     this.storeAccessory.doPost(this.request, this.response);
     Accessory resultAccessory = this.accessoryDatabase.getAccessory(filepath + typeStringInput);
