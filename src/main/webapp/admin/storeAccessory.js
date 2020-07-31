@@ -7,6 +7,9 @@ function getImage(filepathStub) {
   accessoryPicture.onload = function() {
     URL.revokeObjectURL(accessoryPicture.src) // free memory
   }
+  accessoryPicture.onerror = function() {
+    document.getElementById("file-exists").innerHTML = "Filepath not found.";
+  }
   accessoryPicture.style.zIndex = "3"; // on top of player face and body
   accessoryPicture.style.position = "absolute"; // on top of player face and body
 }
