@@ -5,9 +5,12 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.sps.data.Accessory.Type;
+import java.util.ArrayList;
 import java.util.IllegalFormatException;
+import java.util.List;
 
 /* Accessory database, to put and query for Accessories */
 public class AccessoryDatabase {
@@ -21,9 +24,11 @@ public class AccessoryDatabase {
   private String WIDTH_PROPERTY = "width";
   private String XPOS_PROPERTY = "xPos";
   private String YPOS_PROPERTY = "yPos";
+  private List<String> allAccessoryIds;
 
   public AccessoryDatabase(DatastoreService datastore) {
     this.datastore = datastore;
+    this.allAccessoryIds = getAllAccessoryIDsFromDatabase();
   }
 
   /* method to return a Accessory by just the id */
@@ -37,9 +42,26 @@ public class AccessoryDatabase {
     try {
       Entity accessoryEntity = createAccessoryEntity(accessory);
       this.datastore.put(accessoryEntity);
+      this.allAccessoryIds.add(accessory.getId());
+      System.out.println(accessory.getId());
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
     }
+  }
+
+  public List<String> getAllAccessoryIDs() {
+    return this.allAccessoryIds;
+  }
+
+  private List<String> getAllAccessoryIDsFromDatabase() {
+    List<String> ids = new ArrayList();
+    Query query = new Query(QUERY_FOR_ACCESSORY_ENTITY).setKeysOnly();
+    PreparedQuery preparedQuery = datastore.prepare(query);
+    for (Entity result : preparedQuery.asIterable()) {
+      String key = result.getKey().getName();
+      ids.add(key);
+    }
+    return ids;
   }
 
   private Entity getAccessoryEntityFromID(String id) throws EntityNotFoundException {
