@@ -19,6 +19,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.GameStage;
 import com.google.sps.data.GameStageDatabase;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -32,6 +33,7 @@ public final class GetGameDialogue extends HttpServlet {
   private static final String TEXT_TO_HTML = "text/html;";
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String LOGGED_OUT_EXCEPTION = "It appears that you have not logged in";
+  private static final String NUMBER_FORMAT_EXCEPTION = "Could not parse integer from level id";
   private static final Gson gson = new Gson();
   private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   private final PlayerDatabase playerDatabase = new PlayerDatabase(datastore);
@@ -43,12 +45,20 @@ public final class GetGameDialogue extends HttpServlet {
       GameStage currentGameStage =
           gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
       String dialogue = gson.toJson(currentGameStage.getContent());
+      String id = currentGameStage.getID();
+      String level = id.substring(id.length() - 1);
+      // Checks that the Level String can be parsed to an int without throwing an exception.
+      int levelInt = Integer.parseInt(level);
+      String levelJson = gson.toJson(level);
 
-      response.setContentType(JSON_CONTENT_TYPE);
+      response.setContentType(TEXT_TO_HTML);
+      response.getWriter().println(levelJson);
       response.getWriter().println(dialogue);
-    } catch (Exception LoggedOutException) {
-      response.setContentType(JSON_CONTENT_TYPE);
+    } catch (LoggedOutException e) {
+      response.setContentType(TEXT_TO_HTML);
       response.getWriter().println(LOGGED_OUT_EXCEPTION);
+    } catch (NumberFormatException e) {
+      response.getWriter().println(NUMBER_FORMAT_EXCEPTION);
     }
   }
 }
