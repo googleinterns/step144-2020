@@ -19,7 +19,7 @@ const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
 
 var PLAYER_NAME_PARAMATER = 'playerNameHere';
 var words
-var playerNickname = 'Intern';
+var playerNickname;
 var dialogueArray;
 var isPlayingmusic = true;
 var dialogueRegex;
@@ -28,6 +28,7 @@ var threshold;
 var thresholdIncrement;
 
 function getDialogue() {
+  getPlayerName();
   const responsePromise = fetch('/game-dialogue');
   responsePromise.then(handleResponse);
 }
@@ -224,4 +225,19 @@ function reconstructWordToSentence(words) {
     sentence = sentence + words[wordIterator] + ' ';
   }
   dialogueArray[dialogueRegex] = sentence;
+}
+
+//fetch the player as an entitie
+function getPlayerName() {
+  const responsePromise = fetch('/get-player-name');
+  responsePromise.then(handleResponsePlayer);
+}
+
+function handleResponsePlayer(response) {
+  const jsonPromise = response.json();
+  jsonPromise.then(addPlayerToDom);
+}  
+
+function addPlayerToDom(playerName) {
+  var playerNickname = playerName;
 }
