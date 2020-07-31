@@ -25,9 +25,7 @@ var isPlayingmusic = true;
 var dialogueRegex;
 var experience;
 var threshold;
-// For now, this is hard coded, will change with new servlet
-// https://github.com/googleinterns/step144-2020/issues/171
-var newThreshold = 20;
+var thresholdIncrement;
 
 function getDialogue() {
   const responsePromise = fetch('/game-dialogue');
@@ -35,12 +33,24 @@ function getDialogue() {
 }
 
 function handleResponse(response) {
-  const textPromise = response.json();
+  const textPromise = response.text();
   textPromise.then(addDialogueToDom);
 }
-
-function addDialogueToDom(dialogue) {
+ 
+function addDialogueToDom(textResponse) {
+  responseArray = textResponse.split("\n");
+  // Divides the response into level and dialogue
+  var levelString = responseArray[0];
+  // Substring gets rid of the surrounding quotation marks in the string.
+  levelString = levelString.substring(1, levelString.length - 1);
+  // Increment is set to the level times five.
+  thresholdIncrement = parseInt(levelString) * 5;
+  changeThreshold(thresholdIncrement);  
+  
   const quoteContainer = document.getElementById('dialogue-container');
+  var dialogue = responseArray[1];
+  // Substring gets rid of the surrounding quotation marks in the string.
+  dialogue = dialogue.substring(1, dialogue.length - 1);
   dialogueArray = dialogue.split(";");
   dialogueRegex = 0;
   splitSentenceToWords()
@@ -69,11 +79,10 @@ function getImage() {
           var blobkey = messageArray[1];
           if (blobkey == "default") {
               createImageElement("images/face.png");
-          }
-          else {
+          } else {
             fetch('/get-image?blobkey=' + blobkey).then((pic) => {
             createImageElement(pic.url);
-          });
+            });
           }
   });
 }
@@ -126,6 +135,7 @@ function getExperience() {
 function showExperience(experience) {
   const expContainer = document.getElementById('experience-container');
   expContainer.innerText = "EXP:" + experience;
+  workPromoButtonSwitch();
 }
 
 function changeExperience() {
@@ -133,13 +143,13 @@ function changeExperience() {
   workPromoButtonSwitch();
   showExperience(experience);
   const params = new URLSearchParams();
-  params.append('experience', experience);
+  params.append('experiencePoints', experience);
   fetch('/experience', {method: 'POST', body: params});
 }
 
 function workPromoButtonSwitch() {
   if (threshold == null) {
-    getThreshold();
+    changeThreshold(thresholdIncrement);
   }
   if (experience == threshold) {
     // Changes button to "TRY FOR PROMOTION"
@@ -147,7 +157,7 @@ function workPromoButtonSwitch() {
     promoButton.innerText = "TRY FOR PROMOTION";
   } else if (experience == threshold + 1) {
     // Changes button link to promotion.html, and removes button onclick (null)
-    showPromoButton(true, null);
+    showPromoButton(true, tryForPromotion());
   } else {
     // Changes button onclick to increase experience and removes button link
     showPromoButton(false, changeExperience);
@@ -157,9 +167,11 @@ function workPromoButtonSwitch() {
 function showPromoButton(isLinkActive, onclick) {
   const promoButton = document.getElementById('promotion-button');
   if (isLinkActive) {
-    promoButton.onclick = changeThreshold();
+    promoButton.onclick = tryForPromotion();
   }
-  promoButton.onclick = onclick;
+  else {
+    promoButton.onclick = onclick;
+  }
   promoButton.innerText = getWorkButtonTask();
 }
 
@@ -170,19 +182,20 @@ function getWorkButtonTask() {
   return taskArray[randomNum];
 }
 
-function getThreshold() {
+function changeThreshold(increment) {
   fetch("/promotion-threshold")
-  .then(response => response.text())
-  .then(thresholdString => {
+      .then(response => response.text())
+      .then(thresholdString => {
     threshold = parseInt(thresholdString);
-    workPromoButtonSwitch();
+    const params = new URLSearchParams();
+    threshold = threshold + increment;
+    params.append('promotionThreshold', threshold);
+    fetch('/promotion-threshold', {method: 'POST', body: params});
   });
 }
 
-function changeThreshold() {
-  const params = new URLSearchParams();
-  params.append('promotionThreshold', newThreshold);
-  fetch('/promotion-threshold', {method: 'POST', body: params});
+function tryForPromotion() {
+  changeThreshold(thresholdIncrement);
   window.location='promotionquiz.html';
 }
 

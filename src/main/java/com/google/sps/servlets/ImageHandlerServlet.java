@@ -50,7 +50,7 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String CHARACTER_DESIGN_REDIRECT_PARAMETER = "/characterDesign.html";
   private static final String CONTENT_TYPE = "text/html";
   private static final int NO_EXPERIENCE = 0;
-  private static final int STARTER_THRESHOLD = 15;
+  private static final int STARTER_THRESHOLD = 5;
   private static final String START_PAGE = "Character Design";
   private User user;
   private boolean isLoggedIn;
