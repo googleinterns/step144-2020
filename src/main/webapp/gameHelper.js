@@ -16,20 +16,22 @@ const FINAL_STAGE_REDIRECTION = 'completedPath.html';
 const MUSIC_ICON= 'musicIcon';
 const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
 const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
+
+var PLAYER_NAME_PARAMATER = 'playerNameHere';
+var words
+var playerNickname = 'Intern';
 var dialogueArray;
 var isPlayingmusic = true;
 var dialogueRegex;
 var experience;
 var threshold;
-// For now, this is hard coded, will change with new servlet
-// https://github.com/googleinterns/step144-2020/issues/171
 var thresholdIncrement;
 
 function getDialogue() {
   const responsePromise = fetch('/game-dialogue');
   responsePromise.then(handleResponse);
 }
- 
+
 function handleResponse(response) {
   const textPromise = response.text();
   textPromise.then(addDialogueToDom);
@@ -44,24 +46,26 @@ function addDialogueToDom(textResponse) {
   // Increment is set to the level times five.
   thresholdIncrement = parseInt(levelString) * 5;
   changeThreshold(thresholdIncrement);  
-
+  
   const quoteContainer = document.getElementById('dialogue-container');
   var dialogue = responseArray[1];
   // Substring gets rid of the surrounding quotation marks in the string.
   dialogue = dialogue.substring(1, dialogue.length - 1);
   dialogueArray = dialogue.split(";");
   dialogueRegex = 0;
+  splitSentenceToWords()
   quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
- 
+
 function nextLine() {
   const quoteContainer = document.getElementById('dialogue-container');
-  if (dialogueRegex < dialogueArray.length-1){
+  if (dialogueRegex < dialogueArray.length -1){
     dialogueRegex ++;
+    splitSentenceToWords()
   }
   quoteContainer.innerText = dialogueArray[dialogueRegex];
 }
- 
+
 function getImage() {  
   fetch("/image-handler")
       .then(response => response.text())
@@ -82,7 +86,7 @@ function getImage() {
           }
   });
 }
- 
+
 function createImageElement(pic) {
   let image = document.createElement("img");
   image.src = pic;
@@ -90,7 +94,7 @@ function createImageElement(pic) {
   const imageContainer = document.getElementById('image-container');
   imageContainer.append(image);
 }
- 
+
 function modifyIfFinalStage() {
   fetch("/isFinalStage")
       .then(response => response.text())
@@ -105,7 +109,7 @@ function modifyIfFinalStage() {
         }
       });
 }
- 
+
 //play button functions
 function playmusic() {
   const audio = document.getElementById(MUSIC_ICON);
@@ -118,7 +122,7 @@ function playmusic() {
     document.getElementById('musicPlayer').muted=!document.getElementById('musicPlayer').muted;
   }
 }
- 
+
 function getExperience() {
   fetch("/experience")
   .then(response => response.text())
@@ -127,13 +131,13 @@ function getExperience() {
     showExperience(experience);
   });
 }
- 
+
 function showExperience(experience) {
   const expContainer = document.getElementById('experience-container');
   expContainer.innerText = "EXP:" + experience;
   workPromoButtonSwitch();
 }
- 
+
 function changeExperience() {
   experience ++;
   workPromoButtonSwitch();
@@ -142,7 +146,7 @@ function changeExperience() {
   params.append('experiencePoints', experience);
   fetch('/experience', {method: 'POST', body: params});
 }
- 
+
 function workPromoButtonSwitch() {
   if (threshold == null) {
     changeThreshold(thresholdIncrement);
@@ -193,4 +197,31 @@ function changeThreshold(increment) {
 function tryForPromotion() {
   changeThreshold(thresholdIncrement);
   window.location='promotionquiz.html';
+}
+
+/*
+ * This function splits sentences from the fetched dialogue into words
+ * It then looks for PLAYER_NAME_PARAMETER and replaces it with playerNickname
+ */
+function splitSentenceToWords() {
+  words = dialogueArray[dialogueRegex].split(' ');
+  var wordIterator;
+  for(wordIterator = 0; wordIterator < words.length; wordIterator++) {
+    if(words[wordIterator] == PLAYER_NAME_PARAMATER) {
+      words[wordIterator] = playerNickname;
+    }
+  }
+  reconstructWordToSentence(words);
+}
+
+/*
+ * This function reconstructs words to make a sentence
+ */
+function reconstructWordToSentence(words) {
+  var wordIterator;
+  var sentence = '';
+  for(wordIterator = 0; wordIterator < words.length;wordIterator++) {
+    sentence = sentence + words[wordIterator] + ' ';
+  }
+  dialogueArray[dialogueRegex] = sentence;
 }
