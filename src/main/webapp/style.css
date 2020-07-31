@@ -443,6 +443,21 @@ a:hover {
   color: var(--yellow);
 }
 
+.earned-accessory {
+  padding-top : 5px;
+  padding-bottom : 20px;
+  background-color: var(--orange);
+  border-radius: 8px;
+  border-style: solid;
+  border-color: var(--yellow);
+  width: 70%;
+  margin: auto;
+}
+
+.earned-accessory-image {
+  height: 200px;
+}
+
 /** imageHandler classes **/
 .step-textarea {
   border: 2px solid var(--orange);

@@ -15,6 +15,7 @@ import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.annotation.WebServlet;
@@ -52,6 +53,8 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final int NO_EXPERIENCE = 0;
   private static final int STARTER_THRESHOLD = 5;
   private static final String START_PAGE = "Character Design";
+  private static final String START_ACCESSORY_FILEPATH = "images/accessories/SpinnerHat.png";
+  private static final String START_ACCESSORY_TYPE = "HAT";
   private User user;
   private boolean isLoggedIn;
   private Entity player;
@@ -96,6 +99,7 @@ public class ImageHandlerServlet extends HttpServlet {
         new Player(displayName, user.getEmail(), user.getUserId(), imageBlobKeyString, START_PAGE);
     player.setExperiencePoints(NO_EXPERIENCE);
     player.setPromotionThreshold(STARTER_THRESHOLD);
+    player.setAllAccessoryIDs(Arrays.asList(START_ACCESSORY_FILEPATH + START_ACCESSORY_TYPE));
     return player;
   }
 
