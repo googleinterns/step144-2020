@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="player.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="gameHelper.js"></script>
+    <script src="profilePage.js"></script>
+  </head>
+  <body onload="onLoadFunctions()">
+    <h1 class="step-outline">Profile</h1>
+    <button class="step-button" onclick="saveEquippedAccessories()">Save</button>
+    <button id="returnButton" class="step-button" onclick="window.location='gameStage.html'">Return to game.</button>
+    <div id="image-container">
+      <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
+      <img id="player-picture" src="images/face.png" alt="uploaded face">
+      <img id="accessory-hat">
+      <img id="accessory-glasses">
+      <img id="accessory-companion">
+    </div>
+    <br>
+    <div id="accessories-table"></div>
+  </body>
+</html>

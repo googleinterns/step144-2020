@@ -512,3 +512,23 @@ audio {
   top:0;
   left:0;
 }
+
+/** classes for ProfilePage.html **/
+#gridAccessory {
+  object-fit: cover;
+  height: 150px;
+  width: 150px;
+}
+#accessories-table {
+  margin: 0 auto;
+  width : 670px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center space-evenly;
+  border: 3px solid var(--yellow);
+}
+.accessoryButton {
+  background-color: var(--charcoal);
+  text-decoration: none;
+  cursor: pointer;
+}

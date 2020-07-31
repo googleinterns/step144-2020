@@ -49,7 +49,7 @@ public final class GetGameDialogue extends HttpServlet {
       String level = id.substring(id.length() - 1);
       // Checks that the Level String can be parsed to an int without throwing an exception.
       int levelInt = Integer.parseInt(level);
-      String levelJson = gson.toJson(level);
+      String levelJson = gson.toJson(id);
 
       response.setContentType(TEXT_TO_HTML);
       response.getWriter().println(levelJson);
