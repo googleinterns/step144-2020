@@ -44,7 +44,7 @@ public final class GetGameDialogue extends HttpServlet {
     try {
       GameStage currentGameStage =
           gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
-      String dialogue = gson.toJson(currentGameStage.getContent());
+      String dialogue = currentGameStage.getContent();
       String id = currentGameStage.getID();
       String level = id.substring(id.length() - 1);
       // Checks that the Level String can be parsed to an int without throwing an exception.

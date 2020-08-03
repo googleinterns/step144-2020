@@ -49,8 +49,6 @@ function addDialogueToDom(textResponse) {
   
   const quoteContainer = document.getElementById('dialogue-container');
   var dialogue = responseArray[1];
-  // Substring gets rid of the surrounding quotation marks in the string.
-  dialogue = dialogue.substring(1, dialogue.length - 1);
   dialogueArray = dialogue.split(";");
   dialogueRegex = 0;
   splitSentenceToWords()
