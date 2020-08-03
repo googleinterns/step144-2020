@@ -88,4 +88,40 @@ public class GetEquippedAccessories extends HttpServlet {
       return noneEquippedJsonElement;
     }
   }
+
+  /** Sets the players equipped accessories */
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    try {
+      String equippedHatID = request.getParameter(EQUIPPED_HAT);
+      String equippedGlassesID = request.getParameter(EQUIPPED_GLASSES);
+      String equippedCompanionID = request.getParameter(EQUIPPED_COMPANION);
+
+      this.playerDatabase.setEntityEquippedHatID(defaultIfNotFound(equippedHatID));
+      this.playerDatabase.setEntityEquippedGlassesID(defaultIfNotFound(equippedGlassesID));
+      this.playerDatabase.setEntityEquippedCompanionID(defaultIfNotFound(equippedCompanionID));
+    } catch (LoggedOutException e) {
+      response.setContentType(HTML_CONTENT_TYPE);
+      response.getWriter().println(LOGGED_OUT_EXCEPTION);
+    }
+  }
+
+  /* Safeguard function to ensure that a player always has either a valid accessory id set or
+   * the NONE_EQUIPPED string (which is used in this servlets doGet method to determine whether
+   * or not to send an AccessoryObject or just a NONE_EQUIPPED message.
+   */
+  private String defaultIfNotFound(String accessoryId) {
+    // this if statement will trigger the exception and the return of NONE_EQUIPPED either
+    // way, but this check is put here to save time
+    if (accessoryId == null || accessoryId.equals(NONE_EQUIPPED)) {
+      return NONE_EQUIPPED;
+    }
+
+    try {
+      this.accessoryDatabase.getAccessory(accessoryId);
+      return accessoryId;
+    } catch (EntityNotFoundException e) {
+      return NONE_EQUIPPED;
+    }
+  }
 }
