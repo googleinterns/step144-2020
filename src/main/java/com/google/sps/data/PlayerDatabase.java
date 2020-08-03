@@ -208,6 +208,14 @@ public class PlayerDatabase {
     setPlayerProperty(DISPLAY_NAME_QUERY_STRING, displayName);
   }
 
+  public void addToEntityAccessories(String newAccessoryId) throws LoggedOutException {
+    List<String> accessoryIds = getEntityAllAccessoryIDs();
+    accessoryIds.add(newAccessoryId);
+    Entity entity = getCurrentPlayerEntity();
+    entity.setProperty(ALL_ACCESSORIES_QUERY_STRING, accessoryIds);
+    datastore.put(entity);
+  }
+
   private void setPlayerProperty(String propertyName, String newValue) throws LoggedOutException {
     Entity entity = getCurrentPlayerEntity();
     entity.setProperty(propertyName, newValue);

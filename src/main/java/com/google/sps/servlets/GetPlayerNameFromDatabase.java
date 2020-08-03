@@ -39,9 +39,8 @@ public final class GetPlayerNameFromDatabase extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      String playerName = gson.toJson(playerDatabase.getEntityDisplayName());
-
-      response.setContentType(JSON_CONTENT_TYPE);
+      String playerName = playerDatabase.getEntityDisplayName();
+      response.setContentType(TEXT_TO_HTML);
       response.getWriter().print(playerName);
     } catch (LoggedOutException e) {
       response.setContentType(TEXT_TO_HTML);

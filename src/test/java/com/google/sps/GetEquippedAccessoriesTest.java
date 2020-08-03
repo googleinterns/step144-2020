@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.google.sps.data.Accessory;
 import com.google.sps.data.Accessory.Type;
 import com.google.sps.data.AccessoryDatabase;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.servlets.GetEquippedAccessories;
@@ -78,12 +79,15 @@ public final class GetEquippedAccessoriesTest {
   private static final String EQUIPPED_HAT = "equippedHat";
   private static final String EQUIPPED_GLASSES = "equippedGlasses";
   private static final String EQUIPPED_COMPANION = "equippedCompanion";
+  private static final String NONE_EQUIPPED = "noneEquipped";
   private static final String NONE_EQUIPPED_JSON = "\"noneEquipped\"";
   private static final String COWBOY_HAT_ID = "cowboyhat";
+  private static final String TOP_HAT_ID = "tophat";
   private static final String SUNGLASSES_ID = "sunglasses";
   private static final String BOXY_GLASSES_ID = "boxyglasses";
   private static final String DOG_ID = "dog";
   private static final String CAT_ID = "cat";
+  private static final String GARBAGE = "flaming hot garbage.";
   private static final String FILEPATH = "filepath";
   private static final int HEIGHT = 30;
   private static final int WIDTH = 20;
@@ -221,6 +225,138 @@ public final class GetEquippedAccessoriesTest {
     Assert.assertTrue(result.contains(LOGGED_OUT_EXCEPTION));
   }
 
+  @Test
+  public void doPost_withValidAccessoryIdParameters_setsPlayersEquippedAccessories()
+      throws IOException, LoggedOutException {
+    // create user, set current equipped accessories
+    User user = this.localUserService.getCurrentUser();
+    List<String> accessories = Arrays.asList(TOP_HAT_ID, BOXY_GLASSES_ID, DOG_ID);
+    String equippedHatID = TOP_HAT_ID;
+    String equippedGlassesID = BOXY_GLASSES_ID;
+    String equippedCompanionID = DOG_ID;
+    createCurrentPlayerAndAddToDatabase(
+        user, accessories, equippedHatID, equippedGlassesID, equippedCompanionID);
+
+    // add new accessories that will be equipped to database
+    createAccessoryAndAddToDatabase(COWBOY_HAT_ID, Type.HAT);
+    createAccessoryAndAddToDatabase(SUNGLASSES_ID, Type.GLASSES);
+    createAccessoryAndAddToDatabase(CAT_ID, Type.COMPANION);
+
+    // post request changing player accessories
+    String equippedHatInput = COWBOY_HAT_ID;
+    String equippedGlassesInput = SUNGLASSES_ID;
+    String equippedCompanionInput = CAT_ID;
+    mockEquippedAccessoryRequest(equippedHatInput, equippedGlassesInput, equippedCompanionInput);
+
+    this.getEquippedAccessories.doPost(this.request, this.response);
+
+    // assert that player's equipped accessories have been changed
+    String expectedEquippedHat = COWBOY_HAT_ID;
+    String resultEquippedHat = this.playerDatabase.getEntityEquippedHatID();
+    Assert.assertEquals(expectedEquippedHat, resultEquippedHat);
+
+    String expectedEquippedGlasses = SUNGLASSES_ID;
+    String resultEquippedGlasses = this.playerDatabase.getEntityEquippedGlassesID();
+    Assert.assertEquals(expectedEquippedGlasses, resultEquippedGlasses);
+
+    String expectedEquippedCompanion = CAT_ID;
+    String resultEquippedCompanion = this.playerDatabase.getEntityEquippedCompanionID();
+    Assert.assertEquals(expectedEquippedCompanion, resultEquippedCompanion);
+  }
+
+  @Test
+  public void doPost_withSomeNotEquippedAccessories_SetsPlayerAccessoryIdToNoneEquippedCorrectly()
+      throws IOException, LoggedOutException {
+    // create user, set current equipped accessories
+    User user = this.localUserService.getCurrentUser();
+    List<String> accessories = Arrays.asList(TOP_HAT_ID, BOXY_GLASSES_ID, DOG_ID);
+    String equippedHatID = TOP_HAT_ID;
+    String equippedGlassesID = BOXY_GLASSES_ID;
+    String equippedCompanionID = DOG_ID;
+    createCurrentPlayerAndAddToDatabase(
+        user, accessories, equippedHatID, equippedGlassesID, equippedCompanionID);
+
+    // add new accessories that will be equipped to database
+    createAccessoryAndAddToDatabase(COWBOY_HAT_ID, Type.HAT);
+    createAccessoryAndAddToDatabase(SUNGLASSES_ID, Type.GLASSES);
+    createAccessoryAndAddToDatabase(CAT_ID, Type.COMPANION);
+
+    // post request changing player accessories, no glasses are equipped
+    String equippedHatInput = COWBOY_HAT_ID;
+    String equippedGlassesInput = NONE_EQUIPPED;
+    String equippedCompanionInput = CAT_ID;
+    mockEquippedAccessoryRequest(equippedHatInput, equippedGlassesInput, equippedCompanionInput);
+
+    this.getEquippedAccessories.doPost(this.request, this.response);
+
+    // assert that player's equipped accessories have been changed
+    String expectedEquippedHat = COWBOY_HAT_ID;
+    String resultEquippedHat = this.playerDatabase.getEntityEquippedHatID();
+    Assert.assertEquals(expectedEquippedHat, resultEquippedHat);
+
+    String expectedEquippedGlasses = NONE_EQUIPPED;
+    String resultEquippedGlasses = this.playerDatabase.getEntityEquippedGlassesID();
+    Assert.assertEquals(expectedEquippedGlasses, resultEquippedGlasses);
+
+    String expectedEquippedCompanion = CAT_ID;
+    String resultEquippedCompanion = this.playerDatabase.getEntityEquippedCompanionID();
+    Assert.assertEquals(expectedEquippedCompanion, resultEquippedCompanion);
+  }
+
+  @Test
+  public void doPost_withInvalidAccessoryIds_SetsPlayerAccessoryIdToNoneEquippedCorrectly()
+      throws IOException, LoggedOutException {
+    // create user, set current equipped accessories
+    User user = this.localUserService.getCurrentUser();
+    List<String> accessories = Arrays.asList(TOP_HAT_ID, BOXY_GLASSES_ID, DOG_ID);
+    String equippedHatID = TOP_HAT_ID;
+    String equippedGlassesID = BOXY_GLASSES_ID;
+    String equippedCompanionID = DOG_ID;
+    createCurrentPlayerAndAddToDatabase(
+        user, accessories, equippedHatID, equippedGlassesID, equippedCompanionID);
+
+    // add new accessories that will be equipped to database
+    createAccessoryAndAddToDatabase(COWBOY_HAT_ID, Type.HAT);
+    createAccessoryAndAddToDatabase(SUNGLASSES_ID, Type.GLASSES);
+    createAccessoryAndAddToDatabase(CAT_ID, Type.COMPANION);
+
+    // post request changing player accessories, first two values are not valid accessory ids
+    String equippedHatInput = null;
+    String equippedGlassesInput = GARBAGE;
+    String equippedCompanionInput = CAT_ID;
+    mockEquippedAccessoryRequest(equippedHatInput, equippedGlassesInput, equippedCompanionInput);
+
+    this.getEquippedAccessories.doPost(this.request, this.response);
+
+    // assert that player's equipped accessories have been changed
+    String expectedEquippedHat = NONE_EQUIPPED;
+    String resultEquippedHat = this.playerDatabase.getEntityEquippedHatID();
+    Assert.assertEquals(expectedEquippedHat, resultEquippedHat);
+
+    String expectedEquippedGlasses = NONE_EQUIPPED;
+    String resultEquippedGlasses = this.playerDatabase.getEntityEquippedGlassesID();
+    Assert.assertEquals(expectedEquippedGlasses, resultEquippedGlasses);
+
+    String expectedEquippedCompanion = CAT_ID;
+    String resultEquippedCompanion = this.playerDatabase.getEntityEquippedCompanionID();
+    Assert.assertEquals(expectedEquippedCompanion, resultEquippedCompanion);
+  }
+
+  /** Test that logged out player causes LoggedOutException message to be written */
+  @Test
+  public void doPost_WithLoggedOutUser_ExceptionMessageWritten() throws IOException {
+    helper.setEnvIsLoggedIn(false);
+
+    StringWriter stringWriter = new StringWriter();
+    PrintWriter printWriter = new PrintWriter(stringWriter);
+    when(this.response.getWriter()).thenReturn(printWriter);
+
+    this.getEquippedAccessories.doPost(this.request, this.response);
+
+    String result = stringWriter.toString();
+    Assert.assertTrue(result.contains(LOGGED_OUT_EXCEPTION));
+  }
+
   /** Create a player with variable accessories. Other attributes are hardcoded. */
   private void createCurrentPlayerAndAddToDatabase(
       User currentUser,
@@ -249,5 +385,12 @@ public final class GetEquippedAccessoriesTest {
     Accessory accessory = new Accessory(id, FILEPATH, type, HEIGHT, WIDTH, XPOS, YPOS);
     this.accessoryDatabase.storeAccessory(accessory);
     return accessory;
+  }
+
+  private void mockEquippedAccessoryRequest(
+      String equippedHatInput, String equippedGlassesInput, String equippedCompanionInput) {
+    when(this.request.getParameter(EQUIPPED_HAT)).thenReturn(equippedHatInput);
+    when(this.request.getParameter(EQUIPPED_GLASSES)).thenReturn(equippedGlassesInput);
+    when(this.request.getParameter(EQUIPPED_COMPANION)).thenReturn(equippedCompanionInput);
   }
 }

@@ -109,6 +109,10 @@ public class Player {
     this.equippedGlassesID = glassesID;
   }
 
+  public void setAllAccessoryIDs(List<String> allAccessoryIDs) {
+    this.allAccessoryIDs = allAccessoryIDs;
+  }
+
   public void setDisplayName(String displayName) {
     this.displayName = displayName;
   }

@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -68,26 +69,22 @@ public final class GetPlayerNameFromDatabaseTest {
   private static final String DISPLAY_NAME = "admin";
   private static final String EMAIL = "admin@admin.com";
   private static final Gson gson = new Gson();
-  private static GetPlayerNameFromDatabase getPayerNameServlet;
+  private static GetPlayerNameFromDatabase getPlayerNameServlet;
 
   @Mock private HttpServletRequest request;
   @Mock private HttpServletResponse response;
 
-  @Rule public ExpectedException emptyName = ExpectedException.none();
+  @Rule public ExpectedException canNotInitialize = ExpectedException.none();
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() throws ServletException {
     helper.setUp();
-    try {
-      this.localUserService = UserServiceFactory.getUserService();
-      this.localDatastore = DatastoreServiceFactory.getDatastoreService();
-      this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
-      this.getPayerNameServlet = new GetPlayerNameFromDatabase();
-      this.getPayerNameServlet.init();
-      MockitoAnnotations.initMocks(this);
-    } catch (Exception initialize) {
-      throw initialize;
-    }
+    this.localUserService = UserServiceFactory.getUserService();
+    this.localDatastore = DatastoreServiceFactory.getDatastoreService();
+    this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
+    this.getPlayerNameServlet = new GetPlayerNameFromDatabase();
+    this.getPlayerNameServlet.init();
+    MockitoAnnotations.initMocks(this);
   }
 
   @After
@@ -96,7 +93,7 @@ public final class GetPlayerNameFromDatabaseTest {
   }
 
   @Test
-  public void doGet_GetPLayerNameFromDatabase() throws IOException, LoggedOutException {
+  public void doGet_getPlayerNameFromDatabase() throws IOException, LoggedOutException {
     User currentUser = this.localUserService.getCurrentUser();
     Player player = createCurrentPlayer(this.playerDatabase, currentUser);
     this.playerDatabase.addPlayerToDatabase(player);
@@ -106,15 +103,15 @@ public final class GetPlayerNameFromDatabaseTest {
     PrintWriter printWriter = new PrintWriter(stringWriter);
 
     when(this.response.getWriter()).thenReturn(printWriter);
-    this.getPayerNameServlet.doGet(this.request, this.response);
+    this.getPlayerNameServlet.doGet(this.request, this.response);
 
     String result = stringWriter.toString();
-    String expected = gson.toJson(DISPLAY_NAME).toString();
+    String expected = DISPLAY_NAME;
     Assert.assertEquals(expected, result);
   }
 
   @Test
-  public void doGet_GetPLayerNameFromDatabase_LoggedOutException()
+  public void doGet_getPlayerNameFromDatabase_LoggedOutException()
       throws IOException, LoggedOutException {
     helper.setEnvIsLoggedIn(false);
 
@@ -123,7 +120,7 @@ public final class GetPlayerNameFromDatabaseTest {
     when(this.response.getWriter()).thenReturn(printWriter);
 
     when(this.response.getWriter()).thenReturn(printWriter);
-    this.getPayerNameServlet.doGet(this.request, this.response);
+    this.getPlayerNameServlet.doGet(this.request, this.response);
 
     String result = stringWriter.toString();
     Assert.assertEquals(result, LOGGED_OUT_EXCEPTION);

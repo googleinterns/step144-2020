@@ -50,8 +50,6 @@ function addDialogueToDom(textResponse) {
   
   const quoteContainer = document.getElementById('dialogue-container');
   var dialogue = responseArray[1];
-  // Substring gets rid of the surrounding quotation marks in the string.
-  dialogue = dialogue.substring(1, dialogue.length - 1);
   dialogueArray = dialogue.split(";");
   dialogueRegex = 0;
   splitSentenceToWords()
@@ -111,7 +109,7 @@ function modifyIfFinalStage() {
       });
 }
 
-//play button functions
+// playmusic button functions 
 function playmusic() {
   const audio = document.getElementById(MUSIC_ICON);
   if(isPlayingmusic) {
@@ -227,14 +225,15 @@ function reconstructWordToSentence(words) {
   dialogueArray[dialogueRegex] = sentence;
 }
 
-//fetch the player as an entitie
 function getPlayerName() {
+  // fetches the players name from a servlet
+  // then assigns the name as a variable 
   const responsePromise = fetch('/get-player-name');
   responsePromise.then(handleResponsePlayer);
 }
 
 function handleResponsePlayer(response) {
-  const jsonPromise = response.json();
+  const jsonPromise = response.text();
   jsonPromise.then(addPlayerToDom);
 }  
 
