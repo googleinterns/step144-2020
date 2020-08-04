@@ -16,6 +16,8 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.PlayerDatabase;
@@ -34,7 +36,8 @@ public final class GetPlayerNameFromDatabase extends HttpServlet {
       "Player is currently logged out. Cannot process null user.";
   private static final Gson gson = new Gson();
   private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore);
+  private UserService userService = UserServiceFactory.getUserService();
+  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
