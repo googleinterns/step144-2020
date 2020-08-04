@@ -16,5 +16,6 @@ function loadFunctions() {
   getExperience();
   modifyIfFinalStage();
   getImage();
+  getEquippedAccessories();
   playmusic();
 }
