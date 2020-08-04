@@ -8,6 +8,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="player.css">
 
   <script src="gameHelper.js"></script>
   <script src="gameDialogue.js"></script>
@@ -18,7 +19,7 @@
 
   <audio id="musicPlayer" src="music/lofi-sound.mp3" autoplay loop></audio>
   <a href="#" class="step-align-icon" id="musicIcon" onclick="playmusic()"></a>
-
+  <button id="profile-page-button" class="step-button step-align-button" onclick="window.location='profilePage.html'">PROFILE</button> 
   <div class="step-wrap, step-dialogue">
       <div>
           <p id="dialogue-container"></p>
@@ -30,6 +31,10 @@
   </div>
   <div id="image-container">
       <img id="pixel-avatar" src="images/studentBody.png" alt="pixel you">
+      <img id="player-picture" src="images/face.png" alt="uploaded face">
+      <img id="accessory-hat">
+      <img id="accessory-glasses">
+      <img id="accessory-companion">
       <div id="experience-container"></div>
   </div>
 </body>

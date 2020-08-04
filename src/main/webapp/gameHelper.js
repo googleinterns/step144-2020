@@ -16,6 +16,14 @@ const FINAL_STAGE_REDIRECTION = 'completedPath.html';
 const MUSIC_ICON= 'musicIcon';
 const UNMUTE_ICON = '<img src="icons/unmute.gif" alt="unmuted icon">';
 const MUTE_ICON = '<img src="icons/mute.png" alt="muted icon">';
+const HAT_STRING = "HAT";
+const COMPANION_STRING = "COMPANION";
+const GLASSES_STRING = "GLASSES";
+const NONE_EQUIPPED_STRING = "noneEquipped";
+
+const HAT_IMAGE_ID = "accessory-hat";
+const GLASSES_IMAGE_ID = "accessory-glasses";
+const COMPANION_IMAGE_ID = "accessory-companion";
 
 var PLAYER_NAME_PARAMATER = 'playerNameHere';
 var words
@@ -43,7 +51,7 @@ function addDialogueToDom(textResponse) {
   // Divides the response into level and dialogue
   var levelString = responseArray[0];
   // Substring gets rid of the surrounding quotation marks in the string.
-  levelString = levelString.substring(1, levelString.length - 1);
+  levelString = levelString.substring(levelString.length - 2, levelString.length - 1);
   // Increment is set to the level times five.
   thresholdIncrement = parseInt(levelString) * 5;
   changeThreshold(thresholdIncrement);  
@@ -63,6 +71,32 @@ function nextLine() {
     splitSentenceToWords()
   }
   quoteContainer.innerText = dialogueArray[dialogueRegex];
+}
+
+// loads the image upload url to the form
+function fetchBlobstoreUrl() {
+  fetch('/upload-image')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        const messageForm = document.getElementById('my-form');
+        messageForm.action = imageUploadUrl;
+        messageForm.classList.remove('hidden');
+      });
+}
+ 
+function fetchImageHandler() {
+    fetch('/image-handler')
+        .then(response => response.text())
+        .then(message => {
+            const NICKNAME_CONTAINER = document.getElementById("nickname-container");
+            NICKNAME_CONTAINER.innerHTML = message;          
+        })
+        .then(imageTagInAnchor => {
+            const IMAGE_CONTAINER = document.getElementById("image-container");
+            IMAGE_CONTAINER.innerHTML = imageTagInAnchor;                
+        })
 }
 
 function getImage() {  
@@ -225,9 +259,60 @@ function reconstructWordToSentence(words) {
   dialogueArray[dialogueRegex] = sentence;
 }
 
+function getEquippedAccessories() {
+  fetch("/customization").then(handleAccResponse);
+}
+
+function handleAccResponse(response) {
+  const promise = response.json()
+  promise.then(addAccessoriesToDom);
+}
+
+function addAccessoriesToDom(playerAccessories) {
+  equippedHat = playerAccessories.equippedHat;
+  if (equippedHat !== NONE_EQUIPPED_STRING) {
+    displayEquippedAccessory(equippedHat, HAT_STRING);
+  }
+  equippedCompanion = playerAccessories.equippedCompanion;
+  if (equippedHat !== NONE_EQUIPPED_STRING) {
+    displayEquippedAccessory(equippedCompanion, COMPANION_STRING);
+  }
+  equippedGlasses = playerAccessories.equippedGlasses;
+  if (equippedGlasses !== NONE_EQUIPPED_STRING) {
+    displayEquippedAccessory(equippedGlasses, GLASSES_STRING);
+  }
+}
+
+function displayEquippedAccessory(object, type) {
+  let accessoryContainer;
+  switch(type) {
+    case HAT_STRING:
+      accessoryContainer = document.getElementById(HAT_IMAGE_ID);
+      break;
+    case COMPANION_STRING:
+      accessoryContainer = document.getElementById(COMPANION_IMAGE_ID);
+      break;
+    case GLASSES_STRING:
+      accessoryContainer = document.getElementById(GLASSES_IMAGE_ID);
+      break;
+  }
+  accessoryContainer.style.zIndex = 3;
+  accessoryContainer.style.position = "absolute";
+  accessoryContainer.style.height = intToDimension(object.height);
+  accessoryContainer.style.width = intToDimension(object.width);
+  accessoryContainer.style.left = intToDimension(object.xPos);
+  accessoryContainer.style.top = intToDimension(object.yPos);
+  accessoryContainer.src = object.imageFilePath;
+  accessoryContainer.name = object.id;
+}
+
+function intToDimension(number) {
+  return number.toString() + "px";
+}
+
 function getPlayerName() {
   // fetches the players name from a servlet
-  // then assigns the name as a variable 
+  // then assigns the name as a variable
   const responsePromise = fetch('/get-player-name');
   responsePromise.then(handleResponsePlayer);
 }
