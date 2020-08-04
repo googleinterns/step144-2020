@@ -82,7 +82,7 @@ function addImageToDiv(accessory, div) {
     div.appendChild(button);
 }
 
-/** Show uploaded image on player preview as soon as it is changed */
+/** Show uploaded image on player preview as soon as it is changed  */
 function previewImage(event) {
   const playerPicture = document.getElementById('player-picture');
   playerPicture.src = URL.createObjectURL(event.target.files[0]);
