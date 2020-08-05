@@ -21,10 +21,10 @@ public class UserAuthServlet extends HttpServlet {
   private static final String IMAGE_ID_PARAMETER = "imageID";
   private static final String CURRENT_PAGE_ID_PARAMETER = "currentPageID";
   private static final String PLAYER_PARAMETER = "Player";
-  private static UserService userService = UserServiceFactory.getUserService();
-  private static User user = userService.getCurrentUser();
-  private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
-  private static String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
+  private UserService userService = UserServiceFactory.getUserService();
+  private User user = userService.getCurrentUser();
+  private String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
+  private String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

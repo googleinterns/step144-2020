@@ -75,7 +75,6 @@ public final class DeleteUserServletTest {
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.deleteUserServlet = new DeleteUserServlet();
-    this.deleteUserServlet.init();
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     MockitoAnnotations.initMocks(this);
   }

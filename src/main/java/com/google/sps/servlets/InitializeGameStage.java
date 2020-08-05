@@ -20,18 +20,10 @@ public class InitializeGameStage extends HttpServlet {
   private static final String FORM_SUBMIT_PARAMETER = "pathSubmit";
   private static final String REDIRECTION_URL = "gameStage.html";
   private static final String LEVEL_1 = "1";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-  }
+  private static Gson gson = new Gson();
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private UserService userService = UserServiceFactory.getUserService();
+  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

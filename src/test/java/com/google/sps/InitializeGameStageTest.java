@@ -87,7 +87,6 @@ public final class InitializeGameStageTest {
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     this.initializeGameStage = new InitializeGameStage();
-    this.initializeGameStage.init();
     MockitoAnnotations.initMocks(this);
   }
 

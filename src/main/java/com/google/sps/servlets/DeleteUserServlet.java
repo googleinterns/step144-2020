@@ -25,18 +25,10 @@ public class DeleteUserServlet extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String PLAYER_PARAMETER = "player";
   private static final String ID_PARAMETER = "name";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-  }
+  private static Gson gson = new Gson();
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private UserService userService = UserServiceFactory.getUserService();
+  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

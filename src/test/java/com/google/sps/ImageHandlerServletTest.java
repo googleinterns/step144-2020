@@ -83,7 +83,6 @@ public final class ImageHandlerServletTest {
     helper.setUp();
     this.userService = UserServiceFactory.getUserService();
     this.imageHandlerServlet = this.newImageHandlerServlet();
-    this.imageHandlerServlet.init();
     this.datastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
     this.player =

@@ -55,21 +55,12 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String START_PAGE = "Character Design";
   private static final String START_ACCESSORY_FILEPATH = "images/accessories/SpinnerHat.png";
   private static final String START_ACCESSORY_TYPE = "HAT";
-  private User user;
-  private boolean isLoggedIn;
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private UserService userService = UserServiceFactory.getUserService();
+  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+  private User user = this.userService.getCurrentUser();
+  private boolean isLoggedIn = this.userService.isUserLoggedIn();
   private Entity player;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-
-  @Override
-  public void init() {
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-    this.user = this.userService.getCurrentUser();
-    this.isLoggedIn = this.userService.isUserLoggedIn();
-  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
