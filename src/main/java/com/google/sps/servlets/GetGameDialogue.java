@@ -16,6 +16,8 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.GameStage;
 import com.google.sps.data.GameStageDatabase;
@@ -35,9 +37,10 @@ public final class GetGameDialogue extends HttpServlet {
   private static final String LOGGED_OUT_EXCEPTION = "It appears that you have not logged in";
   private static final String NUMBER_FORMAT_EXCEPTION = "Could not parse integer from level id";
   private static final Gson gson = new Gson();
-  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private final PlayerDatabase playerDatabase = new PlayerDatabase(datastore);
-  private final GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
+  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private UserService userService = UserServiceFactory.getUserService();
+  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+  private GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
