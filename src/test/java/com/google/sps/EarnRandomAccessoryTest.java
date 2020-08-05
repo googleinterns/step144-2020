@@ -107,7 +107,7 @@ public final class EarnRandomAccessoryTest {
   private Random randomGenerator;
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp(); // initialize local datastore for testing
     MockitoAnnotations.initMocks(this);
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
@@ -117,8 +117,8 @@ public final class EarnRandomAccessoryTest {
     this.randomGenerator = new Random();
     this.randomGenerator.setSeed(RANDOM_NUMBER_SEED);
     this.earnRandomAccessory = new EarnRandomAccessory();
-    this.earnRandomAccessory.init();
     this.earnRandomAccessory.setRandomNumberGenerator(this.randomGenerator);
+    this.earnRandomAccessory.init();
   }
 
   @After

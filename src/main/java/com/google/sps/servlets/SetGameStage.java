@@ -21,18 +21,7 @@ public class SetGameStage extends HttpServlet {
   private static final String CAREERPATH_PARAMETER = "careerPath";
   private static final String LEVEL_PARAMETER = "level";
   private static final String REDIRECTION_URL = "admin/SetGameStage.html";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-  }
+  private static Gson gson = new Gson();
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -43,11 +32,14 @@ public class SetGameStage extends HttpServlet {
 
   private void setUserGameStage(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    String careerPath = request.getParameter(CAREERPATH_PARAMETER);
-    String level = request.getParameter(LEVEL_PARAMETER);
-    String gameStageID = careerPath + level;
     try {
-      this.playerDatabase.setEntityCurrentPageID(gameStageID);
+      UserService userService = UserServiceFactory.getUserService();
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      String careerPath = request.getParameter(CAREERPATH_PARAMETER);
+      String level = request.getParameter(LEVEL_PARAMETER);
+      String gameStageID = careerPath + level;
+      playerDatabase.setEntityCurrentPageID(gameStageID);
       response.sendRedirect(REDIRECTION_URL);
     } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);

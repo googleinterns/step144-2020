@@ -55,41 +55,26 @@ public class ImageHandlerServlet extends HttpServlet {
   private static final String START_PAGE = "Character Design";
   private static final String START_ACCESSORY_FILEPATH = "images/accessories/SpinnerHat.png";
   private static final String START_ACCESSORY_TYPE = "HAT";
-  private User user;
-  private boolean isLoggedIn;
-  private Entity player;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-
-  @Override
-  public void init() {
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-    this.user = this.userService.getCurrentUser();
-    this.isLoggedIn = this.userService.isUserLoggedIn();
-  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String displayName = request.getParameter(MESSAGE_PARAMETER);
-
-    UserService userService = UserServiceFactory.getUserService();
-    if (!isLoggedIn) {
-      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);
-      return;
-    }
     try {
+      UserService userService = UserServiceFactory.getUserService();
+      User user = userService.getCurrentUser();
+      boolean isLoggedIn = userService.isUserLoggedIn();
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      String displayName = request.getParameter(MESSAGE_PARAMETER);
       String imageBlobKeyString = createUploadedBlobKey(request, IMAGE_PARAMETER);
       // create a new player from the currently logged in user and store it in PlayerDatabase
       Player player = newPlayer(imageBlobKeyString, displayName);
-      this.playerDatabase.addPlayerToDatabase(player);
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      playerDatabase.addPlayerToDatabase(player);
       response.sendRedirect(UPLOADED_REDIRECT_PARAMETER);
     } catch (IllegalArgumentException e) {
       e.printStackTrace();
       response.sendRedirect(CHARACTER_DESIGN_REDIRECT_PARAMETER);
-      return;
+    } catch (LoggedOutException e) {
+      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);   
     }
   }
 
@@ -134,6 +119,12 @@ public class ImageHandlerServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+    User user = userService.getCurrentUser();
+    boolean isLoggedIn = userService.isUserLoggedIn();
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    String displayName = request.getParameter(MESSAGE_PARAMETER);
+
     response.getWriter();
     response.setContentType(CONTENT_TYPE);
     if (isLoggedIn) {
@@ -146,8 +137,13 @@ public class ImageHandlerServlet extends HttpServlet {
   }
 
   private void handleLoggedInUser(HttpServletResponse response) throws IOException {
-    PlayerDatabase playerDatabase = new PlayerDatabase(this.datastore);
+    Entity player = null;
     try {
+      UserService userService = UserServiceFactory.getUserService();
+      User user = userService.getCurrentUser();
+      boolean isLoggedIn = userService.isUserLoggedIn();
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
       player = playerDatabase.getCurrentPlayerEntity();
     } catch (LoggedOutException e) {
     }

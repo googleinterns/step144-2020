@@ -25,26 +25,18 @@ public class DeleteUserServlet extends HttpServlet {
   private static final String JSON_CONTENT_TYPE = "application/json";
   private static final String PLAYER_PARAMETER = "player";
   private static final String ID_PARAMETER = "name";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-  }
+  private static Gson gson = new Gson();
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      UserService userService = UserServiceFactory.getUserService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
       Entity currentPlayer = playerDatabase.getCurrentPlayerEntity();
       Key playerEntityKey = currentPlayer.getKey();
       datastore.delete(playerEntityKey);
-      deletePlayerFromPlayerDatabase(response);
+      deletePlayerFromPlayerDatabase(userService, playerDatabase, response);
     } catch (LoggedOutException e) {
       response.setContentType(JSON_CONTENT_TYPE);
       response.getWriter().println(gson.toJson(e.getMessage()));
@@ -52,7 +44,9 @@ public class DeleteUserServlet extends HttpServlet {
     }
   }
 
-  public void deletePlayerFromPlayerDatabase(HttpServletResponse response) throws IOException {
+  public void deletePlayerFromPlayerDatabase(
+      UserService userService, PlayerDatabase playerDatabase, HttpServletResponse response)
+      throws IOException {
     List<Player> players = playerDatabase.getPlayers();
     List<Player> playersToDelete = new ArrayList<>();
     Player playerToDelete = null;

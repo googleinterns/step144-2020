@@ -77,13 +77,12 @@ public final class GetPlayerNameFromDatabaseTest {
   @Rule public ExpectedException canNotInitialize = ExpectedException.none();
 
   @Before
-  public void setUp() throws ServletException {
+  public void setUp() throws LoggedOutException {
     helper.setUp();
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     this.getPlayerNameServlet = new GetPlayerNameFromDatabase();
-    this.getPlayerNameServlet.init();
     MockitoAnnotations.initMocks(this);
   }
 

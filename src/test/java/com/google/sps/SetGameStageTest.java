@@ -79,14 +79,13 @@ public final class SetGameStageTest {
   private static final Gson gson = new Gson();
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     // initialize local user + datastore service. Current user is admin.
     helper.setUp();
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     this.setGameStage = new SetGameStage();
-    this.setGameStage.init();
     MockitoAnnotations.initMocks(this);
   }
 

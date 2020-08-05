@@ -79,12 +79,11 @@ public final class PromotionThresholdServletTest {
   @Mock private LoggedOutException e;
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp();
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.promotionThresholdServlet = new PromotionThresholdServlet();
-    this.promotionThresholdServlet.init();
     this.promotionThreshold = 12;
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     MockitoAnnotations.initMocks(this);

@@ -25,29 +25,20 @@ public class GetPlayerAccessories extends HttpServlet {
   private static final String HTML_CONTENT_TYPE = "text/html";
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private AccessoryDatabase accessoryDatabase;
-
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-    this.accessoryDatabase = new AccessoryDatabase(datastore);
-  }
+  private static Gson gson = new Gson();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      List<String> accessoryIDs = this.playerDatabase.getEntityAllAccessoryIDs();
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      UserService userService = UserServiceFactory.getUserService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      AccessoryDatabase accessoryDatabase = new AccessoryDatabase(datastore);
+      List<String> accessoryIDs = playerDatabase.getEntityAllAccessoryIDs();
       List<Accessory> accessories = new ArrayList();
       for (String id : accessoryIDs) {
         try {
-          accessories.add(this.accessoryDatabase.getAccessory(id));
+          accessories.add(accessoryDatabase.getAccessory(id));
         } catch (EntityNotFoundException e) {
           // if no entity is found, simply don't add to available accessories
           System.out.println(e.getMessage());
