@@ -3,7 +3,7 @@ var name;
 var careerPath;
 
 function onLoadFunctions() {
-  fetchBlobstoreUrl();
+  getImage();
   getEquippedAccessories();
   getAccessories();
   fillText();

@@ -296,14 +296,23 @@ function displayEquippedAccessory(object, type) {
       accessoryContainer = document.getElementById(GLASSES_IMAGE_ID);
       break;
   }
-  accessoryContainer.style.zIndex = 3;
-  accessoryContainer.style.position = "absolute";
-  accessoryContainer.style.height = intToDimension(object.height);
-  accessoryContainer.style.width = intToDimension(object.width);
-  accessoryContainer.style.left = intToDimension(object.xPos);
-  accessoryContainer.style.top = intToDimension(object.yPos);
-  accessoryContainer.src = object.imageFilePath;
-  accessoryContainer.name = object.id;
+
+  if (object === NONE_EQUIPPED_STRING || accessoryContainer.name === object.id) {
+    object = NONE_EQUIPPED_STRING;
+    accessoryContainer.src = null;
+    accessoryContainer.name = null;
+    accessoryContainer.style.visibility = "hidden";
+  } else {
+    accessoryContainer.style.position = "absolute";
+    accessoryContainer.style.visibility = "visible";
+    accessoryContainer.style.zIndex = 3;
+    accessoryContainer.style.height = intToDimension(object.height);
+    accessoryContainer.style.width = intToDimension(object.width);
+    accessoryContainer.style.left = intToDimension(object.xPos);
+    accessoryContainer.style.top = intToDimension(object.yPos);
+    accessoryContainer.src = object.imageFilePath;
+    accessoryContainer.name = object.id;
+  }
 }
 
 function intToDimension(number) {
