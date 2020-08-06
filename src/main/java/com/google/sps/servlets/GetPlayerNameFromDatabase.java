@@ -35,13 +35,20 @@ public final class GetPlayerNameFromDatabase extends HttpServlet {
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
   private static final Gson gson = new Gson();
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
+
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      updateService();
       String playerName = playerDatabase.getEntityDisplayName();
       response.setContentType(TEXT_TO_HTML);
       response.getWriter().print(playerName);

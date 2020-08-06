@@ -26,17 +26,24 @@ public class DeleteUserServlet extends HttpServlet {
   private static final String PLAYER_PARAMETER = "player";
   private static final String ID_PARAMETER = "name";
   private static Gson gson = new Gson();
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
+
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      Entity currentPlayer = playerDatabase.getCurrentPlayerEntity();
+      updateService();
+      Entity currentPlayer = this.playerDatabase.getCurrentPlayerEntity();
       Key playerEntityKey = currentPlayer.getKey();
       datastore.delete(playerEntityKey);
-      deletePlayerFromPlayerDatabase(userService, playerDatabase, response);
+      deletePlayerFromPlayerDatabase(response);
     } catch (LoggedOutException e) {
       response.setContentType(JSON_CONTENT_TYPE);
       response.getWriter().println(gson.toJson(e.getMessage()));
@@ -44,13 +51,11 @@ public class DeleteUserServlet extends HttpServlet {
     }
   }
 
-  public void deletePlayerFromPlayerDatabase(
-      UserService userService, PlayerDatabase playerDatabase, HttpServletResponse response)
-      throws IOException {
-    List<Player> players = playerDatabase.getPlayers();
+  public void deletePlayerFromPlayerDatabase(HttpServletResponse response) throws IOException {
+    List<Player> players = this.playerDatabase.getPlayers();
     List<Player> playersToDelete = new ArrayList<>();
     Player playerToDelete = null;
-    String email = userService.getCurrentUser().getEmail().toString();
+    String email = this.userService.getCurrentUser().getEmail().toString();
     for (Player player : players) {
       if (player.getEmail().equals(email)) {
         playersToDelete.add(player);

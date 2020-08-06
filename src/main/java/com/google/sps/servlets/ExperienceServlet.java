@@ -31,17 +31,21 @@ public class ExperienceServlet extends HttpServlet {
   private PlayerDatabase playerDatabase;
   private boolean isLoggedIn;
 
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.isLoggedIn = userService.isUserLoggedIn();
+  }
+
   // Update the player's experience points
   // Experience Points are the scoring metric of the game.
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      UserService userService = UserServiceFactory.getUserService();
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      boolean isLoggedIn = userService.isUserLoggedIn();
+      updateService();
       experience = Integer.parseInt(request.getParameter(EXPERIENCE_PARAMETER).toString());
-      playerDatabase.setEntityExperience(experience);
+      this.playerDatabase.setEntityExperience(experience);
     } catch (LoggedOutException e) {
       response.setContentType(CONTENT_TYPE);
       response.getWriter().println(e.getMessage());
@@ -56,22 +60,18 @@ public class ExperienceServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      UserService userService = UserServiceFactory.getUserService();
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      boolean isLoggedIn = userService.isUserLoggedIn();
-      handleLoggedInUser(playerDatabase, response);
+      updateService();
+      handleLoggedInUser(response);
     } catch (LoggedOutException e) {
       handleLoggedOutUser(response);
     }
   }
 
-  private void handleLoggedInUser(PlayerDatabase playerDatabase, HttpServletResponse response)
-      throws IOException {
+  private void handleLoggedInUser(HttpServletResponse response) throws IOException {
     response.getWriter();
     response.setContentType(CONTENT_TYPE);
     try {
-      experience = playerDatabase.getEntityExperience();
+      experience = this.playerDatabase.getEntityExperience();
     } catch (LoggedOutException e) {
       response.getWriter().println(e.getMessage());
     }

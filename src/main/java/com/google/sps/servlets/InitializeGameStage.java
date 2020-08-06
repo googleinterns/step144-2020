@@ -21,27 +21,33 @@ public class InitializeGameStage extends HttpServlet {
   private static final String REDIRECTION_URL = "gameStage.html";
   private static final String LEVEL_1 = "1";
   private static Gson gson = new Gson();
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
+
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+  }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      updateService();
       if (request.getParameter(FORM_SUBMIT_PARAMETER) != null) {
-        setUserGameStage(playerDatabase, request, response);
+        setUserGameStage(request, response);
       }
     } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }
   }
 
-  private void setUserGameStage(
-      PlayerDatabase playerDatabase, HttpServletRequest request, HttpServletResponse response)
+  private void setUserGameStage(HttpServletRequest request, HttpServletResponse response)
       throws IOException, LoggedOutException {
     String careerPath = request.getParameter(FORM_SUBMIT_PARAMETER);
     String gameStageID = careerPath + LEVEL_1;
-    playerDatabase.setEntityCurrentPageID(gameStageID);
+    this.playerDatabase.setEntityCurrentPageID(gameStageID);
     response.sendRedirect(REDIRECTION_URL);
   }
 

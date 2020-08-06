@@ -33,20 +33,27 @@ public class PromotionQuizServlet extends HttpServlet {
   private static final Double CORRECT_NEEDED_THRESHOLD = 0.5;
   private static Gson gson = new Gson();
   private List<QuizQuestion> quizQuestions;
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
+  GameStageDatabase gameStageDatabase;
+
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.gameStageDatabase = new GameStageDatabase(datastore);
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType(JSON_CONTENT_TYPE);
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      if (isUserOnFinalStage(gameStageDatabase, playerDatabase)) {
+      updateService();
+      if (isUserOnFinalStage()) {
         response.getWriter().println(gson.toJson(IS_FINAL_STAGE_MESSAGE));
       } else {
-        this.quizQuestions =
-            getQuizQuestions(datastore, gameStageDatabase, playerDatabase, response);
+        this.quizQuestions = getQuizQuestions(response);
         String quizQuestionsJson = gson.toJson(quizQuestions);
         response.getWriter().println(quizQuestionsJson);
       }
@@ -63,15 +70,11 @@ public class PromotionQuizServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      this.quizQuestions = getQuizQuestions(datastore, gameStageDatabase, playerDatabase, response);
+      updateService();
+      this.quizQuestions = getQuizQuestions(response);
       Boolean isPromoted = handleQuizSubmission(request);
       if (isPromoted) {
-        String nextGameStageId =
-            getCurrentGameStage(gameStageDatabase, playerDatabase).getNextStageID();
+        String nextGameStageId = getCurrentGameStage().getNextStageID();
         playerDatabase.setEntityCurrentPageID(nextGameStageId);
       }
       response.sendRedirect(RESULT_REDIRECT_PAGE + "?isPromoted=" + Boolean.toString(isPromoted));
@@ -80,33 +83,24 @@ public class PromotionQuizServlet extends HttpServlet {
     }
   }
 
-  private GameStage getCurrentGameStage(
-      GameStageDatabase gameStageDatabase, PlayerDatabase playerDatabase)
-      throws LoggedOutException {
-    String currentGameStageId = playerDatabase.getEntityCurrentPageID();
-    return gameStageDatabase.getGameStage(currentGameStageId);
+  private GameStage getCurrentGameStage() throws LoggedOutException {
+    String currentGameStageId = this.playerDatabase.getEntityCurrentPageID();
+    return this.gameStageDatabase.getGameStage(currentGameStageId);
   }
 
-  private boolean isUserOnFinalStage(
-      GameStageDatabase gameStageDatabase, PlayerDatabase playerDatabase)
-      throws LoggedOutException {
-    GameStage currentGameStage = getCurrentGameStage(gameStageDatabase, playerDatabase);
+  private boolean isUserOnFinalStage() throws LoggedOutException {
+    GameStage currentGameStage = getCurrentGameStage();
     return currentGameStage.isFinalStage();
   }
 
-  private List<QuizQuestion> getQuizQuestions(
-      DatastoreService datastore,
-      GameStageDatabase gameStageDatabase,
-      PlayerDatabase playerDatabase,
-      HttpServletResponse response)
-      throws IOException {
+  private List<QuizQuestion> getQuizQuestions(HttpServletResponse response) throws IOException {
     String queryString = new String();
     try {
-      queryString = getCurrentGameStage(gameStageDatabase, playerDatabase).getQuizKey();
+      queryString = getCurrentGameStage().getQuizKey();
     } catch (LoggedOutException e) {
       handleNotLoggedInUser(e.getMessage(), response);
     }
-    QuestionDatabase questionDatabase = new QuestionDatabase(datastore, queryString);
+    QuestionDatabase questionDatabase = new QuestionDatabase(this.datastore, queryString);
     return questionDatabase.getQuizQuestions();
   }
 

@@ -32,6 +32,10 @@ public class GetEquippedAccessories extends HttpServlet {
       "Something went wrong. The accessory was not found in the database.";
   private static Gson gson;
   private static JsonParser jsonParser;
+  DatastoreService datastore;
+  UserService userService;
+  AccessoryDatabase accessoryDatabase;
+  PlayerDatabase playerDatabase;
 
   @Override
   public void init() {
@@ -39,21 +43,24 @@ public class GetEquippedAccessories extends HttpServlet {
     this.jsonParser = new JsonParser();
   }
 
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.accessoryDatabase = new AccessoryDatabase(datastore);
+  }
+
   /** Responds with a Json message that includes all equipped accessories */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      AccessoryDatabase accessoryDatabase = new AccessoryDatabase(datastore);
+      updateService();
 
-      String equippedHatID = playerDatabase.getEntityEquippedHatID();
-      String equippedGlassesID = playerDatabase.getEntityEquippedGlassesID();
-      String equippedCompanionID = playerDatabase.getEntityEquippedCompanionID();
+      String equippedHatID = this.playerDatabase.getEntityEquippedHatID();
+      String equippedGlassesID = this.playerDatabase.getEntityEquippedGlassesID();
+      String equippedCompanionID = this.playerDatabase.getEntityEquippedCompanionID();
       JsonObject accessoryJson =
-          createJsonEquippedAccessoryObject(
-              accessoryDatabase, equippedHatID, equippedGlassesID, equippedCompanionID);
+          createJsonEquippedAccessoryObject(equippedHatID, equippedGlassesID, equippedCompanionID);
       String accessoryMessage = accessoryJson.toString();
       response.setContentType(JSON_CONTENT_TYPE);
       response.getWriter().println(accessoryMessage);
@@ -65,30 +72,23 @@ public class GetEquippedAccessories extends HttpServlet {
 
   /** Creates JsonObject that encapsulates all equipped accessories */
   private JsonObject createJsonEquippedAccessoryObject(
-      AccessoryDatabase accessoryDatabase,
-      String equippedHatID,
-      String equippedGlassesID,
-      String equippedCompanionID) {
+      String equippedHatID, String equippedGlassesID, String equippedCompanionID) {
     JsonObject accessoryJson = new JsonObject();
 
-    accessoryJson.add(
-        EQUIPPED_HAT, gson.toJsonTree(getJsonTreeFromID(accessoryDatabase, equippedHatID)));
-    accessoryJson.add(
-        EQUIPPED_GLASSES, gson.toJsonTree(getJsonTreeFromID(accessoryDatabase, equippedGlassesID)));
-    accessoryJson.add(
-        EQUIPPED_COMPANION,
-        gson.toJsonTree(getJsonTreeFromID(accessoryDatabase, equippedCompanionID)));
+    accessoryJson.add(EQUIPPED_HAT, gson.toJsonTree(getJsonTreeFromID(equippedHatID)));
+    accessoryJson.add(EQUIPPED_GLASSES, gson.toJsonTree(getJsonTreeFromID(equippedGlassesID)));
+    accessoryJson.add(EQUIPPED_COMPANION, gson.toJsonTree(getJsonTreeFromID(equippedCompanionID)));
     return accessoryJson;
   }
 
   /** if the player does not have the accessory equipped/ it is not found, returns NONE_EQUIPPED */
-  private JsonElement getJsonTreeFromID(AccessoryDatabase accessoryDatabase, String id) {
+  private JsonElement getJsonTreeFromID(String id) {
     String noneEquippedJson = gson.toJson(NONE_EQUIPPED);
     JsonElement noneEquippedJsonElement = jsonParser.parse(noneEquippedJson);
     try {
       return id == NONE_EQUIPPED
           ? noneEquippedJsonElement
-          : gson.toJsonTree(accessoryDatabase.getAccessory(id));
+          : gson.toJsonTree(this.accessoryDatabase.getAccessory(id));
     } catch (EntityNotFoundException e) {
       return noneEquippedJsonElement;
     }
@@ -98,20 +98,15 @@ public class GetEquippedAccessories extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      UserService userService = UserServiceFactory.getUserService();
-      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-      AccessoryDatabase accessoryDatabase = new AccessoryDatabase(datastore);
+      updateService();
 
       String equippedHatID = request.getParameter(EQUIPPED_HAT);
       String equippedGlassesID = request.getParameter(EQUIPPED_GLASSES);
       String equippedCompanionID = request.getParameter(EQUIPPED_COMPANION);
 
-      playerDatabase.setEntityEquippedHatID(defaultIfNotFound(accessoryDatabase, equippedHatID));
-      playerDatabase.setEntityEquippedGlassesID(
-          defaultIfNotFound(accessoryDatabase, equippedGlassesID));
-      playerDatabase.setEntityEquippedCompanionID(
-          defaultIfNotFound(accessoryDatabase, equippedCompanionID));
+      this.playerDatabase.setEntityEquippedHatID(defaultIfNotFound(equippedHatID));
+      this.playerDatabase.setEntityEquippedGlassesID(defaultIfNotFound(equippedGlassesID));
+      this.playerDatabase.setEntityEquippedCompanionID(defaultIfNotFound(equippedCompanionID));
     } catch (LoggedOutException e) {
       response.setContentType(HTML_CONTENT_TYPE);
       response.getWriter().println(LOGGED_OUT_EXCEPTION);
@@ -122,7 +117,7 @@ public class GetEquippedAccessories extends HttpServlet {
    * the NONE_EQUIPPED string (which is used in this servlets doGet method to determine whether
    * or not to send an AccessoryObject or just a NONE_EQUIPPED message.
    */
-  private String defaultIfNotFound(AccessoryDatabase accessoryDatabase, String accessoryId) {
+  private String defaultIfNotFound(String accessoryId) {
     // this if statement will trigger the exception and the return of NONE_EQUIPPED either
     // way, but this check is put here to save time
     if (accessoryId == null || accessoryId.equals(NONE_EQUIPPED)) {
@@ -130,7 +125,7 @@ public class GetEquippedAccessories extends HttpServlet {
     }
 
     try {
-      accessoryDatabase.getAccessory(accessoryId);
+      this.accessoryDatabase.getAccessory(accessoryId);
       return accessoryId;
     } catch (EntityNotFoundException e) {
       return NONE_EQUIPPED;
