@@ -39,6 +39,7 @@ import org.mockito.MockitoAnnotations;
 // They create accurate links.
 @RunWith(JUnit4.class)
 public final class ImageHandlerServletTest {
+  private static final String HANDLE_LOGGED_OUT_USER = "false\nempty\nnull\n";
   private final String EMAIL = "email";
   private final String AUTH_DOMAIN = "email.com";
   private final String CURR_USER_ID = "testid";
@@ -160,13 +161,14 @@ public final class ImageHandlerServletTest {
     Assert.assertTrue(result.contains(EXPECTED_OUTPUT_TRUE));
   }
 
-  //@Test
-  public void doGet_whileLoggedOut_throwsNullPointerException() throws IOException {
+  @Test
+  public void doGet_handleLoggedOutUser() throws IOException {
     helper.setEnvIsLoggedIn(false);
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
-    loggedOutExceptionRule.expect(NullPointerException.class);
     this.imageHandlerServlet.doGet(this.request, this.response);
+    String result = stringWriter.toString();
+    Assert.assertEquals(result, HANDLE_LOGGED_OUT_USER);
   }
 }

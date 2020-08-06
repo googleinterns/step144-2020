@@ -36,7 +36,7 @@ public class GetEquippedAccessories extends HttpServlet {
   @Override
   public void init() {
     this.gson = new Gson();
-    this.jsonParser = new JsonParser(); 
+    this.jsonParser = new JsonParser();
   }
 
   /** Responds with a Json message that includes all equipped accessories */
@@ -47,12 +47,13 @@ public class GetEquippedAccessories extends HttpServlet {
       UserService userService = UserServiceFactory.getUserService();
       PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
       AccessoryDatabase accessoryDatabase = new AccessoryDatabase(datastore);
-      
+
       String equippedHatID = playerDatabase.getEntityEquippedHatID();
       String equippedGlassesID = playerDatabase.getEntityEquippedGlassesID();
       String equippedCompanionID = playerDatabase.getEntityEquippedCompanionID();
       JsonObject accessoryJson =
-          createJsonEquippedAccessoryObject(accessoryDatabase, equippedHatID, equippedGlassesID, equippedCompanionID);
+          createJsonEquippedAccessoryObject(
+              accessoryDatabase, equippedHatID, equippedGlassesID, equippedCompanionID);
       String accessoryMessage = accessoryJson.toString();
       response.setContentType(JSON_CONTENT_TYPE);
       response.getWriter().println(accessoryMessage);
@@ -64,15 +65,19 @@ public class GetEquippedAccessories extends HttpServlet {
 
   /** Creates JsonObject that encapsulates all equipped accessories */
   private JsonObject createJsonEquippedAccessoryObject(
-      AccessoryDatabase accessoryDatabase, String equippedHatID, String equippedGlassesID, String equippedCompanionID) {
+      AccessoryDatabase accessoryDatabase,
+      String equippedHatID,
+      String equippedGlassesID,
+      String equippedCompanionID) {
     JsonObject accessoryJson = new JsonObject();
 
-    accessoryJson.add(EQUIPPED_HAT, gson.toJsonTree(getJsonTreeFromID(
-        accessoryDatabase, equippedHatID)));
-    accessoryJson.add(EQUIPPED_GLASSES, gson.toJsonTree(getJsonTreeFromID(
-        accessoryDatabase, equippedGlassesID)));
-    accessoryJson.add(EQUIPPED_COMPANION, gson.toJsonTree(getJsonTreeFromID(
-        accessoryDatabase, equippedCompanionID)));
+    accessoryJson.add(
+        EQUIPPED_HAT, gson.toJsonTree(getJsonTreeFromID(accessoryDatabase, equippedHatID)));
+    accessoryJson.add(
+        EQUIPPED_GLASSES, gson.toJsonTree(getJsonTreeFromID(accessoryDatabase, equippedGlassesID)));
+    accessoryJson.add(
+        EQUIPPED_COMPANION,
+        gson.toJsonTree(getJsonTreeFromID(accessoryDatabase, equippedCompanionID)));
     return accessoryJson;
   }
 
@@ -97,13 +102,12 @@ public class GetEquippedAccessories extends HttpServlet {
       UserService userService = UserServiceFactory.getUserService();
       PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
       AccessoryDatabase accessoryDatabase = new AccessoryDatabase(datastore);
-      
+
       String equippedHatID = request.getParameter(EQUIPPED_HAT);
       String equippedGlassesID = request.getParameter(EQUIPPED_GLASSES);
       String equippedCompanionID = request.getParameter(EQUIPPED_COMPANION);
 
-      playerDatabase.setEntityEquippedHatID(
-          defaultIfNotFound(accessoryDatabase, equippedHatID));
+      playerDatabase.setEntityEquippedHatID(defaultIfNotFound(accessoryDatabase, equippedHatID));
       playerDatabase.setEntityEquippedGlassesID(
           defaultIfNotFound(accessoryDatabase, equippedGlassesID));
       playerDatabase.setEntityEquippedCompanionID(
