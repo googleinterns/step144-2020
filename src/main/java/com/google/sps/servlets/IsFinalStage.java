@@ -32,24 +32,16 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/isFinalStage")
 public final class IsFinalStage extends HttpServlet {
   private static final String HTML_CONTENT_TYPE = "text/html;";
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private GameStageDatabase gameStageDatabase;
-
-  @Override
-  public void init() {
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-    this.gameStageDatabase = new GameStageDatabase(datastore);
-  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      UserService userService = UserServiceFactory.getUserService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
       GameStage currentGameStage =
-          this.gameStageDatabase.getGameStage(this.playerDatabase.getEntityCurrentPageID());
+          gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
       boolean isFinalStage = currentGameStage.isFinalStage();
       response.setContentType(HTML_CONTENT_TYPE);
       response.getWriter().println(Boolean.toString(isFinalStage));

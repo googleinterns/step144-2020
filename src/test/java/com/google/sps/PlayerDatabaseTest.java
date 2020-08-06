@@ -86,7 +86,7 @@ public final class PlayerDatabaseTest {
   private static final Gson gson = new Gson();
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp(); // initialize local datastore for testing
     DatastoreService localDatastore = DatastoreServiceFactory.getDatastoreService();
     UserService localUserService = UserServiceFactory.getUserService();

@@ -80,14 +80,13 @@ public final class InitializeGameStageTest {
   private static final Gson gson = new Gson();
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     // initialize local user + datastore service. Current user is admin.
     helper.setUp();
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     this.initializeGameStage = new InitializeGameStage();
-    this.initializeGameStage.init();
     MockitoAnnotations.initMocks(this);
   }
 
@@ -152,7 +151,6 @@ public final class InitializeGameStageTest {
     when(this.request.getParameter(FORM_SUBMIT_PARAMETER)).thenReturn(WEB_DEVELOPER);
     this.initializeGameStage.doPost(this.request, this.response);
 
-    this.initializeGameStage.doPost(this.request, this.response);
     String result = stringWriter.toString();
     Assert.assertTrue(result.contains(LOGGED_OUT_EXCEPTION));
   }

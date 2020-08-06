@@ -37,14 +37,14 @@ public final class GetGameDialogue extends HttpServlet {
   private static final String LOGGED_OUT_EXCEPTION = "It appears that you have not logged in";
   private static final String NUMBER_FORMAT_EXCEPTION = "Could not parse integer from level id";
   private static final Gson gson = new Gson();
-  private DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  private UserService userService = UserServiceFactory.getUserService();
-  private PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
-  private GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      UserService userService = UserServiceFactory.getUserService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      GameStageDatabase gameStageDatabase = new GameStageDatabase(datastore);
       GameStage currentGameStage =
           gameStageDatabase.getGameStage(playerDatabase.getEntityCurrentPageID());
       String dialogue = currentGameStage.getContent();

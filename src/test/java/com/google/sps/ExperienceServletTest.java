@@ -78,12 +78,11 @@ public final class ExperienceServletTest {
   @Mock private HttpServletResponse response;
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp();
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.experienceServlet = new ExperienceServlet();
-    this.experienceServlet.init();
     this.experience = 12;
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     MockitoAnnotations.initMocks(this);

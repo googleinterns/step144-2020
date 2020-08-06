@@ -26,27 +26,18 @@ public class PromotionThresholdServlet extends HttpServlet {
   private static final String CONTENT_TYPE = "text/html";
   private static final String PROMOTION_THRESHOLD_PARAMETER = "promotionThreshold";
   private static final String NOT_LOGGED_IN_PARAMETER = "User Not Logged In";
-  private static Gson gson;
+  private static Gson gson = new Gson();
   private static int promotionThreshold;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private boolean isLoggedIn;
-
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
-    this.isLoggedIn = userService.isUserLoggedIn();
-  }
 
   // Update the player's promotion threshold
   // The promotion threshold is how many experience points a player needs to try for promotion.
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      UserService userService = UserServiceFactory.getUserService();
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      boolean isLoggedIn = userService.isUserLoggedIn();
       promotionThreshold =
           Integer.parseInt(request.getParameter(PROMOTION_THRESHOLD_PARAMETER).toString());
       playerDatabase.setEntityPromotionThreshold(promotionThreshold);
@@ -63,22 +54,28 @@ public class PromotionThresholdServlet extends HttpServlet {
   // The promotion threshold is how many experience points a player needs to try for promotion.
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    boolean isLoggedIn = userService.isUserLoggedIn();
     if (isLoggedIn) {
-      handleLoggedInUser(response);
+      handleLoggedInUser(userService, datastore, response);
     } else {
       handleLoggedOutUser(response);
     }
   }
 
-  private void handleLoggedInUser(HttpServletResponse response) throws IOException {
-    response.getWriter();
-    response.setContentType(CONTENT_TYPE);
+  private void handleLoggedInUser(
+      UserService userService, DatastoreService datastore, HttpServletResponse response)
+      throws IOException {
     try {
+      PlayerDatabase playerDatabase = new PlayerDatabase(datastore, userService);
+      response.getWriter();
+      response.setContentType(CONTENT_TYPE);
       promotionThreshold = playerDatabase.getEntityPromotionThreshold();
+      response.getWriter().println(promotionThreshold);
     } catch (LoggedOutException e) {
       response.getWriter().println(e.getMessage());
     }
-    response.getWriter().println(promotionThreshold);
   }
 
   private void handleLoggedOutUser(HttpServletResponse response) throws IOException {

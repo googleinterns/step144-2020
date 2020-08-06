@@ -101,7 +101,7 @@ public final class GetEquippedAccessoriesTest {
       "Something went wrong. The accessory was not found in the database.";
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp(); // initialize local datastore for testing
     MockitoAnnotations.initMocks(this);
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();

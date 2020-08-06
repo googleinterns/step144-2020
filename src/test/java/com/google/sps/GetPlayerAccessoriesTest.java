@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.google.sps.data.Accessory;
 import com.google.sps.data.Accessory.Type;
 import com.google.sps.data.AccessoryDatabase;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.servlets.GetPlayerAccessories;
@@ -99,7 +100,7 @@ public final class GetPlayerAccessoriesTest {
   private static final Gson gson = new Gson();
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp(); // initialize local datastore for testing
     MockitoAnnotations.initMocks(this);
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
@@ -107,7 +108,6 @@ public final class GetPlayerAccessoriesTest {
     this.accessoryDatabase = new AccessoryDatabase(localDatastore);
     this.playerDatabase = new PlayerDatabase(localDatastore, localUserService);
     this.getPlayerAccessories = new GetPlayerAccessories();
-    this.getPlayerAccessories.init();
   }
 
   @After
