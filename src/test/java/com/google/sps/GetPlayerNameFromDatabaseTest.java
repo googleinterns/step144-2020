@@ -20,7 +20,6 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.After;
@@ -77,13 +76,12 @@ public final class GetPlayerNameFromDatabaseTest {
   @Rule public ExpectedException canNotInitialize = ExpectedException.none();
 
   @Before
-  public void setUp() throws ServletException {
+  public void setUp() throws LoggedOutException {
     helper.setUp();
     this.localUserService = UserServiceFactory.getUserService();
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(this.localDatastore, this.localUserService);
     this.getPlayerNameServlet = new GetPlayerNameFromDatabase();
-    this.getPlayerNameServlet.init();
     MockitoAnnotations.initMocks(this);
   }
 

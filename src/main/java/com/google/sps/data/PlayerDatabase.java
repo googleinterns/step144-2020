@@ -39,16 +39,20 @@ public class PlayerDatabase {
     return players;
   }
 
-  public PlayerDatabase(DatastoreService datastore) {
+  public PlayerDatabase(DatastoreService datastore) throws LoggedOutException {
     this(datastore, UserServiceFactory.getUserService());
   }
 
-  public PlayerDatabase(DatastoreService datastore, UserService userService) {
+  public PlayerDatabase(DatastoreService datastore, UserService userService)
+      throws LoggedOutException {
+    this.isLoggedIn = userService.isUserLoggedIn();
+    if (!this.isLoggedIn) {
+      throw new LoggedOutException();
+    }
     this.datastore = datastore;
     this.user = userService.getCurrentUser();
     this.userEmail = this.user.getEmail();
     this.userID = this.user.getUserId();
-    this.isLoggedIn = userService.isUserLoggedIn();
   }
 
   public static void addPlayerToDatabase(Player player) {

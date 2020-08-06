@@ -83,7 +83,7 @@ public final class IsFinalStageTest {
   private static final String IS_NOT_FINAL_STAGE_STRING = "false";
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp(); // initialize local datastore for testing
     MockitoAnnotations.initMocks(this);
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
@@ -91,7 +91,6 @@ public final class IsFinalStageTest {
     this.playerDatabase = new PlayerDatabase(localDatastore, localUserService);
     this.gameStageDatabase = new GameStageDatabase(localDatastore);
     this.isFinalStage = new IsFinalStage();
-    this.isFinalStage.init();
   }
 
   @After

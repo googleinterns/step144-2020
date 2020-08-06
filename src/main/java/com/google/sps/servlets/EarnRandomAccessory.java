@@ -30,28 +30,32 @@ public class EarnRandomAccessory extends HttpServlet {
       "Earned id cannot be found in the database.";
   private static Gson gson;
   private Random randomGenerator;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private AccessoryDatabase accessoryDatabase;
+  DatastoreService datastore;
+  UserService userService;
+  AccessoryDatabase accessoryDatabase;
+  PlayerDatabase playerDatabase;
 
   @Override
   public void init() {
     this.gson = new Gson();
     setRandomNumberGenerator(new Random());
-    this.userService = UserServiceFactory.getUserService();
-    this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
   }
 
   public void setRandomNumberGenerator(Random randomGenerator) {
     this.randomGenerator = randomGenerator;
   }
 
+  private void updateService() throws LoggedOutException {
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.accessoryDatabase = new AccessoryDatabase(datastore);
+  }
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
-      this.accessoryDatabase = new AccessoryDatabase(datastore);
+      updateService();
       List<String> playerAccessoryIDs = this.playerDatabase.getEntityAllAccessoryIDs();
       List<String> allAccessoryIDs = this.accessoryDatabase.getAllAccessoryIDs();
       allAccessoryIDs.removeAll(playerAccessoryIDs);
@@ -61,7 +65,7 @@ public class EarnRandomAccessory extends HttpServlet {
       } else {
         int index = randomGenerator.nextInt(allAccessoryIDs.size());
         String earnedAccessoryID = allAccessoryIDs.get(index);
-        Accessory earnedAccessory = this.accessoryDatabase.getAccessory(earnedAccessoryID);
+        Accessory earnedAccessory = accessoryDatabase.getAccessory(earnedAccessoryID);
         this.playerDatabase.addToEntityAccessories(earnedAccessoryID);
         response.setContentType(JSON_CONTENT_TYPE);
         response.getWriter().println(gson.toJson(earnedAccessory));

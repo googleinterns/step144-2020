@@ -25,17 +25,16 @@ public class GetPlayerAccessories extends HttpServlet {
   private static final String HTML_CONTENT_TYPE = "text/html";
   private static final String LOGGED_OUT_EXCEPTION =
       "Player is currently logged out. Cannot process null user.";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private AccessoryDatabase accessoryDatabase;
+  private static Gson gson = new Gson();
 
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
+  DatastoreService datastore;
+  UserService userService;
+  AccessoryDatabase accessoryDatabase;
+  PlayerDatabase playerDatabase;
+
+  private void updateService() throws LoggedOutException {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
     this.accessoryDatabase = new AccessoryDatabase(datastore);
   }
@@ -43,6 +42,7 @@ public class GetPlayerAccessories extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      updateService();
       List<String> accessoryIDs = this.playerDatabase.getEntityAllAccessoryIDs();
       List<Accessory> accessories = new ArrayList();
       for (String id : accessoryIDs) {

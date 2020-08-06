@@ -26,20 +26,18 @@ public class PromotionThresholdServlet extends HttpServlet {
   private static final String CONTENT_TYPE = "text/html";
   private static final String PROMOTION_THRESHOLD_PARAMETER = "promotionThreshold";
   private static final String NOT_LOGGED_IN_PARAMETER = "User Not Logged In";
-  private static Gson gson;
+  private static Gson gson = new Gson();
   private static int promotionThreshold;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private boolean isLoggedIn;
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
+  boolean isLoggedIn;
 
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
+  private void updateService() throws LoggedOutException {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.userService = UserServiceFactory.getUserService();
     this.isLoggedIn = userService.isUserLoggedIn();
+    this.playerDatabase = new PlayerDatabase(datastore, userService);
   }
 
   // Update the player's promotion threshold
@@ -47,9 +45,10 @@ public class PromotionThresholdServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      updateService();
       promotionThreshold =
           Integer.parseInt(request.getParameter(PROMOTION_THRESHOLD_PARAMETER).toString());
-      playerDatabase.setEntityPromotionThreshold(promotionThreshold);
+      this.playerDatabase.setEntityPromotionThreshold(promotionThreshold);
     } catch (LoggedOutException e) {
       response.setContentType(CONTENT_TYPE);
       response.getWriter().println(e.getMessage());
@@ -63,22 +62,27 @@ public class PromotionThresholdServlet extends HttpServlet {
   // The promotion threshold is how many experience points a player needs to try for promotion.
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    if (isLoggedIn) {
-      handleLoggedInUser(response);
-    } else {
+    try {
+      updateService();
+      if (isLoggedIn) {
+        handleLoggedInUser(response);
+      } else {
+        handleLoggedOutUser(response);
+      }
+    } catch (LoggedOutException e) {
       handleLoggedOutUser(response);
     }
   }
 
   private void handleLoggedInUser(HttpServletResponse response) throws IOException {
-    response.getWriter();
-    response.setContentType(CONTENT_TYPE);
     try {
-      promotionThreshold = playerDatabase.getEntityPromotionThreshold();
+      response.getWriter();
+      response.setContentType(CONTENT_TYPE);
+      promotionThreshold = this.playerDatabase.getEntityPromotionThreshold();
+      response.getWriter().println(promotionThreshold);
     } catch (LoggedOutException e) {
       response.getWriter().println(e.getMessage());
     }
-    response.getWriter().println(promotionThreshold);
   }
 
   private void handleLoggedOutUser(HttpServletResponse response) throws IOException {

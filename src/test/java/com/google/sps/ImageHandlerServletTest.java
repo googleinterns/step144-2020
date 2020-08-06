@@ -13,6 +13,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
+import com.google.sps.data.LoggedOutException;
 import com.google.sps.data.Player;
 import com.google.sps.data.PlayerDatabase;
 import com.google.sps.servlets.ImageHandlerServlet;
@@ -38,6 +39,7 @@ import org.mockito.MockitoAnnotations;
 // They create accurate links.
 @RunWith(JUnit4.class)
 public final class ImageHandlerServletTest {
+  private static final String HANDLE_LOGGED_OUT_USER = "false\nempty\nnull\n";
   private final String EMAIL = "email";
   private final String AUTH_DOMAIN = "email.com";
   private final String CURR_USER_ID = "testid";
@@ -79,11 +81,10 @@ public final class ImageHandlerServletTest {
   @Mock private BlobInfo blobInfo;
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp();
     this.userService = UserServiceFactory.getUserService();
     this.imageHandlerServlet = this.newImageHandlerServlet();
-    this.imageHandlerServlet.init();
     this.datastore = DatastoreServiceFactory.getDatastoreService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
     this.player =
@@ -161,12 +162,13 @@ public final class ImageHandlerServletTest {
   }
 
   @Test
-  public void doGet_whileLoggedOut_throwsNullPointerException() throws IOException {
+  public void doGet_handleLoggedOutUser() throws IOException {
     helper.setEnvIsLoggedIn(false);
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
-    loggedOutExceptionRule.expect(NullPointerException.class);
     this.imageHandlerServlet.doGet(this.request, this.response);
+    String result = stringWriter.toString();
+    Assert.assertEquals(result, HANDLE_LOGGED_OUT_USER);
   }
 }

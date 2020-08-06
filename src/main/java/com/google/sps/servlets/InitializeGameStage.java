@@ -20,36 +20,35 @@ public class InitializeGameStage extends HttpServlet {
   private static final String FORM_SUBMIT_PARAMETER = "pathSubmit";
   private static final String REDIRECTION_URL = "gameStage.html";
   private static final String LEVEL_1 = "1";
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
+  private static Gson gson = new Gson();
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
 
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
+  private void updateService() throws LoggedOutException {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    if (request.getParameter(FORM_SUBMIT_PARAMETER) != null) {
-      setUserGameStage(request, response);
+    try {
+      updateService();
+      if (request.getParameter(FORM_SUBMIT_PARAMETER) != null) {
+        setUserGameStage(request, response);
+      }
+    } catch (LoggedOutException e) {
+      handleNotLoggedInUser(e.getMessage(), response);
     }
   }
 
   private void setUserGameStage(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+      throws IOException, LoggedOutException {
     String careerPath = request.getParameter(FORM_SUBMIT_PARAMETER);
     String gameStageID = careerPath + LEVEL_1;
-    try {
-      this.playerDatabase.setEntityCurrentPageID(gameStageID);
-      response.sendRedirect(REDIRECTION_URL);
-    } catch (LoggedOutException e) {
-      handleNotLoggedInUser(e.getMessage(), response);
-    }
+    this.playerDatabase.setEntityCurrentPageID(gameStageID);
+    response.sendRedirect(REDIRECTION_URL);
   }
 
   private void handleNotLoggedInUser(String message, HttpServletResponse response)

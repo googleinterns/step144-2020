@@ -32,17 +32,20 @@ public class GetEquippedAccessories extends HttpServlet {
       "Something went wrong. The accessory was not found in the database.";
   private static Gson gson;
   private static JsonParser jsonParser;
-  private DatastoreService datastore;
-  private UserService userService;
-  private PlayerDatabase playerDatabase;
-  private AccessoryDatabase accessoryDatabase;
+  DatastoreService datastore;
+  UserService userService;
+  AccessoryDatabase accessoryDatabase;
+  PlayerDatabase playerDatabase;
 
   @Override
   public void init() {
     this.gson = new Gson();
     this.jsonParser = new JsonParser();
-    this.userService = UserServiceFactory.getUserService();
+  }
+
+  private void updateService() throws LoggedOutException {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
     this.accessoryDatabase = new AccessoryDatabase(datastore);
   }
@@ -51,6 +54,8 @@ public class GetEquippedAccessories extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      updateService();
+
       String equippedHatID = this.playerDatabase.getEntityEquippedHatID();
       String equippedGlassesID = this.playerDatabase.getEntityEquippedGlassesID();
       String equippedCompanionID = this.playerDatabase.getEntityEquippedCompanionID();
@@ -93,6 +98,8 @@ public class GetEquippedAccessories extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      updateService();
+
       String equippedHatID = request.getParameter(EQUIPPED_HAT);
       String equippedGlassesID = request.getParameter(EQUIPPED_GLASSES);
       String equippedCompanionID = request.getParameter(EQUIPPED_COMPANION);
