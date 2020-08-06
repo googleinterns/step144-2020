@@ -114,7 +114,7 @@ public final class PromotionQuizTest {
           + "\"isAcceptableChoice\":false}]}]";
 
   @Before
-  public void setUp() {
+  public void setUp() throws LoggedOutException {
     helper.setUp(); // initialize local datastore for testing
     MockitoAnnotations.initMocks(this);
     this.localDatastore = DatastoreServiceFactory.getDatastoreService();
@@ -122,7 +122,6 @@ public final class PromotionQuizTest {
     this.playerDatabase = new PlayerDatabase(localDatastore, localUserService);
     this.gameStageDatabase = new GameStageDatabase(localDatastore);
     this.promotionQuizServlet = this.createPromotionQuizServlet();
-    this.promotionQuizServlet.init();
   }
 
   @After

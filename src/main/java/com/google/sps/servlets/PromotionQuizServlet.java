@@ -31,26 +31,25 @@ public class PromotionQuizServlet extends HttpServlet {
   private static final String RESULT_REDIRECT_PAGE = "promotionresults.html";
   // future: threshold based on level https://github.com/googleinterns/step144-2020/issues/89
   private static final Double CORRECT_NEEDED_THRESHOLD = 0.5;
-  private static Gson gson;
-  private DatastoreService datastore;
-  private UserService userService;
-  private GameStageDatabase gameStageDatabase;
-  private PlayerDatabase playerDatabase;
+  private static Gson gson = new Gson();
   private List<QuizQuestion> quizQuestions;
+  DatastoreService datastore;
+  UserService userService;
+  PlayerDatabase playerDatabase;
+  GameStageDatabase gameStageDatabase;
 
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
+  private void updateService() throws LoggedOutException {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
-    this.gameStageDatabase = new GameStageDatabase(datastore);
+    this.userService = UserServiceFactory.getUserService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
+    this.gameStageDatabase = new GameStageDatabase(datastore);
   }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType(JSON_CONTENT_TYPE);
     try {
+      updateService();
       if (isUserOnFinalStage()) {
         response.getWriter().println(gson.toJson(IS_FINAL_STAGE_MESSAGE));
       } else {
@@ -71,11 +70,12 @@ public class PromotionQuizServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      updateService();
       this.quizQuestions = getQuizQuestions(response);
       Boolean isPromoted = handleQuizSubmission(request);
       if (isPromoted) {
         String nextGameStageId = getCurrentGameStage().getNextStageID();
-        this.playerDatabase.setEntityCurrentPageID(nextGameStageId);
+        playerDatabase.setEntityCurrentPageID(nextGameStageId);
       }
       response.sendRedirect(RESULT_REDIRECT_PAGE + "?isPromoted=" + Boolean.toString(isPromoted));
     } catch (LoggedOutException e) {

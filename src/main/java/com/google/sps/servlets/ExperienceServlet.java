@@ -24,18 +24,16 @@ public class ExperienceServlet extends HttpServlet {
   private static final String CONTENT_TYPE = "text/html";
   private static final String EXPERIENCE_PARAMETER = "experiencePoints";
   private static final String EMPTY_PARAMETER = "empty";
-  private static Gson gson;
+  private static Gson gson = new Gson();
   private static int experience;
   private DatastoreService datastore;
   private UserService userService;
   private PlayerDatabase playerDatabase;
   private boolean isLoggedIn;
 
-  @Override
-  public void init() {
-    this.gson = new Gson();
-    this.userService = UserServiceFactory.getUserService();
+  private void updateService() throws LoggedOutException {
     this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.userService = UserServiceFactory.getUserService();
     this.playerDatabase = new PlayerDatabase(datastore, userService);
     this.isLoggedIn = userService.isUserLoggedIn();
   }
@@ -45,8 +43,9 @@ public class ExperienceServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     try {
+      updateService();
       experience = Integer.parseInt(request.getParameter(EXPERIENCE_PARAMETER).toString());
-      playerDatabase.setEntityExperience(experience);
+      this.playerDatabase.setEntityExperience(experience);
     } catch (LoggedOutException e) {
       response.setContentType(CONTENT_TYPE);
       response.getWriter().println(e.getMessage());
@@ -60,9 +59,10 @@ public class ExperienceServlet extends HttpServlet {
   // Experience Points are the scoring metric of the game.
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    if (isLoggedIn) {
+    try {
+      updateService();
       handleLoggedInUser(response);
-    } else {
+    } catch (LoggedOutException e) {
       handleLoggedOutUser(response);
     }
   }
@@ -71,7 +71,7 @@ public class ExperienceServlet extends HttpServlet {
     response.getWriter();
     response.setContentType(CONTENT_TYPE);
     try {
-      experience = playerDatabase.getEntityExperience();
+      experience = this.playerDatabase.getEntityExperience();
     } catch (LoggedOutException e) {
       response.getWriter().println(e.getMessage());
     }
