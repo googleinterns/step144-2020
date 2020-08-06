@@ -74,7 +74,7 @@ public class ImageHandlerServlet extends HttpServlet {
       e.printStackTrace();
       response.sendRedirect(CHARACTER_DESIGN_REDIRECT_PARAMETER);
     } catch (LoggedOutException e) {
-      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);   
+      response.sendRedirect(LOGIN_REDIRECT_PARAMETER);
     }
   }
 

@@ -66,8 +66,8 @@ public class ExperienceServlet extends HttpServlet {
     }
   }
 
-  private void handleLoggedInUser(
-      PlayerDatabase playerDatabase, HttpServletResponse response) throws IOException {
+  private void handleLoggedInUser(PlayerDatabase playerDatabase, HttpServletResponse response)
+      throws IOException {
     response.getWriter();
     response.setContentType(CONTENT_TYPE);
     try {

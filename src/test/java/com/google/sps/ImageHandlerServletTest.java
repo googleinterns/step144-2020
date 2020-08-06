@@ -44,6 +44,9 @@ public final class ImageHandlerServletTest {
   private final String CURR_USER_ID = "testid";
   private String imageID = "testImageIDString";
   private Map<String, Object> USER_ID_CONFIG = new HashMap<>();
+  private static final String LOGGED_OUT_EXCEPTION =
+      "Player is currently logged out. Cannot process null user.";
+  private static final String HANDLE_LOGGED_OUT_USER = "false\nempty\nnull\n";
 
   {
     USER_ID_CONFIG.put("com.google.appengine.api.users.UserService.user_id_key", CURR_USER_ID);
@@ -160,13 +163,14 @@ public final class ImageHandlerServletTest {
     Assert.assertTrue(result.contains(EXPECTED_OUTPUT_TRUE));
   }
 
-  //@Test
-  public void doGet_whileLoggedOut_throwsNullPointerException() throws IOException {
+  @Test
+  public void doGet_handleLoggedOutUser() throws IOException {
     helper.setEnvIsLoggedIn(false);
     StringWriter stringWriter = new StringWriter();
     PrintWriter printWriter = new PrintWriter(stringWriter);
     when(this.response.getWriter()).thenReturn(printWriter);
-    loggedOutExceptionRule.expect(NullPointerException.class);
     this.imageHandlerServlet.doGet(this.request, this.response);
+    String result = stringWriter.toString();
+    Assert.assertEquals(result, HANDLE_LOGGED_OUT_USER);
   }
 }

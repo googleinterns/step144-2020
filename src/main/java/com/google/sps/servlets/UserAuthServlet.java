@@ -23,8 +23,8 @@ public class UserAuthServlet extends HttpServlet {
   private static final String PLAYER_PARAMETER = "Player";
   private UserService userService = UserServiceFactory.getUserService();
   private User user = userService.getCurrentUser();
-  private static String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
-  private static String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
+  private String logoutUrl = userService.createLogoutURL(SLASH_PAGE_REDIRECT);
+  private String loginUrl = userService.createLoginURL(GAME_STAGE_REDIRECT);
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

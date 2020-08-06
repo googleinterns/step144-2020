@@ -98,7 +98,8 @@ public class PromotionQuizServlet extends HttpServlet {
       DatastoreService datastore,
       GameStageDatabase gameStageDatabase,
       PlayerDatabase playerDatabase,
-      HttpServletResponse response) throws IOException {
+      HttpServletResponse response) 
+      throws IOException {
     String queryString = new String();
     try {
       queryString = getCurrentGameStage(gameStageDatabase, playerDatabase).getQuizKey();
