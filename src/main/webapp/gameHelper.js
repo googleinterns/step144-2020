@@ -274,7 +274,7 @@ function addAccessoriesToDom(playerAccessories) {
     displayEquippedAccessory(equippedHat, HAT_STRING);
   }
   equippedCompanion = playerAccessories.equippedCompanion;
-  if (equippedHat !== NONE_EQUIPPED_STRING) {
+  if (equippedCompanion !== NONE_EQUIPPED_STRING) {
     displayEquippedAccessory(equippedCompanion, COMPANION_STRING);
   }
   equippedGlasses = playerAccessories.equippedGlasses;
